@@ -1,7 +1,7 @@
 name: pretty_animated_text
-description: "A new Flutter plugin project."
+description: "Pretty animated text plugin for flutter"
 version: 0.0.1
-homepage: https://github.com/YeLwinOo-Steve/pretty-animated-text
+homepage: https://github.com/YeLwinOo-Steve/pretty_animated_text
 
 environment:
   sdk: '>=3.4.3 <4.0.0'
