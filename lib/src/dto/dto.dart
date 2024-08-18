@@ -1,1 +1,1 @@
-part 'chime_bell_dto.dart';
+part 'effect_dto.dart';

@@ -7,27 +7,33 @@ import 'package:pretty_animated_text/src/enums/animation_type.dart';
 class ChimeBellText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final Duration duration;
+  final TextStyle? textStyle;
 
   /// Chime Bell Effect for list of words
-  List<ChimeBellDto> get splittedWords => text
+  List<EffectDto> get splittedWords => text
       .split(' ')
       .indexed
       .map(
-        (e) => ChimeBellDto(index: e.$1, text: '${e.$2} '),
+        (e) => EffectDto(index: e.$1, text: '${e.$2} '),
       )
       .toList();
 
   /// Chime Bell Effect for list of letters
-  List<ChimeBellDto> get splittedLetters => text
+  List<EffectDto> get splittedLetters => text
       .split('')
       .indexed
-      .map((e) => ChimeBellDto(index: e.$1, text: e.$2))
+      .map((e) => EffectDto(index: e.$1, text: e.$2))
       .toList();
+
+  int get milliseconds => duration.inMilliseconds;
 
   const ChimeBellText({
     super.key,
     required this.text,
+    this.textStyle,
     this.type = AnimationType.word,
+    this.duration = const Duration(seconds: 4),
   });
 
   @override
@@ -40,7 +46,7 @@ class _ChimeBellTextState extends State<ChimeBellText>
   late AnimationController _controller;
   late List<Animation<double>> _opacities;
   late List<Animation<double>> _rotations;
-  late final List<ChimeBellDto> _data;
+  late final List<EffectDto> _data;
 
   @override
   void initState() {
@@ -52,16 +58,16 @@ class _ChimeBellTextState extends State<ChimeBellText>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(seconds: 4),
+      duration: widget.duration,
     );
 
     // Creating the opacity and rotation animations with staggered delays.
-    _opacities = widget.splittedLetters.map((data) {
+    _opacities = _data.map((data) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         CurvedAnimation(
           parent: _controller,
           curve: Interval(
-            data.index * 0.1,
+            data.index / _data.length,
             1.0,
             curve: Curves.easeIn,
           ),
@@ -74,8 +80,7 @@ class _ChimeBellTextState extends State<ChimeBellText>
         CurvedAnimation(
           parent: _controller,
           curve: Interval(
-            data.index *
-                0.08, // Delay equivalent to Swift's .delay for spring animation
+            data.index / _data.length,
             1.0,
             curve: Curves.elasticOut, // Mimicking spring-like bounce
           ),
@@ -95,31 +100,38 @@ class _ChimeBellTextState extends State<ChimeBellText>
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      children: _data.map((data) {
-        return AnimatedBuilder(
-          animation: _controller,
-          builder: (context, child) {
-            return Opacity(
-              opacity: _opacities[data.index].value,
-              child: Transform(
-                transform: Matrix4.identity()
-                  ..setEntry(3, 2, 0.01) // Perspective effect
-                  ..rotateX(
-                      _rotations[data.index].value * pi / 360), // 3D rotation
-                alignment: Alignment.topCenter,
-                child: child,
+      alignment: WrapAlignment.center,
+      children: _data
+          .map(
+            (dto) => AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return _animatedBuilder(dto, child);
+              },
+              child: Text(
+                dto.text,
+                style: widget.textStyle ??
+                    const TextStyle(
+                      fontSize: 48,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            );
-          },
-          child: Text(
-            data.text, // Replace with desired text
-            style: const TextStyle(
-              fontSize: 48,
-              fontWeight: FontWeight.bold,
             ),
-          ),
-        );
-      }).toList(),
+          )
+          .toList(),
+    );
+  }
+
+  Opacity _animatedBuilder(EffectDto data, Widget? child) {
+    return Opacity(
+      opacity: _opacities[data.index].value,
+      child: Transform(
+        transform: Matrix4.identity()
+          ..setEntry(3, 2, 0.01) // Perspective effect
+          ..rotateX(_rotations[data.index].value * pi / 360), // 3D rotation
+        alignment: Alignment.topCenter,
+        child: child,
+      ),
     );
   }
 }
