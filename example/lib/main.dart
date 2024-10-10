@@ -1,166 +1,241 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
+
+const _loremText =
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.';
+const _style = TextStyle(
+  fontSize: 40,
+  fontWeight: FontWeight.bold,
+);
+const letterAnimationDuration = Duration(seconds: 100);
+const wordAnimationDuration = Duration(seconds: 10);
 
 void main() {
   runApp(
     const MaterialApp(
-      // home: ScaleTextDemo(),
-      // home: RotateTextDemo(),
-      // home: BlurTextDemo(),
-      home: OffsetTextDemo(),
+      home: HomeWidget(),
     ),
   );
 }
 
-class ChimeBellDemo extends StatelessWidget {
-  const ChimeBellDemo({super.key});
+class HomeWidget extends StatefulWidget {
+  const HomeWidget({
+    super.key,
+  });
+
+  @override
+  State<HomeWidget> createState() => _HomeWidgetState();
+}
+
+class _HomeWidgetState extends State<HomeWidget> {
+  int selectedValue = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.repeat),
+      appBar: AppBar(
+        title: const Text('Pretty Animated Text'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: ChimeBellText(
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 10),
-            type: AnimationType.word,
-            textStyle: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          children: [
+            CupertinoSegmentedControl<int>(
+              children: const {
+                0: Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 40.0),
+                  child: Text('Letters'),
+                ),
+                1: Padding(
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 40.0),
+                  child: Text('Words'),
+                ),
+              },
+              groupValue: selectedValue,
+              onValueChanged: (int value) {
+                setState(() {
+                  selectedValue = value;
+                });
+              },
             ),
-          ),
+            Expanded(
+              child: selectedValue == 0
+                  ? PageView(
+                      children: const [
+                        SpringDemo(),
+                        ChimeBellDemo(),
+                        ScaleTextDemo(),
+                        RotateTextDemo(),
+                        BlurTextDemo(),
+                        OffsetTextDemo(),
+                      ],
+                    )
+                  : PageView(
+                      children: const [
+                        SpringDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                        ChimeBellDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                        ScaleTextDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                        RotateTextDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                        BlurTextDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                        OffsetTextDemo(
+                          type: AnimationType.word,
+                          duration: wordAnimationDuration,
+                        ),
+                      ],
+                    ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class ChimeBellDemo extends StatelessWidget {
+  final AnimationType type;
+  final Duration duration;
+  const ChimeBellDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: ChimeBellText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }
 }
 
 class SpringDemo extends StatelessWidget {
-  const SpringDemo({super.key});
+  final AnimationType type;
+  final Duration duration;
+  const SpringDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: SpringText(
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 10),
-            type: AnimationType.word,
-            textStyle: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+    return Center(
+      child: SpringText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }
 }
 
 class ScaleTextDemo extends StatelessWidget {
-  const ScaleTextDemo({super.key});
+  final AnimationType type;
+  final Duration duration;
+  const ScaleTextDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: ScaleText(
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 10),
-            type: AnimationType.word,
-            textStyle: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+    return Center(
+      child: ScaleText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }
 }
 
 class RotateTextDemo extends StatelessWidget {
-  const RotateTextDemo({super.key});
+  final AnimationType type;
+  final Duration duration;
+  const RotateTextDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: RotateText(
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 50),
-            type: AnimationType.letter,
-            textStyle: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+    return Center(
+      child: RotateText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }
 }
 
 class BlurTextDemo extends StatelessWidget {
-  const BlurTextDemo({super.key});
+  final AnimationType type;
+  final Duration duration;
+  const BlurTextDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: BlurText(
-              // text:
-              //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-              // duration: Duration(seconds: 50),
-              // type: AnimationType.letter,
-              // textStyle: TextStyle(
-              //   fontSize: 40,
-              //   fontWeight: FontWeight.bold,
-              // ),
-              ),
-        ),
+    return Center(
+      child: BlurText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }
 }
 
 class OffsetTextDemo extends StatelessWidget {
-  const OffsetTextDemo({super.key});
+  final AnimationType type;
+  final Duration duration;
+  const OffsetTextDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(24),
-        child: Center(
-          child: OffsetText(
-            text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 100),
-            type: AnimationType.letter,
-            textStyle: TextStyle(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ),
+    return Center(
+      child: OffsetText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
       ),
     );
   }

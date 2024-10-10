@@ -55,16 +55,11 @@ class _ChimeBellTextState extends State<ChimeBellText>
     // Creating the opacity and rotation animations with staggered delays.
     _opacities = _data.map((data) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            data.index *
-                intervalStep *
-                overlapFactor, // Start halfway through the previous word
-            data.index * intervalStep * overlapFactor +
-                intervalStep, // Finish at its own step
-            curve: Curves.easeIn,
-          ),
+        curvedAnimation(
+          _controller,
+          data.index,
+          intervalStep,
+          overlapFactor,
         ),
       );
     }).toList();
