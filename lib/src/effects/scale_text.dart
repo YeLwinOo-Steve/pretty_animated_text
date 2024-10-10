@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
+import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
 class ScaleText extends StatefulWidget {
   final String text;
@@ -9,30 +10,12 @@ class ScaleText extends StatefulWidget {
   final Duration duration;
   final TextStyle? textStyle;
 
-  /// Chime Bell Effect for list of words
-  List<EffectDto> get splittedWords => text
-      .split(' ')
-      .indexed
-      .map(
-        (e) => EffectDto(index: e.$1, text: '${e.$2} '),
-      )
-      .toList();
-
-  /// Chime Bell Effect for list of letters
-  List<EffectDto> get splittedLetters => text
-      .split('')
-      .indexed
-      .map((e) => EffectDto(index: e.$1, text: e.$2))
-      .toList();
-
-  int get milliseconds => duration.inMilliseconds;
-
   const ScaleText({
     super.key,
     required this.text,
     this.textStyle,
     this.type = AnimationType.word,
-    this.duration = const Duration(seconds: 4),
+    this.duration = const Duration(milliseconds: 4000),
   });
 
   @override
@@ -50,8 +33,8 @@ class _ScaleTextState extends State<ScaleText>
   void initState() {
     super.initState();
     _data = switch (widget.type) {
-      AnimationType.letter => widget.splittedLetters,
-      _ => widget.splittedWords,
+      AnimationType.letter => widget.text.splittedLetters,
+      _ => widget.text.splittedWords,
     };
 
     _controller = AnimationController(

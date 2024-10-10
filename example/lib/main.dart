@@ -4,7 +4,7 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: ScaleTextDemo(),
+      home: SpringDemo(),
     ),
   );
 }
@@ -43,17 +43,19 @@ class SpringDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return const Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(24),
+        padding: EdgeInsets.all(24),
         child: Center(
           child: SpringText(
             text:
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.'
-                    .split('')
-                    .map((e) => '$e')
-                    .toList(),
-            duration: const Duration(seconds: 100),
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
+            duration: Duration(seconds: 100),
+            type: AnimationType.letter,
+            textStyle: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
