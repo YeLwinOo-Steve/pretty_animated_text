@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-
-import 'package:flutter/physics.dart';
+import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 
 class SpringText extends StatefulWidget {
+  final TextStyle? textStyle;
   final List<String> text;
   final Duration duration;
   const SpringText({
     required this.text,
+    this.textStyle,
     this.duration = const Duration(milliseconds: 4000),
     super.key,
   });
@@ -94,7 +95,7 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
       (index) {
         return Tween<double>(begin: 1, end: 0).animate(
           _controllers[index].drive(
-            CurveTween(curve: _SpringCurve()), // Custom spring curve
+            CurveTween(curve: SpringCurve()), // Custom spring curve
           ),
         );
       },
@@ -136,33 +137,10 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
           },
           child: Text(
             widget.text[index],
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-            ),
+            style: widget.textStyle,
           ),
         );
       }),
     );
-  }
-}
-
-// Custom Spring Curve using Flutter's SpringSimulation
-class _SpringCurve extends Curve {
-  @override
-  double transform(double t) {
-    // A SpringSimulation that will simulate spring physics.
-    final simulation = SpringSimulation(
-      const SpringDescription(
-        mass: 1,
-        stiffness: 100, // Stiffness of the spring
-        damping: 10, // Damping to control oscillation
-      ),
-      0, // Initial position
-      1, // Target position
-      0, // Initial velocity
-    );
-
-    return simulation.x(t); // The position of the spring at time t
   }
 }

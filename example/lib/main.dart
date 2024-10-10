@@ -4,7 +4,7 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: SpringDemo(),
+      home: ChimeBellDemo(),
     ),
   );
 }
@@ -14,10 +14,24 @@ class ChimeBellDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: ChimeBellText(
-          text: 'Hello Pretty Chimebell Effect This is testing you know!',
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: const Icon(Icons.repeat),
+      ),
+      body: const Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(
+          child: ChimeBellText(
+            text:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
+            duration: Duration(seconds: 10),
+            type: AnimationType.word,
+            textStyle: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );
@@ -30,14 +44,17 @@ class SpringDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SpringText(
-          text:
-              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.'
-                  .split('')
-                  .map((e) => '$e')
-                  .toList(),
-          duration: const Duration(seconds: 100),
+      body: Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: SpringText(
+            text:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.'
+                    .split('')
+                    .map((e) => '$e')
+                    .toList(),
+            duration: const Duration(seconds: 100),
+          ),
         ),
       ),
     );
