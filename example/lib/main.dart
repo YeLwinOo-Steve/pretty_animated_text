@@ -5,7 +5,8 @@ void main() {
   runApp(
     const MaterialApp(
       // home: ScaleTextDemo(),
-      home: RotateTextDemo(),
+      // home: RotateTextDemo(),
+      home: BlurTextDemo(),
     ),
   );
 }
@@ -108,6 +109,31 @@ class RotateTextDemo extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class BlurTextDemo extends StatelessWidget {
+  const BlurTextDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(
+          child: BlurText(
+              // text:
+              //     'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
+              // duration: Duration(seconds: 50),
+              // type: AnimationType.letter,
+              // textStyle: TextStyle(
+              //   fontSize: 40,
+              //   fontWeight: FontWeight.bold,
+              // ),
+              ),
         ),
       ),
     );

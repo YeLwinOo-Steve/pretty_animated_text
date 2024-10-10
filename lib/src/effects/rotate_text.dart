@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
 class RotateText extends StatefulWidget {
