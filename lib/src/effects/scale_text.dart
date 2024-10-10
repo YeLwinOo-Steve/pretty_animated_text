@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
+import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
@@ -51,16 +52,12 @@ class _ScaleTextState extends State<ScaleText>
     // Creating the scale animations with staggered delays.
     _scales = _data.map((data) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            data.index *
-                intervalStep *
-                overlapFactor, // Start halfway through the previous word
-            data.index * intervalStep * overlapFactor +
-                intervalStep, // Finish at its own step
-            curve: SpringCurve(),
-          ),
+        curvedAnimation(
+          _controller,
+          data.index,
+          intervalStep,
+          overlapFactor,
+          curve: SpringCurve(),
         ),
       );
     }).toList();

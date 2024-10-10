@@ -1,18 +1,17 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
+import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
-class RotateText extends StatefulWidget {
+class OffsetText extends StatefulWidget {
   final String text;
   final AnimationType type;
   final Duration duration;
   final TextStyle? textStyle;
 
-  const RotateText({
+  const OffsetText({
     super.key,
     required this.text,
     this.textStyle,
@@ -22,13 +21,13 @@ class RotateText extends StatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  _RotateTextState createState() => _RotateTextState();
+  _OffsetTextState createState() => _OffsetTextState();
 }
 
-class _RotateTextState extends State<RotateText>
+class _OffsetTextState extends State<OffsetText>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Animation<double>> _rotates;
+  late List<Animation<Offset>> _offsets;
   late List<Animation<double>> _opacities;
   late final List<EffectDto> _data;
 
@@ -45,36 +44,46 @@ class _RotateTextState extends State<RotateText>
       duration: widget.duration,
     );
     final wordCount = _data.length;
-    const double overlapFactor = 0.5; // 50% overlap between animations
+    const double overlapFactor = 0.2; // 50% overlap between animations
 
     // Calculate the interval step with overlap in mind
     final double intervalStep = wordCount > 1
         ? (1.0 / (wordCount + (wordCount - 1) * overlapFactor))
         : 1.0;
-    // Creating the rotation animations with staggered delays.
-    _rotates = _data.map((data) {
-      return Tween<double>(begin: 360.0, end: 0.0).animate(
+    // Creating the scale animations with staggered delays.
+    _offsets = _data.map((data) {
+      bool isEven = data.index % 2 == 0;
+      return Tween<Offset>(
+              begin: isEven ? const Offset(0, -100) : const Offset(0, 100),
+              end: const Offset(0, 0))
+          .animate(
         curvedAnimation(
           _controller,
           data.index,
           intervalStep,
           overlapFactor,
+          curve: SpringCurve(),
         ),
       );
     }).toList();
 
-    _opacities = _data
-        .map(
-          (data) => Tween<double>(begin: 0.0, end: 1.0).animate(
-            curvedAnimation(
-              _controller,
-              data.index,
-              intervalStep,
-              overlapFactor,
-            ),
+    // Create opacity animations with staggered starts (50% overlap)
+    _opacities = _data.map((data) {
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
+        CurvedAnimation(
+          parent: _controller,
+          curve: Interval(
+            data.index *
+                intervalStep *
+                overlapFactor, // Start halfway through the previous word
+            data.index * intervalStep * overlapFactor +
+                intervalStep, // Finish at its own step
+            curve: Curves.easeIn,
           ),
-        )
-        .toList();
+        ),
+      );
+    }).toList();
+
     _controller.forward();
   }
 
@@ -108,10 +117,8 @@ class _RotateTextState extends State<RotateText>
   Widget _animatedBuilder(EffectDto data, Widget? child) {
     return Opacity(
       opacity: _opacities[data.index].value,
-      child: Transform(
-        transform: Matrix4.identity()
-          ..rotateZ(_rotates[data.index].value * pi / 180), // 3D rotation
-        alignment: Alignment.center,
+      child: Transform.translate(
+        offset: _offsets[data.index].value,
         child: child,
       ),
     );

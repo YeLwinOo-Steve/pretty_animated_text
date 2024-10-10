@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/enums/animation_type.dart';
+import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'dart:math';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
@@ -55,16 +56,11 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
     // Create opacity animations with staggered starts (50% overlap)
     _opacities = _data.map((data) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            data.index *
-                intervalStep *
-                overlapFactor, // Start halfway through the previous word
-            data.index * intervalStep * overlapFactor +
-                intervalStep, // Finish at its own step
-            curve: Curves.easeIn,
-          ),
+        curvedAnimation(
+          _controller,
+          data.index,
+          intervalStep,
+          overlapFactor,
         ),
       );
     }).toList();
@@ -76,16 +72,11 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
             begin: 180.0,
             end: 0.0,
           ).animate(
-            CurvedAnimation(
-              parent: _controller,
-              curve: Interval(
-                data.index *
-                    intervalStep *
-                    overlapFactor, // Start halfway through the previous word
-                data.index * intervalStep * overlapFactor +
-                    intervalStep, // Ensure each word finishes at its own step
-                curve: Curves.easeInOutBack,
-              ),
+            curvedAnimation(
+              _controller,
+              data.index,
+              intervalStep,
+              overlapFactor,
             ),
           ),
         )

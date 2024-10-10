@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/enums/animation_type.dart';
+import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
@@ -70,16 +71,12 @@ class _ChimeBellTextState extends State<ChimeBellText>
 
     _rotations = _data.map((data) {
       return Tween<double>(begin: 180, end: 0).animate(
-        CurvedAnimation(
-          parent: _controller,
-          curve: Interval(
-            data.index *
-                intervalStep *
-                overlapFactor, // Start halfway through the previous word
-            data.index * intervalStep * overlapFactor +
-                intervalStep, // Finish at its own step
-            curve: SpringCurve(),
-          ),
+        curvedAnimation(
+          _controller,
+          data.index,
+          intervalStep,
+          overlapFactor,
+          curve: SpringCurve(),
         ),
       );
     }).toList();
