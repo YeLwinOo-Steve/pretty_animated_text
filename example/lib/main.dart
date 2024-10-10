@@ -4,7 +4,8 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: SpringDemo(),
+      // home: ScaleTextDemo(),
+      home: RotateTextDemo(),
     ),
   );
 }
@@ -50,8 +51,8 @@ class SpringDemo extends StatelessWidget {
           child: SpringText(
             text:
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
-            duration: Duration(seconds: 100),
-            type: AnimationType.letter,
+            duration: Duration(seconds: 10),
+            type: AnimationType.word,
             textStyle: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,
@@ -77,6 +78,31 @@ class ScaleTextDemo extends StatelessWidget {
                 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
             duration: Duration(seconds: 10),
             type: AnimationType.word,
+            textStyle: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class RotateTextDemo extends StatelessWidget {
+  const RotateTextDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(
+          child: RotateText(
+            text:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
+            duration: Duration(seconds: 50),
+            type: AnimationType.letter,
             textStyle: TextStyle(
               fontSize: 40,
               fontWeight: FontWeight.bold,

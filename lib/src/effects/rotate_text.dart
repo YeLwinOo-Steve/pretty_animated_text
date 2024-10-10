@@ -1,34 +1,36 @@
-import 'package:flutter/material.dart';
-import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/enums/animation_type.dart';
 import 'dart:math';
+
+import 'package:flutter/material.dart';
+import 'package:pretty_animated_text/pretty_animated_text.dart';
+import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
-class SpringText extends StatefulWidget {
-  final TextStyle? textStyle;
+class RotateText extends StatefulWidget {
   final String text;
   final AnimationType type;
   final Duration duration;
-  const SpringText({
+  final TextStyle? textStyle;
+
+  const RotateText({
+    super.key,
     required this.text,
     this.textStyle,
     this.type = AnimationType.word,
     this.duration = const Duration(milliseconds: 4000),
-    super.key,
   });
 
   @override
   // ignore: library_private_types_in_public_api
-  _SpringTextState createState() => _SpringTextState();
+  _RotateTextState createState() => _RotateTextState();
 }
 
-class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
+class _RotateTextState extends State<RotateText>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late List<Animation<double>> _rotations;
-  late final List<EffectDto> _data;
+  late List<Animation<double>> _rotates;
   late List<Animation<double>> _opacities;
-  late List<Animation<double>> _springAnimations; // To store spring animations
+  late final List<EffectDto> _data;
 
   @override
   void initState() {
@@ -37,24 +39,21 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
       AnimationType.letter => widget.text.splittedLetters,
       _ => widget.text.splittedWords,
     };
-    final wordCount = _data.length;
 
-    // Define an overlap factor: this is how much each animation overlaps with the previous one.
+    _controller = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
+    final wordCount = _data.length;
     const double overlapFactor = 0.5; // 50% overlap between animations
 
     // Calculate the interval step with overlap in mind
     final double intervalStep = wordCount > 1
         ? (1.0 / (wordCount + (wordCount - 1) * overlapFactor))
         : 1.0;
-
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.duration,
-    );
-
-    // Create opacity animations with staggered starts (50% overlap)
-    _opacities = _data.map((data) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
+    // Creating the rotation animations with staggered delays.
+    _rotates = _data.map((data) {
+      return Tween<double>(begin: 360.0, end: 0.0).animate(
         CurvedAnimation(
           parent: _controller,
           curve: Interval(
@@ -63,46 +62,27 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
                 overlapFactor, // Start halfway through the previous word
             data.index * intervalStep * overlapFactor +
                 intervalStep, // Finish at its own step
-            curve: Curves.easeIn,
+            curve: Curves.easeInOut,
           ),
         ),
       );
     }).toList();
 
-    // Create rotation animations with the same staggered starts
-    _rotations = _data
+    _opacities = _data
         .map(
-          (data) => Tween<double>(
-            begin: 180.0,
-            end: 0.0,
-          ).animate(
-            CurvedAnimation(
-              parent: _controller,
-              curve: Interval(
-                data.index *
-                    intervalStep *
-                    overlapFactor, // Start halfway through the previous word
-                data.index * intervalStep * overlapFactor +
-                    intervalStep, // Ensure each word finishes at its own step
-                curve: Curves.easeInOutBack,
-              ),
+          (data) => Tween<double>(begin: 0.0, end: 1.0).animate(CurvedAnimation(
+            parent: _controller,
+            curve: Interval(
+              data.index *
+                  intervalStep *
+                  overlapFactor, // Start halfway through the previous word
+              data.index * intervalStep * overlapFactor +
+                  intervalStep, // Finish at its own step
+              curve: Curves.easeInOut,
             ),
-          ),
+          )),
         )
         .toList();
-
-    //  Add spring animation for each word
-    _springAnimations = _data.map(
-      (data) {
-        return Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(
-            parent: _controller,
-            curve: SpringCurve(),
-          ),
-        );
-      },
-    ).toList();
-
     _controller.forward();
   }
 
@@ -137,12 +117,9 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
     return Opacity(
       opacity: _opacities[data.index].value,
       child: Transform(
-        alignment: Alignment.bottomCenter,
         transform: Matrix4.identity()
-          // Apply the spring animation for translation
-          ..translate(0.0, _springAnimations[data.index].value)
-          // Apply rotation
-          ..rotateZ(_rotations[data.index].value * pi / 180),
+          ..rotateZ(_rotates[data.index].value * pi / 180), // 3D rotation
+        alignment: Alignment.center,
         child: child,
       ),
     );
