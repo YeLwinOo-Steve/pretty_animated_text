@@ -4,7 +4,7 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 void main() {
   runApp(
     const MaterialApp(
-      home: ChimeBellDemo(),
+      home: ScaleTextDemo(),
     ),
   );
 }
@@ -54,6 +54,31 @@ class SpringDemo extends StatelessWidget {
                     .map((e) => '$e')
                     .toList(),
             duration: const Duration(seconds: 100),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class ScaleTextDemo extends StatelessWidget {
+  const ScaleTextDemo({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      body: Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(
+          child: ScaleText(
+            text:
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.',
+            duration: Duration(seconds: 10),
+            type: AnimationType.word,
+            textStyle: TextStyle(
+              fontSize: 40,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
       ),
