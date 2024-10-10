@@ -32,9 +32,12 @@ class SpringDemo extends StatelessWidget {
     return Scaffold(
       body: Center(
         child: SpringText(
-          text: ['Flutter', 'is', 'not', 'what', 'you', 'think']
-              .map((e) => '$e ')
-              .toList(),
+          text:
+              'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.'
+                  .split('')
+                  .map((e) => '$e')
+                  .toList(),
+          duration: const Duration(seconds: 100),
         ),
       ),
     );
