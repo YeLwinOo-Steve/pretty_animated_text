@@ -24,7 +24,66 @@ Link: https://pretty-animated-text.vercel.app
 ## <img src="assets/Fire.png" width="36px">️ Installation
 To use this package, add `pretty_animated_text` as a dependency in your `pubspec.yaml` file:
 
-```flutter pub add pretty_animated_text```
+`flutter pub add pretty_animated_text`
+
+### How to
+
+- Spring Text
+  ```dart
+    SpringText(
+          text: _loremText,
+          duration: duration,
+          type: type,
+          textStyle: _style,
+        )
+  ```
+- Chimbell Text
+  ```dart
+    ChimeBellText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
+      ),
+  ```
+- Scale Text
+  ```dart
+    ScaleText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
+      ),
+  ```
+- Blur Text
+  ```dart
+    BlurText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        textStyle: _style,
+      ),
+  ```
+- Rotate Text
+  ```dart
+    RotateText(
+        text: _loremText,
+        direction: direction,
+        duration: duration,
+        type: type,
+        textStyle: _style,
+      ),
+  ```
+- Offset Text
+  ```dart
+    OffsetText(
+        text: _loremText,
+        duration: duration,
+        type: type,
+        slideType: slideType,
+        textStyle: _style,
+      ),
+  ```
 
 ### <img src="assets/Eyes.png" width="36px">️  Project License:
 This project is licensed under [MIT License](LICENSE).
