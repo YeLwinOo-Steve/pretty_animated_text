@@ -1,3 +1,8 @@
+## 1.0.1
+
+* Added more customizations and controls for text animations
+
+
 ## 1.0.0
 
 * Added multiple animated text widgets and their variations

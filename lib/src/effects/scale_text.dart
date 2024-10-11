@@ -8,12 +8,14 @@ import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 class ScaleText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final Alignment alignment;
   final Duration duration;
   final TextStyle? textStyle;
 
   const ScaleText({
     super.key,
     required this.text,
+    this.alignment = Alignment.bottomCenter,
     this.textStyle,
     this.type = AnimationType.word,
     this.duration = const Duration(milliseconds: 4000),
@@ -79,9 +81,7 @@ class _ScaleTextState extends State<ScaleText>
           .map(
             (dto) => AnimatedBuilder(
               animation: _controller,
-              builder: (context, child) {
-                return _animatedBuilder(dto, child);
-              },
+              builder: (context, child) => _animatedBuilder(dto, child),
               child: Text(
                 dto.text,
                 style: widget.textStyle,
@@ -93,14 +93,15 @@ class _ScaleTextState extends State<ScaleText>
   }
 
   Widget _animatedBuilder(EffectDto data, Widget? child) {
+    var scaleValue = _scales[data.index].value;
     return Transform(
       transform: Matrix4.identity()
         ..setEntry(3, 2, 0.015) // Perspective effect
         ..scale(
-          _scales[data.index].value,
-          _scales[data.index].value,
+          scaleValue,
+          scaleValue,
         ), // 3D rotation
-      alignment: Alignment.bottomCenter,
+      alignment: widget.alignment,
       child: child,
     );
   }

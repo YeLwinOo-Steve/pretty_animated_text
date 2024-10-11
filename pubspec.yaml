@@ -1,6 +1,6 @@
 name: pretty_animated_text
-description: "Pretty animated text plugin for flutter"
-version: 1.0.0
+description: "A Flutter plugin for creating customizable animated text widgets, enhancing app aesthetics with engaging text animations."
+version: 1.0.1
 homepage: https://pretty-animated-text.vercel.app
 
 environment:
@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  web: ^0.5.1
+  web: ^1.1.0
   plugin_platform_interface: ^2.0.2
 
 dev_dependencies:
