@@ -4,17 +4,20 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
+import 'package:pretty_animated_text/src/utils/double_tween_by_rotate_type.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
 class RotateText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final RotateAnimationType direction;
   final Duration duration;
   final TextStyle? textStyle;
 
   const RotateText({
     super.key,
     required this.text,
+    this.direction = RotateAnimationType.clockwise,
     this.textStyle,
     this.type = AnimationType.word,
     this.duration = const Duration(milliseconds: 4000),
@@ -53,7 +56,7 @@ class _RotateTextState extends State<RotateText>
         : 1.0;
     // Creating the rotation animations with staggered delays.
     _rotates = _data.map((data) {
-      return Tween<double>(begin: 360.0, end: 0.0).animate(
+      return doubleTweenByRotateType(widget.direction).animate(
         curvedAnimation(
           _controller,
           data.index,

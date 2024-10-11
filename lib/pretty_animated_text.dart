@@ -7,3 +7,9 @@ export 'src/effects/offset_text.dart' show OffsetText;
 
 /// Animation type enum for [letter, word]
 export 'src/enums/animation_type.dart' show AnimationType;
+
+/// Animation type enum for [OffsetText] animation
+export 'src/enums/slide_animation_type.dart' show SlideAnimationType;
+
+/// Animation type enum for [RotateText] animation
+export 'src/enums/rotate_animation_type.dart' show RotateAnimationType;

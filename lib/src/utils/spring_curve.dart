@@ -9,7 +9,7 @@ class SpringCurve extends Curve {
     final simulation = SpringSimulation(
       const SpringDescription(
         mass: 1,
-        stiffness: 50, // Stiffness of the spring
+        stiffness: 60, // Stiffness of the spring
         damping: 10, // Damping to control oscillation
       ),
       0, // Initial position

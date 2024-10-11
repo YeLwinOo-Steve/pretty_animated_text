@@ -1,0 +1,4 @@
+enum RotateAnimationType {
+  clockwise,
+  anticlockwise,
+}

@@ -109,8 +109,10 @@ class _BlurTextState extends State<BlurText>
                           sigmaY: _blurSigmaList[data.index].value,
                           tileMode: TileMode.decal,
                         ),
-                        child: Text(data.text,
-                            style: const TextStyle(fontSize: 40)),
+                        child: Text(
+                          data.text,
+                          style: widget.textStyle,
+                        ),
                       ),
                     ),
                   ),

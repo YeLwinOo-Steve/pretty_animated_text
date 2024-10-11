@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
+import 'package:pretty_animated_text/src/utils/offset_tween_by_slide_type.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
 class OffsetText extends StatefulWidget {
   final String text;
+
   final AnimationType type;
+  final SlideAnimationType slideType;
   final Duration duration;
   final TextStyle? textStyle;
 
@@ -16,6 +19,7 @@ class OffsetText extends StatefulWidget {
     required this.text,
     this.textStyle,
     this.type = AnimationType.word,
+    this.slideType = SlideAnimationType.topBottom,
     this.duration = const Duration(milliseconds: 4000),
   });
 
@@ -51,21 +55,22 @@ class _OffsetTextState extends State<OffsetText>
         ? (1.0 / (wordCount + (wordCount - 1) * overlapFactor))
         : 1.0;
     // Creating the scale animations with staggered delays.
-    _offsets = _data.map((data) {
-      bool isEven = data.index % 2 == 0;
-      return Tween<Offset>(
-              begin: isEven ? const Offset(0, -100) : const Offset(0, 100),
-              end: const Offset(0, 0))
-          .animate(
-        curvedAnimation(
-          _controller,
-          data.index,
-          intervalStep,
-          overlapFactor,
-          curve: SpringCurve(),
-        ),
-      );
-    }).toList();
+    _offsets = _data
+        .map(
+          (data) => offsetTweenBySlideType(
+            widget.slideType,
+            index: data.index,
+          ).animate(
+            curvedAnimation(
+              _controller,
+              data.index,
+              intervalStep,
+              overlapFactor,
+              curve: SpringCurve(),
+            ),
+          ),
+        )
+        .toList();
 
     // Create opacity animations with staggered starts (50% overlap)
     _opacities = _data.map((data) {
