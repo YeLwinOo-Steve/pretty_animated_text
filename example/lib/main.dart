@@ -34,6 +34,14 @@ class _HomeWidgetState extends State<HomeWidget> {
   final PageController wordController = PageController();
   int selectedValue = 0;
   final int length = 12;
+
+  @override
+  void dispose() {
+    letterController.dispose();
+    wordController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -172,31 +180,34 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
-  CupertinoSegmentedControl<int> _tabs() {
-    return CupertinoSegmentedControl<int>(
-      children: const {
-        0: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 60.0),
-          child: Text('Letters'),
-        ),
-        1: Padding(
-          padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 60.0),
-          child: Text('Words'),
-        ),
-      },
-      groupValue: selectedValue,
-      onValueChanged: (int value) {
-        setState(() {
-          selectedValue = value;
-        });
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (selectedValue == 0) {
-            letterController.jumpToPage(0);
-          } else {
-            wordController.jumpToPage(0);
-          }
-        });
-      },
+  _tabs() {
+    return SizedBox(
+      width: double.maxFinite,
+      child: CupertinoSegmentedControl<int>(
+        children: const {
+          0: Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.0),
+            child: Text('Letters'),
+          ),
+          1: Padding(
+            padding: EdgeInsets.symmetric(vertical: 12.0),
+            child: Text('Words'),
+          ),
+        },
+        groupValue: selectedValue,
+        onValueChanged: (int value) {
+          setState(() {
+            selectedValue = value;
+          });
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (selectedValue == 0) {
+              letterController.jumpToPage(0);
+            } else {
+              wordController.jumpToPage(0);
+            }
+          });
+        },
+      ),
     );
   }
 }
