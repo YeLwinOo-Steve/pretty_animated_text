@@ -1,11 +1,11 @@
 name: pretty_animated_text
 description: "Pretty animated text plugin for flutter"
-version: 0.0.1
-homepage: https://github.com/YeLwinOo-Steve/pretty_animated_text
+version: 1.0.0
+homepage: https://pretty-animated-text.vercel.app
 
 environment:
-  sdk: '>=3.4.3 <4.0.0'
-  flutter: '>=3.3.0'
+  sdk: ">=3.4.3 <4.0.0"
+  flutter: ">=3.3.0"
 
 dependencies:
   flutter:

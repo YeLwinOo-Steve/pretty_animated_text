@@ -1,6 +1,6 @@
 # Pretty Animated Text
 
-A ui plugin that provides you gorgeous and customizable animated text widgets so that you can use it effortlessly.
+An animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
 ## Preview Website
 
@@ -24,9 +24,10 @@ To use this package, add `pretty_animated_text` as a dependency in your `pubspec
 
 ```flutter pub add pretty_animated_text```
 
+### 🪪 Project License:
+This project is licensed under [MIT License](LICENSE).
 
-
-
+Copyright (©️) 2024 YE LWIN OO
 
 
 
