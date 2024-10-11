@@ -9,7 +9,7 @@ const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
 );
-const letterAnimationDuration = Duration(seconds: 100);
+const letterAnimationDuration = Duration(seconds: 50);
 const wordAnimationDuration = Duration(seconds: 10);
 
 void main() {
