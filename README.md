@@ -1,12 +1,14 @@
 # Pretty Animated Text
 
+## <img src="assets/Telescope.webp" width="36px"> Overview
+
 An animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
-## Preview Website
+## <img src="assets/Spider Web.webp" width="36px">  Preview Website
 
 Link: https://pretty-animated-text.vercel.app
 
-## Features
+### <img src="assets/Rocket.png" width="36px">️ Key Features: 
 
 - Various text animation types:
   - Spring animation
@@ -19,15 +21,21 @@ Link: https://pretty-animated-text.vercel.app
 - Customizable animation duration and styles
 - Easy to integrate into existing Flutter projects
 
-## Installation
+## <img src="assets/Fire.png" width="36px">️ Installation
 To use this package, add `pretty_animated_text` as a dependency in your `pubspec.yaml` file:
 
 ```flutter pub add pretty_animated_text```
 
-### 🪪 Project License:
+### <img src="assets/Eyes.png" width="36px">️  Project License:
 This project is licensed under [MIT License](LICENSE).
 
-Copyright (©️) 2024 YE LWIN OO
+Feel free to check it out and give it a  <img src="assets/Star.png" width="36px">️ if you love it. 
+Follow me for more updates and more projects
+
+> Suggestions are warmly welcome & more updates are coming along the way ...  <img src="assets/Folded Hands Medium Skin Tone.png" width="36px">️ 
+
+
+Copyright (©️) 2023 __YE LWIN OO__
 
 
 
