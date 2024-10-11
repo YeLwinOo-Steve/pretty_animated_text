@@ -2,14 +2,19 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
+import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/double_tween_by_rotate_type.dart';
+import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
+import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
 
 class RotateText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final double overlapFactor;
+  final TextAlignment textAlignment;
   final RotateAnimationType direction;
   final Duration duration;
   final TextStyle? textStyle;
@@ -17,7 +22,9 @@ class RotateText extends StatefulWidget {
   const RotateText({
     super.key,
     required this.text,
+    this.overlapFactor = kOverlapFactor,
     this.direction = RotateAnimationType.clockwise,
+    this.textAlignment = TextAlignment.start,
     this.textStyle,
     this.type = AnimationType.word,
     this.duration = const Duration(milliseconds: 4000),
@@ -48,12 +55,11 @@ class _RotateTextState extends State<RotateText>
       duration: widget.duration,
     );
     final wordCount = _data.length;
-    const double overlapFactor = 0.5; // 50% overlap between animations
+    final double overlapFactor = widget.overlapFactor;
 
-    // Calculate the interval step with overlap in mind
-    final double intervalStep = wordCount > 1
-        ? (1.0 / (wordCount + (wordCount - 1) * overlapFactor))
-        : 1.0;
+    final double intervalStep =
+        intervalStepByOverlapFactor(wordCount, overlapFactor);
+
     // Creating the rotation animations with staggered delays.
     _rotates = _data.map((data) {
       return doubleTweenByRotateType(widget.direction).animate(
@@ -90,7 +96,7 @@ class _RotateTextState extends State<RotateText>
   @override
   Widget build(BuildContext context) {
     return Wrap(
-      alignment: WrapAlignment.center,
+      alignment: wrapAlignmentByTextAlign(widget.textAlignment),
       children: _data
           .map(
             (dto) => AnimatedBuilder(

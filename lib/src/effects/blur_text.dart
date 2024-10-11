@@ -2,17 +2,24 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
+import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
+import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
+import 'package:pretty_animated_text/src/utils/text_align_by_text_alignment.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
 
 class BlurText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final TextAlignment textAlignment;
+  final double overlapFactor;
   final Duration duration;
   final TextStyle? textStyle;
   const BlurText({
     super.key,
     required this.text,
+    this.overlapFactor = kOverlapFactor,
+    this.textAlignment = TextAlignment.start,
     this.textStyle,
     this.type = AnimationType.word,
     this.duration = const Duration(milliseconds: 4000),
@@ -42,12 +49,10 @@ class _BlurTextState extends State<BlurText>
       duration: widget.duration,
     );
     final wordCount = _data.length;
-    const double overlapFactor = 0.5; // 50% overlap between animations
+    final double overlapFactor = widget.overlapFactor;
 
-    // Calculate the interval step with overlap in mind
-    final double intervalStep = wordCount > 1
-        ? (1.0 / (wordCount + (wordCount - 1) * overlapFactor))
-        : 1.0;
+    final double intervalStep =
+        intervalStepByOverlapFactor(wordCount, overlapFactor);
 
     // Creating the opacity animation with staggered delays.
     _opacities = _data.map((data) {
@@ -96,8 +101,9 @@ class _BlurTextState extends State<BlurText>
     return AnimatedBuilder(
       animation: _controller,
       builder: (context, child) {
-        return Text.rich(
-          TextSpan(
+        return RichText(
+          textAlign: textAlignByTextAlign(widget.textAlignment),
+          text: TextSpan(
             children: _data
                 .map(
                   (data) => WidgetSpan(

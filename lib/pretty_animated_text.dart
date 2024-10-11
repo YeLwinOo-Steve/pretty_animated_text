@@ -13,3 +13,6 @@ export 'src/enums/slide_animation_type.dart' show SlideAnimationType;
 
 /// Animation type enum for [RotateText] animation
 export 'src/enums/rotate_animation_type.dart' show RotateAnimationType;
+
+/// Text alignment enum
+export 'src/enums/text_alignment.dart' show TextAlignment;
