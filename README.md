@@ -42,20 +42,20 @@ And for texts such as `RotateText` and `OffsetText`, you can trigger some more v
 
 See the demos and examples below:
 
-| Type                               | Word Animation | Letter Animation |
-| ---------------------------------- | -------------- | ---------------- |
-| Spring Text                        | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Chim Bell Text                     | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Scale Text                         | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Blur Text                          | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Rotate Text (clockwise)            | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Rotate Text (anti-clockwise)       | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (top-bottom)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (bottom-top)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (alternate top-bottom) | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (left-right)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (right-left)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Offest Text (alternate left-right) | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Type                               | Word Animation                                                    | Letter Animation                                                  |
+| ---------------------------------- | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
+| Spring Text                        | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️     | <img src="assets/gifs/letters/spring_text.gif" width="250px">️     |
+| Chime Bell Text                     | <img src="assets/gifs/words/w_chime_bell_text.gif" width="250px">️ | <img src="assets/gifs/letters/chime_bell_text.gif" width="250px">️ |
+| Scale Text                         | <img src="assets/gifs/words/w_scale_text.gif" width="250px">️     | <img src="assets/gifs/letters/scale_text.gif" width="250px">️     |
+| Blur Text                          | <img src="assets/gifs/words/w_blur_text.gif" width="250px">️     | <img src="assets/gifs/letters/blur_text.gif" width="250px">️     |
+| Rotate Text (clockwise)            | <img src="assets/gifs/words/w_rotate_text_clockwise.gif" width="250px">️     | <img src="assets/gifs/letters/rotate_text_clockwise.gif" width="250px">️     |
+| Rotate Text (anti-clockwise)       | <img src="assets/gifs/words/w_rotate_text_anticlockwise.gif" width="250px">️     | <img src="assets/gifs/letters/rotate_text_anticlockwise.gif" width="250px">️     |
+| Offest Text (top-bottom)           | <img src="assets/gifs/words/w_offset_text_top_bottom.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_top_bottom.gif" width="250px">️     |
+| Offest Text (bottom-top)           | <img src="assets/gifs/words/w_offset_text_bottom_top.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_bottom_top.gif" width="250px">️     |
+| Offest Text (alternate top-bottom) | <img src="assets/gifs/words/w_offset_text_alternate_tb.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_alternate_tb.gif" width="250px">️     |
+| Offest Text (left-right)           | <img src="assets/gifs/words/w_offset_text_left_right.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_left_right.gif" width="250px">️     |
+| Offest Text (right-left)           | <img src="assets/gifs/words/w_offset_text_right_left.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_right_left.gif" width="250px">️     |
+| Offest Text (alternate left-right) | <img src="assets/gifs/words/w_offset_text_alternate_lr.gif" width="250px">️     | <img src="assets/gifs/letters/offset_text_alternate_lr.gif" width="250px">️     |
 
 ##### Code Examples
 
