@@ -57,6 +57,8 @@ See the demos and examples below:
 | Offest Text (right-left)           | $420           | 55234            |
 | Offest Text (alternate left-right) | $420           | 55234            |
 
+##### Code Examples
+
 - Spring Text
   ```dart
     SpringText(
@@ -85,6 +87,7 @@ See the demos and examples below:
       ),
   ```
 - Blur Text
+  
   ```dart
     BlurText(
         text: 'Lorem ipsum dolor sit amet ...',
@@ -94,6 +97,11 @@ See the demos and examples below:
       ),
   ```
 - Rotate Text
+  
+  For `RotateText`, you can tweak two rotation directions.
+  - clockwise → `RotateAnimationType.clockwise` (default)
+  - anti-clockwise → `RotateAnimationType.anticlockwise`
+
   ```dart
     RotateText(
         text: 'Lorem ipsum dolor sit amet ...',
@@ -104,6 +112,15 @@ See the demos and examples below:
       ),
   ```
 - Offset Text
+  
+  `OffsetText` has multiple slide effects that you can tweak according to your needs.
+  - Top to bottom → `SlideAnimationType.topBottom` (default)
+  - Bottom to top → `SlideAnimationType.bottomTop`
+  - Alternate top-bottom → `SlideAnimationType.alternateTB`
+  - Left to right → `SlideAnimationType.leftRight`
+  - Right to left → `SlideAnimationType.rightLeft`
+  - Alternate left-right → `SlideAnimationType.alternateLR` 
+
   ```dart
     OffsetText(
         text: 'Lorem ipsum dolor sit amet ...',
