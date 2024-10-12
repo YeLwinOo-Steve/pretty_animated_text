@@ -1,3 +1,7 @@
+## 1.0.3
+
+* Updated docs and added github link
+
 ## 1.0.2
 
 * Updated docs and usage guide
