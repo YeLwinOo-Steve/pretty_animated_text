@@ -44,7 +44,7 @@ See the demos and examples below:
 
 | Type                               | Word Animation | Letter Animation |
 | ---------------------------------- | -------------- | ---------------- |
-| Spring Text                        | $80            | 492              |
+| Spring Text                        | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
 | Chim Bell Text                     | January        | $250             |
 | Scale Text                         | $80            | 492              |
 | Blur Text                          | $420           | 55234            |

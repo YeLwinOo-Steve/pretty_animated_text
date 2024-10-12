@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-const _loremText =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+const _loremText = 'Hello World!';
 const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
 );
-const letterAnimationDuration = Duration(seconds: 30);
-const wordAnimationDuration = Duration(seconds: 7);
+const letterAnimationDuration = Duration(seconds: 7);
+const wordAnimationDuration = Duration(seconds: 2);
 
 void main() {
   runApp(
