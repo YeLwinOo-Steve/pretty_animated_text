@@ -1,3 +1,7 @@
+## 1.0.2
+
+* Updated docs and usage guide
+
 ## 1.0.1
 
 * Added more customizations and controls for text animations
