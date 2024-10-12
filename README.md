@@ -45,17 +45,17 @@ See the demos and examples below:
 | Type                               | Word Animation | Letter Animation |
 | ---------------------------------- | -------------- | ---------------- |
 | Spring Text                        | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
-| Chim Bell Text                     | January        | $250             |
-| Scale Text                         | $80            | 492              |
-| Blur Text                          | $420           | 55234            |
-| Rotate Text (clockwise)            | $420           | 55234            |
-| Rotate Text (anti-clockwise)       | $420           | 55234            |
-| Offest Text (top-bottom)           | $420           | 55234            |
-| Offest Text (bottom-top)           | $420           | 55234            |
-| Offest Text (alternate top-bottom) | $420           | 55234            |
-| Offest Text (left-right)           | $420           | 55234            |
-| Offest Text (right-left)           | $420           | 55234            |
-| Offest Text (alternate left-right) | $420           | 55234            |
+| Chim Bell Text                     | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Scale Text                         | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Blur Text                          | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Rotate Text (clockwise)            | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Rotate Text (anti-clockwise)       | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (top-bottom)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (bottom-top)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (alternate top-bottom) | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (left-right)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (right-left)           | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
+| Offest Text (alternate left-right) | <img src="assets/gifs/words/w_spring_text.gif" width="250px">️            | <img src="assets/gifs/letters/spring_text.gif" width="250px">️              |
 
 ##### Code Examples
 
