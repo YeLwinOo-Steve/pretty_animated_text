@@ -2,7 +2,7 @@
 
 ## <img src="assets/Telescope.webp" width="36px"> Overview
 
-An animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
+A text animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
 Physics-based animations are utilized for text animations, providing a smooth and delightful experience.
 
@@ -40,7 +40,17 @@ There are two main animation types that you can trigger.
 
 And for texts such as `RotateText` and `OffsetText`, you can trigger some more variations like rotation direction and slide offset.
 
-See the demos and examples below:
+Currently, the plugin supports 6 alignment styles.
+  - `TextAlignment.start`
+  - `TextAlignment.center`
+  - `TextAlignment.end`
+  - `TextAlignment.spaceAround`
+  - `TextAlignment.spaceBetween`
+  - `TextAlignment.spaceEvenly`
+
+
+
+#### See the demos and examples below:
 
 | Type                               | Word Animation                                                    | Letter Animation                                                  |
 | ---------------------------------- | :-----------------------------------------------------------------: | :-----------------------------------------------------------------: |
@@ -140,7 +150,7 @@ Follow me for more updates and more projects
 > Suggestions are warmly welcome & more updates are coming along the way ...  <img src="assets/Folded Hands Medium Skin Tone.png" width="36px">️ 
 
 
-Copyright (©️) 2023 __YE LWIN OO__
+Copyright (©️) 2024 __YE LWIN OO__
 
 
 
