@@ -4,13 +4,13 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 const _loremText =
-    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus molestie ullamcorper libero ut feugiat.';
+    'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
 );
-const letterAnimationDuration = Duration(seconds: 50);
-const wordAnimationDuration = Duration(seconds: 10);
+const letterAnimationDuration = Duration(seconds: 30);
+const wordAnimationDuration = Duration(seconds: 7);
 
 void main() {
   runApp(

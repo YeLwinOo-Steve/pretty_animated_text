@@ -4,6 +4,11 @@
 
 An animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
+Physics-based animations are utilized for text animations, providing a smooth and delightful experience.
+
+> This project heavily inspires on [jasudev's AnimateText for SwiftUI package](https://github.com/jasudev/AnimateText)
+
+
 ## <img src="assets/Spider Web.webp" width="36px">  Preview Website
 
 Link: https://pretty-animated-text.vercel.app
@@ -26,62 +31,86 @@ To use this package, add `pretty_animated_text` as a dependency in your `pubspec
 
 `flutter pub add pretty_animated_text`
 
-### How to
+### <img src="assets/Comet.png" width="36px">️ How to
+
+There are two main animation types that you can trigger.
+- for word by word → `AnimationType.word`
+- for letter by letter → `AnimationType.letter`
+
+
+And for texts such as `RotateText` and `OffsetText`, you can trigger some more variations like rotation direction and slide offset.
+
+See the demos and examples below:
+
+| Type                               | Word Animation | Letter Animation |
+| ---------------------------------- | -------------- | ---------------- |
+| Spring Text                        | $80            | 492              |
+| Chim Bell Text                     | January        | $250             |
+| Scale Text                         | $80            | 492              |
+| Blur Text                          | $420           | 55234            |
+| Rotate Text (clockwise)            | $420           | 55234            |
+| Rotate Text (anti-clockwise)       | $420           | 55234            |
+| Offest Text (top-bottom)           | $420           | 55234            |
+| Offest Text (bottom-top)           | $420           | 55234            |
+| Offest Text (alternate top-bottom) | $420           | 55234            |
+| Offest Text (left-right)           | $420           | 55234            |
+| Offest Text (right-left)           | $420           | 55234            |
+| Offest Text (alternate left-right) | $420           | 55234            |
 
 - Spring Text
   ```dart
     SpringText(
-          text: _loremText,
-          duration: duration,
-          type: type,
-          textStyle: _style,
+          text: 'Lorem ipsum dolor sit amet ...',
+          duration: const Duration(seconds: 4), 
+          type: AnimationType.word,
+          textStyle: const TextStyle(fontSize: 18),
         )
   ```
-- Chimbell Text
+- Chime Bell Text
   ```dart
     ChimeBellText(
-        text: _loremText,
-        duration: duration,
-        type: type,
-        textStyle: _style,
+        text: 'Lorem ipsum dolor sit amet ...',
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        textStyle: const TextStyle(fontSize: 18),
       ),
   ```
 - Scale Text
   ```dart
     ScaleText(
-        text: _loremText,
-        duration: duration,
-        type: type,
-        textStyle: _style,
+        text: 'Lorem ipsum dolor sit amet ...',
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        textStyle: const TextStyle(fontSize: 18),
       ),
   ```
 - Blur Text
   ```dart
     BlurText(
-        text: _loremText,
-        duration: duration,
-        type: type,
-        textStyle: _style,
+        text: 'Lorem ipsum dolor sit amet ...',
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        textStyle: const TextStyle(fontSize: 18),
       ),
   ```
 - Rotate Text
   ```dart
     RotateText(
-        text: _loremText,
-        direction: direction,
-        duration: duration,
-        type: type,
-        textStyle: _style,
+        text: 'Lorem ipsum dolor sit amet ...',
+        direction: RotateAnimationType.clockwise,
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        textStyle: const TextStyle(fontSize: 18),
       ),
   ```
 - Offset Text
   ```dart
     OffsetText(
-        text: _loremText,
-        duration: duration,
-        type: type,
-        slideType: slideType,
-        textStyle: _style,
+        text: 'Lorem ipsum dolor sit amet ...',
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        slideType: SlideAnimationType.topBottom,
+        textStyle: const TextStyle(fontSize: 18),
       ),
   ```
 
