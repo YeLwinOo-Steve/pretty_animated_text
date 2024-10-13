@@ -43,115 +43,117 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pretty Animated Text'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          children: [
-            _tabs(),
-            if (selectedValue == 0) ...[
-              Expanded(
-                flex: 9,
-                child: PageView(
-                  controller: letterController,
-                  children: const [
-                    SpringDemo(),
-                    ChimeBellDemo(),
-                    ScaleTextDemo(),
-                    RotateTextDemo(),
-                    RotateTextDemo(
-                      direction: RotateAnimationType.anticlockwise,
-                    ),
-                    BlurTextDemo(),
-                    OffsetTextDemo(),
-                    OffsetTextDemo(
-                      slideType: SlideAnimationType.bottomTop,
-                    ),
-                    OffsetTextDemo(
-                      slideType: SlideAnimationType.alternateTB,
-                    ),
-                    OffsetTextDemo(
-                      slideType: SlideAnimationType.leftRight,
-                    ),
-                    OffsetTextDemo(
-                      slideType: SlideAnimationType.rightLeft,
-                    ),
-                    OffsetTextDemo(
-                      slideType: SlideAnimationType.alternateLR,
-                    ),
-                  ],
+    return SelectionArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Pretty Animated Text'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              _tabs(),
+              if (selectedValue == 0) ...[
+                Expanded(
+                  flex: 9,
+                  child: PageView(
+                    controller: letterController,
+                    children: const [
+                      SpringDemo(),
+                      ChimeBellDemo(),
+                      ScaleTextDemo(),
+                      RotateTextDemo(),
+                      RotateTextDemo(
+                        direction: RotateAnimationType.anticlockwise,
+                      ),
+                      BlurTextDemo(),
+                      OffsetTextDemo(),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.bottomTop,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.alternateTB,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.leftRight,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.rightLeft,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.alternateLR,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              _pageIndicator(letterController),
-            ] else ...[
-              Expanded(
-                flex: 9,
-                child: PageView(
-                  controller: wordController,
-                  children: const [
-                    SpringDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    ChimeBellDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    ScaleTextDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    RotateTextDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    RotateTextDemo(
-                      type: AnimationType.word,
-                      direction: RotateAnimationType.anticlockwise,
-                      duration: wordAnimationDuration,
-                    ),
-                    BlurTextDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      slideType: SlideAnimationType.bottomTop,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      slideType: SlideAnimationType.alternateTB,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      slideType: SlideAnimationType.leftRight,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      slideType: SlideAnimationType.rightLeft,
-                      duration: wordAnimationDuration,
-                    ),
-                    OffsetTextDemo(
-                      type: AnimationType.word,
-                      slideType: SlideAnimationType.alternateLR,
-                      duration: wordAnimationDuration,
-                    ),
-                  ],
+                _pageIndicator(letterController),
+              ] else ...[
+                Expanded(
+                  flex: 9,
+                  child: PageView(
+                    controller: wordController,
+                    children: const [
+                      SpringDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      ChimeBellDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      ScaleTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      RotateTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      RotateTextDemo(
+                        type: AnimationType.word,
+                        direction: RotateAnimationType.anticlockwise,
+                        duration: wordAnimationDuration,
+                      ),
+                      BlurTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.bottomTop,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.alternateTB,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.leftRight,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.rightLeft,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.alternateLR,
+                        duration: wordAnimationDuration,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              _pageIndicator(wordController),
+                _pageIndicator(wordController),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
