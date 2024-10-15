@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-const _loremText = 'Hello World!';
+const _loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
 );
-const letterAnimationDuration = Duration(seconds: 7);
-const wordAnimationDuration = Duration(seconds: 2);
+const letterAnimationDuration = Duration(seconds: 30);
+const wordAnimationDuration = Duration(seconds: 10);
 
 void main() {
   runApp(
@@ -41,12 +42,40 @@ class _HomeWidgetState extends State<HomeWidget> {
     super.dispose();
   }
 
+  Future<void> _launchUrl(String url) async {
+    if (!await launchUrl(Uri.parse(url))) {
+      throw Exception('Could not launch $url');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SelectionArea(
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Pretty Animated Text'),
+        ),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              key: const ValueKey('pub.dev'),
+              onPressed: () =>
+                  _launchUrl('https://pub.dev/packages/pretty_animated_text'),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('assets/pub.png')),
+            ),
+            const SizedBox(width: 8),
+            FloatingActionButton(
+              key: const ValueKey('github'),
+              onPressed: () => _launchUrl(
+                  'https://github.com/YeLwinOo-Steve/pretty_animated_text'),
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset('assets/github.png')),
+            ),
+          ],
         ),
         body: Padding(
           padding: const EdgeInsets.all(24),
