@@ -21,9 +21,7 @@ void main() {
 }
 
 class HomeWidget extends StatefulWidget {
-  const HomeWidget({
-    super.key,
-  });
+  const HomeWidget({super.key});
 
   @override
   State<HomeWidget> createState() => _HomeWidgetState();
@@ -32,6 +30,9 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   final PageController letterController = PageController();
   final PageController wordController = PageController();
+  late final AnimationController controller;
+  final pageTransitionDuration = const Duration(milliseconds: 200);
+  final curve = Curves.easeInOut;
   int selectedValue = 0;
   final int length = 12;
 
@@ -48,6 +49,34 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
+  void _previousPage() {
+    if (selectedValue == 0) {
+      letterController.previousPage(
+        duration: pageTransitionDuration,
+        curve: curve,
+      );
+    } else {
+      wordController.previousPage(
+        duration: pageTransitionDuration,
+        curve: curve,
+      );
+    }
+  }
+
+  void _nextPage() {
+    if (selectedValue == 0) {
+      letterController.nextPage(
+        duration: pageTransitionDuration,
+        curve: curve,
+      );
+    } else {
+      wordController.nextPage(
+        duration: pageTransitionDuration,
+        curve: curve,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SelectionArea(
@@ -57,23 +86,49 @@ class _HomeWidgetState extends State<HomeWidget> {
         ),
         floatingActionButton: Row(
           mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             FloatingActionButton(
-              key: const ValueKey('pub.dev'),
-              onPressed: () =>
-                  _launchUrl('https://pub.dev/packages/pretty_animated_text'),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset('assets/pub.png')),
+              key: const ValueKey('previous'),
+              onPressed: _previousPage,
+              child: const Icon(Icons.arrow_back_ios_new),
             ),
             const SizedBox(width: 8),
             FloatingActionButton(
-              key: const ValueKey('github'),
-              onPressed: () => _launchUrl(
-                  'https://github.com/YeLwinOo-Steve/pretty_animated_text'),
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Image.asset('assets/github.png')),
+              key: const ValueKey('next'),
+              onPressed: _nextPage,
+              child: const Icon(Icons.arrow_forward_ios),
+            ),
+            const SizedBox(width: 32),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                FloatingActionButton(
+                  key: const ValueKey('repeat'),
+                  onPressed: () {},
+                  child: const Icon(Icons.refresh),
+                ),
+                const SizedBox(height: 16),
+                FloatingActionButton(
+                  key: const ValueKey('pub.dev'),
+                  onPressed: () => _launchUrl(
+                    'https://pub.dev/packages/pretty_animated_text',
+                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset('assets/pub.png')),
+                ),
+                const SizedBox(height: 8),
+                FloatingActionButton(
+                  key: const ValueKey('github'),
+                  onPressed: () => _launchUrl(
+                    'https://github.com/YeLwinOo-Steve/pretty_animated_text',
+                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset('assets/github.png')),
+                ),
+              ],
             ),
           ],
         ),
