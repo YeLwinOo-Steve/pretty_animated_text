@@ -4,13 +4,13 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
+const _loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
 const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
 );
-const letterAnimationDuration = Duration(seconds: 30);
-const wordAnimationDuration = Duration(seconds: 10);
+const letterAnimationDuration = Duration(milliseconds: 300);
+const wordAnimationDuration = Duration(milliseconds: 1000);
 
 void main() {
   runApp(
@@ -35,6 +35,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   final curve = Curves.easeInOut;
   int selectedValue = 0;
   final int length = 12;
+  final GlobalKey<SpringTextState> springTextKey = GlobalKey<SpringTextState>();
 
   @override
   void dispose() {
@@ -105,7 +106,9 @@ class _HomeWidgetState extends State<HomeWidget> {
               children: [
                 FloatingActionButton(
                   key: const ValueKey('repeat'),
-                  onPressed: () {},
+                  onPressed: () {
+                    springTextKey.currentState?.pauseAnimation();
+                  },
                   child: const Icon(Icons.refresh),
                 ),
                 const SizedBox(height: 16),
@@ -142,8 +145,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                   flex: 9,
                   child: PageView(
                     controller: letterController,
-                    children: const [
-                      SpringDemo(),
+                    children: [
+                      SpringDemo(
+                        springTextKey: springTextKey,
+                      ),
                       ChimeBellDemo(),
                       ScaleTextDemo(),
                       RotateTextDemo(),
@@ -321,9 +326,11 @@ class ChimeBellDemo extends StatelessWidget {
 
 class SpringDemo extends StatelessWidget {
   final AnimationType type;
+  final GlobalKey? springTextKey;
   final Duration duration;
   const SpringDemo({
     super.key,
+    this.springTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -332,6 +339,7 @@ class SpringDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SpringText(
+        key: springTextKey,
         text: _loremText,
         duration: duration,
         type: type,

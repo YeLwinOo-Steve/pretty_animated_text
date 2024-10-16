@@ -14,11 +14,13 @@ class SpringText extends StatefulWidget {
   final String text;
   final double overlapFactor;
   final TextAlignment textAlignment;
+  final AnimationMode mode;
   final AnimationType type;
   final Duration duration;
   const SpringText({
     required this.text,
     this.textStyle,
+    this.mode = AnimationMode.repeatWithReverse,
     this.overlapFactor = kOverlapFactor,
     this.textAlignment = TextAlignment.start,
     this.type = AnimationType.word,
@@ -27,11 +29,10 @@ class SpringText extends StatefulWidget {
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _SpringTextState createState() => _SpringTextState();
+  SpringTextState createState() => SpringTextState();
 }
 
-class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
+class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
   late AnimationController _controller;
   late List<Animation<double>> _rotations;
   late final List<EffectDto> _data;
@@ -52,10 +53,13 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
 
     final double intervalStep =
         intervalStepByOverlapFactor(wordCount, overlapFactor);
-
+    int total = (wordCount * widget.duration.inMilliseconds * widget.overlapFactor).toInt();
+    final duration = total;
+    print("--------------> total milliseconds $duration");
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: Duration(milliseconds: duration),
+      reverseDuration: Duration(milliseconds: duration),
     );
 
     // Create opacity animations with staggered starts (50% overlap)
@@ -99,13 +103,30 @@ class _SpringTextState extends State<SpringText> with TickerProviderStateMixin {
       },
     ).toList();
 
-    _controller.forward();
+    _controller.repeat(reverse: true);
   }
 
   @override
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+  // Public methods to control the animation
+  void playAnimation() {
+    _controller.forward();
+  }
+
+  void pauseAnimation() {
+    _controller.stop();
+  }
+
+  void reverseAnimation() {
+    _controller.reverse();
+  }
+
+  void repeatAnimation() {
+    _controller.repeat(reverse: true);
   }
 
   @override
