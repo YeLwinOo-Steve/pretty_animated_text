@@ -6,6 +6,7 @@ import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
+import 'package:pretty_animated_text/src/utils/total_duration.dart';
 import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
 
 class ScaleText extends StatefulWidget {
@@ -25,15 +26,14 @@ class ScaleText extends StatefulWidget {
     this.textAlignment = TextAlignment.start,
     this.textStyle,
     this.type = AnimationType.word,
-    this.duration = const Duration(milliseconds: 4000),
+    this.duration = const Duration(milliseconds: 200),
   });
 
   @override
-  // ignore: library_private_types_in_public_api
-  _ScaleTextState createState() => _ScaleTextState();
+  ScaleTextState createState() => ScaleTextState();
 }
 
-class _ScaleTextState extends State<ScaleText>
+class ScaleTextState extends State<ScaleText>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late List<Animation<double>> _scales;
@@ -46,13 +46,20 @@ class _ScaleTextState extends State<ScaleText>
       AnimationType.letter => widget.text.splittedLetters,
       _ => widget.text.splittedWords,
     };
+    final wordCount = _data.length;
+    final double overlapFactor = widget.overlapFactor;
+
+    final int totalDuration = getTotalDuration(
+      wordCount: wordCount,
+      duration: widget.duration,
+      overlapFactor: overlapFactor,
+    );
 
     _controller = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: Duration(milliseconds: totalDuration),
+      reverseDuration: Duration(milliseconds: totalDuration),
     );
-    final wordCount = _data.length;
-    final double overlapFactor = widget.overlapFactor;
 
     // Calculate the interval step with overlap in mind
     final double intervalStep =

@@ -4,7 +4,7 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. ';
+const _loremText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
 const _style = TextStyle(
   fontSize: 40,
   fontWeight: FontWeight.bold,
@@ -30,12 +30,17 @@ class HomeWidget extends StatefulWidget {
 class _HomeWidgetState extends State<HomeWidget> {
   final PageController letterController = PageController();
   final PageController wordController = PageController();
-  late final AnimationController controller;
   final pageTransitionDuration = const Duration(milliseconds: 200);
   final curve = Curves.easeInOut;
   int selectedValue = 0;
   final int length = 12;
   final GlobalKey<SpringTextState> springTextKey = GlobalKey<SpringTextState>();
+  final GlobalKey<ChimeBellTextState> chimbellTextKey =
+      GlobalKey<ChimeBellTextState>();
+  final GlobalKey<ScaleTextState> scaleTextKey = GlobalKey<ScaleTextState>();
+  final GlobalKey<BlurTextState> blurTextKey = GlobalKey<BlurTextState>();
+  final GlobalKey<RotateTextState> rotateTextKey = GlobalKey<RotateTextState>();
+  final GlobalKey<OffsetTextState> offsetTextKey = GlobalKey<OffsetTextState>();
 
   @override
   void dispose() {
@@ -107,7 +112,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                 FloatingActionButton(
                   key: const ValueKey('repeat'),
                   onPressed: () {
-                    springTextKey.currentState?.pauseAnimation();
+                    offsetTextKey.currentState?.restartAnimation();
                   },
                   child: const Icon(Icons.refresh),
                 ),
@@ -149,27 +154,43 @@ class _HomeWidgetState extends State<HomeWidget> {
                       SpringDemo(
                         springTextKey: springTextKey,
                       ),
-                      ChimeBellDemo(),
-                      ScaleTextDemo(),
-                      RotateTextDemo(),
+                      ChimeBellDemo(
+                        chimbellTextKey: chimbellTextKey,
+                      ),
+                      ScaleTextDemo(
+                        scaleTextKey: scaleTextKey,
+                      ),
                       RotateTextDemo(
+                        rotateTextKey: rotateTextKey,
+                      ),
+                      RotateTextDemo(
+                        // rotateTextKey: rotateTextKey,
                         direction: RotateAnimationType.anticlockwise,
                       ),
-                      BlurTextDemo(),
-                      OffsetTextDemo(),
+                      BlurTextDemo(
+                        blurTextKey: blurTextKey,
+                      ),
                       OffsetTextDemo(
+                        offsetTextKey: offsetTextKey,
+                      ),
+                      OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         slideType: SlideAnimationType.bottomTop,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         slideType: SlideAnimationType.alternateTB,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         slideType: SlideAnimationType.leftRight,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         slideType: SlideAnimationType.rightLeft,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         slideType: SlideAnimationType.alternateLR,
                       ),
                     ],
@@ -181,57 +202,69 @@ class _HomeWidgetState extends State<HomeWidget> {
                   flex: 9,
                   child: PageView(
                     controller: wordController,
-                    children: const [
+                    children: [
                       SpringDemo(
+                        springTextKey: springTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       ChimeBellDemo(
+                        chimbellTextKey: chimbellTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       ScaleTextDemo(
+                        scaleTextKey: scaleTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       RotateTextDemo(
+                        rotateTextKey: rotateTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       RotateTextDemo(
+                        // rotateTextKey: rotateTextKey,
                         type: AnimationType.word,
                         direction: RotateAnimationType.anticlockwise,
                         duration: wordAnimationDuration,
                       ),
                       BlurTextDemo(
+                        blurTextKey: blurTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                        offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         slideType: SlideAnimationType.bottomTop,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         slideType: SlideAnimationType.alternateTB,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                      //  offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         slideType: SlideAnimationType.leftRight,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         slideType: SlideAnimationType.rightLeft,
                         duration: wordAnimationDuration,
                       ),
                       OffsetTextDemo(
+                        // offsetTextKey: offsetTextKey,
                         type: AnimationType.word,
                         slideType: SlideAnimationType.alternateLR,
                         duration: wordAnimationDuration,
@@ -305,8 +338,10 @@ class _HomeWidgetState extends State<HomeWidget> {
 class ChimeBellDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final GlobalKey? chimbellTextKey;
   const ChimeBellDemo({
     super.key,
+    this.chimbellTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -315,6 +350,7 @@ class ChimeBellDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ChimeBellText(
+        key: chimbellTextKey,
         text: _loremText,
         duration: duration,
         type: type,
@@ -352,8 +388,10 @@ class SpringDemo extends StatelessWidget {
 class ScaleTextDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final GlobalKey? scaleTextKey;
   const ScaleTextDemo({
     super.key,
+    this.scaleTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -362,6 +400,7 @@ class ScaleTextDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ScaleText(
+        key: scaleTextKey,
         text: _loremText,
         duration: duration,
         type: type,
@@ -373,10 +412,12 @@ class ScaleTextDemo extends StatelessWidget {
 
 class RotateTextDemo extends StatelessWidget {
   final AnimationType type;
+  final GlobalKey? rotateTextKey;
   final RotateAnimationType direction;
   final Duration duration;
   const RotateTextDemo({
     super.key,
+    this.rotateTextKey,
     this.direction = RotateAnimationType.clockwise,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
@@ -386,6 +427,7 @@ class RotateTextDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: RotateText(
+        key: rotateTextKey,
         text: _loremText,
         direction: direction,
         duration: duration,
@@ -399,8 +441,10 @@ class RotateTextDemo extends StatelessWidget {
 class BlurTextDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final GlobalKey? blurTextKey;
   const BlurTextDemo({
     super.key,
+    this.blurTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -409,6 +453,7 @@ class BlurTextDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: BlurText(
+        key: blurTextKey,
         text: _loremText,
         duration: duration,
         type: type,
@@ -419,11 +464,13 @@ class BlurTextDemo extends StatelessWidget {
 }
 
 class OffsetTextDemo extends StatelessWidget {
+  final GlobalKey? offsetTextKey;
   final AnimationType type;
   final SlideAnimationType slideType;
   final Duration duration;
   const OffsetTextDemo({
     super.key,
+    this.offsetTextKey,
     this.type = AnimationType.letter,
     this.slideType = SlideAnimationType.topBottom,
     this.duration = letterAnimationDuration,
@@ -433,6 +480,7 @@ class OffsetTextDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: OffsetText(
+        key: offsetTextKey,
         text: _loremText,
         duration: duration,
         type: type,

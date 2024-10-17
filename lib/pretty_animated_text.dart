@@ -1,9 +1,10 @@
-export 'src/effects/chime_bell_text.dart' show ChimeBellText;
+export 'src/effects/chime_bell_text.dart'
+    show ChimeBellText, ChimeBellTextState;
 export 'src/effects/spring_text.dart' show SpringText, SpringTextState;
-export 'src/effects/scale_text.dart' show ScaleText;
-export 'src/effects/rotate_text.dart' show RotateText;
-export 'src/effects/blur_text.dart' show BlurText;
-export 'src/effects/offset_text.dart' show OffsetText;
+export 'src/effects/scale_text.dart' show ScaleText, ScaleTextState;
+export 'src/effects/rotate_text.dart' show RotateText, RotateTextState;
+export 'src/effects/blur_text.dart' show BlurText, BlurTextState;
+export 'src/effects/offset_text.dart' show OffsetText, OffsetTextState;
 
 /// Animation type enum for [letter, word] & modes [ forward, reverse, repeat ]
 export 'src/enums/animation_type.dart' show AnimationType, AnimationMode;

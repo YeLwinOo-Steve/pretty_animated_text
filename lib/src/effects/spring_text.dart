@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
+import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'dart:math';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 import 'package:pretty_animated_text/src/utils/text_transformation.dart';
+import 'package:pretty_animated_text/src/utils/total_duration.dart';
 import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
 
 class SpringText extends StatefulWidget {
@@ -20,11 +22,11 @@ class SpringText extends StatefulWidget {
   const SpringText({
     required this.text,
     this.textStyle,
-    this.mode = AnimationMode.repeatWithReverse,
+    this.mode = AnimationMode.forward,
     this.overlapFactor = kOverlapFactor,
     this.textAlignment = TextAlignment.start,
     this.type = AnimationType.word,
-    this.duration = const Duration(milliseconds: 4000),
+    this.duration = const Duration(milliseconds: 200),
     super.key,
   });
 
@@ -53,13 +55,16 @@ class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
 
     final double intervalStep =
         intervalStepByOverlapFactor(wordCount, overlapFactor);
-    int total = (wordCount * widget.duration.inMilliseconds * widget.overlapFactor).toInt();
-    final duration = total;
-    print("--------------> total milliseconds $duration");
+    final int totalDuration = getTotalDuration(
+      wordCount: wordCount,
+      duration: widget.duration,
+      overlapFactor: widget.overlapFactor,
+    );
+
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: duration),
-      reverseDuration: Duration(milliseconds: duration),
+      duration: Duration(milliseconds: totalDuration),
+      reverseDuration: Duration(milliseconds: totalDuration),
     );
 
     // Create opacity animations with staggered starts (50% overlap)
@@ -95,15 +100,18 @@ class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
     _springAnimations = _data.map(
       (data) {
         return Tween<double>(begin: 1, end: 0).animate(
-          CurvedAnimation(
-            parent: _controller,
+          curvedAnimation(
+            _controller,
+            data.index,
+            intervalStep,
+            overlapFactor,
             curve: SpringCurve(),
           ),
         );
       },
     ).toList();
 
-    _controller.repeat(reverse: true);
+    _controller.animationByMode(widget.mode);
   }
 
   @override
@@ -125,8 +133,15 @@ class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
     _controller.reverse();
   }
 
-  void repeatAnimation() {
-    _controller.repeat(reverse: true);
+  void restartAnimation() {
+    _controller.reset();
+    Future.delayed(const Duration(milliseconds: 10), () {
+      _controller.animationByMode(widget.mode);
+    });
+  }
+
+  void repeatAnimation({bool reverse = false}) {
+    _controller.repeat(reverse: reverse);
   }
 
   @override

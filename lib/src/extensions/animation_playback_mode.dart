@@ -5,10 +5,7 @@ extension AnimationPlaybackMode on AnimationController {
   void animationByMode(AnimationMode mode) => switch (mode) {
         AnimationMode.forward => forward(),
         AnimationMode.reverse => reverse(),
-        AnimationMode.repeatNoReverse => repeat(period: duration),
-        AnimationMode.repeatWithReverse => repeat(
-            reverse: true,
-            period: duration,
-          ),
+        AnimationMode.repeatNoReverse => repeat(),
+        AnimationMode.repeatWithReverse => repeat(reverse: true),
       };
 }
