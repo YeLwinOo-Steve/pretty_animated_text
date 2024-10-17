@@ -1,3 +1,9 @@
+## 2.0.0
+
+* Added more custom controls over text animation & animation modes ( forward, repeat, reverse, repeat with reverse )
+* Animation control from outside classes ( pause, play, repeat, etc )
+* Improved interval adjustments
+
 ## 1.0.3
 
 * Updated docs and added github link
