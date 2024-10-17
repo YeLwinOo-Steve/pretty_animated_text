@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'package:pretty_animated_text/src/dto/dto.dart';
+import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/double_tween_by_rotate_type.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
@@ -14,6 +15,7 @@ import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart
 class RotateText extends StatefulWidget {
   final String text;
   final AnimationType type;
+  final AnimationMode mode;
   final double overlapFactor;
   final TextAlignment textAlignment;
   final RotateAnimationType direction;
@@ -23,6 +25,7 @@ class RotateText extends StatefulWidget {
   const RotateText({
     super.key,
     required this.text,
+    this.mode = AnimationMode.forward,
     this.overlapFactor = kOverlapFactor,
     this.direction = RotateAnimationType.clockwise,
     this.textAlignment = TextAlignment.start,
@@ -99,6 +102,30 @@ class RotateTextState extends State<RotateText>
   void dispose() {
     _controller.dispose();
     super.dispose();
+  }
+
+// Public methods to control the animation
+  void playAnimation() {
+    _controller.forward();
+  }
+
+  void pauseAnimation() {
+    _controller.stop();
+  }
+
+  void reverseAnimation() {
+    _controller.reverse();
+  }
+
+  void restartAnimation() {
+    _controller.reset();
+    Future.delayed(const Duration(milliseconds: 10), () {
+      _controller.animationByMode(widget.mode);
+    });
+  }
+
+  void repeatAnimation({bool reverse = false}) {
+    _controller.repeat(reverse: reverse);
   }
 
   @override

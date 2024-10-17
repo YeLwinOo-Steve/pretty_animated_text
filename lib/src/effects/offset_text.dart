@@ -24,7 +24,7 @@ class OffsetText extends StatefulWidget {
   const OffsetText({
     super.key,
     required this.text,
-    this.mode = AnimationMode.repeatWithReverse,
+    this.mode = AnimationMode.forward,
     this.overlapFactor = kOverlapFactor,
     this.textAlignment = TextAlignment.start,
     this.textStyle,
