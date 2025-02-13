@@ -14,13 +14,13 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
   final TextAlignment textAlignment;
   final double overlapFactor;
   final Duration duration;
-  final AnimationController? controller;
   final TextStyle? textStyle;
-  final VoidCallback? onPlay;
-  final VoidCallback? onComplete;
-  final VoidCallback? onPause;
-  final VoidCallback? onResume;
-  final VoidCallback? onRepeat;
+  final void Function(AnimationController)? onPlay;
+  final void Function(AnimationController)? onComplete;
+  final void Function(AnimationController)? onDismissed;
+  final void Function(AnimationController)? onPause;
+  final void Function(AnimationController)? onResume;
+  final void Function(AnimationController)? onRepeat;
   final bool autoPlay;
   final void Function(AnimationController controller)? builder;
 
@@ -33,9 +33,9 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
     this.overlapFactor = kOverlapFactor,
     this.duration = const Duration(milliseconds: 200),
     this.textStyle,
-    this.controller,
     this.onPlay,
     this.onComplete,
+    this.onDismissed,
     this.onPause,
     this.onResume,
     this.onRepeat,
@@ -67,12 +67,11 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
       overlapFactor: widget.overlapFactor,
     );
 
-    controller = widget.controller ??
-        AnimationController(
-          vsync: this,
-          duration: Duration(milliseconds: totalDuration),
-          reverseDuration: Duration(milliseconds: totalDuration),
-        );
+    controller = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: totalDuration),
+      reverseDuration: Duration(milliseconds: totalDuration),
+    );
 
     controller.addStatusListener(_handleAnimationStatus);
 
@@ -87,15 +86,16 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
   void _handleAnimationStatus(AnimationStatus status) {
     switch (status) {
       case AnimationStatus.completed:
-        widget.onComplete?.call();
+        widget.onComplete?.call(controller);
         break;
       case AnimationStatus.forward:
-        widget.onPlay?.call();
+        widget.onPlay?.call(controller);
         break;
       case AnimationStatus.reverse:
-        widget.onRepeat?.call();
+        widget.onRepeat?.call(controller);
         break;
-      default:
+      case AnimationStatus.dismissed:
+        widget.onComplete?.call(controller);
         break;
     }
   }
@@ -106,19 +106,25 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
     super.dispose();
   }
 
+  void listen(void Function(double) callback) {
+    controller.addListener(() {
+      callback(controller.value);
+    });
+  }
+
   void play() {
     controller.forward();
-    widget.onPlay?.call();
+    widget.onPlay?.call(controller);
   }
 
   void pause() {
     controller.stop();
-    widget.onPause?.call();
+    widget.onPause?.call(controller);
   }
 
   void resume() {
     controller.forward();
-    widget.onResume?.call();
+    widget.onResume?.call(controller);
   }
 
   void reverse() {
@@ -129,12 +135,12 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
     controller.reset();
     Future.delayed(const Duration(milliseconds: 10), () {
       controller.animationByMode(widget.mode);
-      widget.onPlay?.call();
+      widget.onPlay?.call(controller);
     });
   }
 
   void repeat({bool reverse = false}) {
     controller.repeat(reverse: reverse);
-    widget.onRepeat?.call();
+    widget.onRepeat?.call(controller);
   }
 }

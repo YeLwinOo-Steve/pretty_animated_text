@@ -27,13 +27,23 @@ class HomeWidget extends StatefulWidget {
   State<HomeWidget> createState() => _HomeWidgetState();
 }
 
-class _HomeWidgetState extends State<HomeWidget> {
+class _HomeWidgetState extends State<HomeWidget>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+
   final PageController letterController = PageController();
   final PageController wordController = PageController();
   final pageTransitionDuration = const Duration(milliseconds: 200);
   final curve = Curves.easeInOut;
   int selectedValue = 0;
   final int length = 12;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 2000));
+  }
 
   @override
   void dispose() {
@@ -116,9 +126,12 @@ class _HomeWidgetState extends State<HomeWidget> {
               children: [
                 FloatingActionButton(
                   key: const ValueKey('repeat'),
-                  onPressed: () => switch (selectedValue) {
-                    0 => _restartAnimation(currentLetterPage),
-                    _ => _restartAnimation(currentWordPage),
+                  // onPressed: () => switch (selectedValue) {
+                  //   0 => _restartAnimation(currentLetterPage),
+                  //   _ => _restartAnimation(currentWordPage),
+                  // },
+                  onPressed: () {
+                    controller.repeat();
                   },
                   child: const Icon(Icons.refresh),
                 ),
@@ -406,11 +419,9 @@ class ChimeBellDemo extends StatelessWidget {
 
 class SpringDemo extends StatelessWidget {
   final AnimationType type;
-  final GlobalKey? springTextKey;
   final Duration duration;
   const SpringDemo({
     super.key,
-    this.springTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -419,11 +430,19 @@ class SpringDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: SpringText(
-        key: springTextKey,
         text: _loremText,
         duration: duration,
         type: type,
         textStyle: _style,
+        onRepeat: (_) {
+          print('$runtimeType is repeated');
+        },
+        onPause: (_) {
+          print('$runtimeType is paused!');
+        },
+        onPlay: (_) {
+          print('$runtimeType is played!');
+        },
       ),
     );
   }
@@ -499,8 +518,6 @@ class BlurTextDemo extends StatelessWidget {
         duration: duration,
         text: _loremText,
         textStyle: _style,
-        onPlay: () {},
-        onComplete: () {},
       ),
     );
   }
