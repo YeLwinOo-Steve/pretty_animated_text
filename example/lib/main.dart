@@ -173,11 +173,9 @@ class _HomeWidgetState extends State<HomeWidget> {
                   flex: 9,
                   child: PageView(
                     controller: letterController,
-                    children: [
-                      // SpringDemo(
-                      //   springTextKey: springTextKey,
-                      // ),
-                      const ChimeBellDemo(),
+                    children: const [
+                      SpringDemo(),
+                      ChimeBellDemo(),
                       // ScaleTextDemo(
                       //   scaleTextKey: scaleTextKey,
                       // ),
@@ -188,9 +186,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       //   rotateTextKey: rotateTextAntiKey,
                       //   direction: RotateAnimationType.anticlockwise,
                       // ),
-                      BlurTextDemo(
-                        blurTextKey: blurTextKey,
-                      ),
+                      BlurTextDemo(),
                       // OffsetTextDemo(
                       //   offsetTextKey: offsetTextTBKey,
                       // ),
@@ -224,11 +220,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                   child: PageView(
                     controller: wordController,
                     children: const [
-                      // SpringDemo(
-                      //   springTextKey: springTextKey,
-                      //   type: AnimationType.word,
-                      //   duration: wordAnimationDuration,
-                      // ),
+                      SpringDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
                       ChimeBellDemo(
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
@@ -249,7 +244,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       //   direction: RotateAnimationType.anticlockwise,
                       //   duration: wordAnimationDuration,
                       // ),
-                      const BlurTextDemo(
+                      BlurTextDemo(
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
@@ -301,7 +296,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   void _playAnimation(int page) => switch (page) {
-        0 => springTextKey.currentState?.playAnimation(),
+        // 0 => springTextKey.currentState?.playAnimation(),
         // 1 => chimbellTextKey.currentState?.playAnimation(),
         2 => scaleTextKey.currentState?.playAnimation(),
         3 => rotateTextKey.currentState?.playAnimation(),
@@ -317,7 +312,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       };
 
   void _pauseAnimation(int page) => switch (page) {
-        0 => springTextKey.currentState?.pauseAnimation(),
+        // 0 => springTextKey.currentState?.pauseAnimation(),
         // 1 => chimbellTextKey.currentState?.pauseAnimation(),
         2 => scaleTextKey.currentState?.pauseAnimation(),
         3 => rotateTextKey.currentState?.pauseAnimation(),
@@ -332,7 +327,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         _ => () {},
       };
   void _restartAnimation(int page) => switch (page) {
-        0 => springTextKey.currentState?.restartAnimation(),
+        // 0 => springTextKey.currentState?.restartAnimation(),
         // 1 => chimbellTextKey.currentState?.restartAnimation(),
         2 => scaleTextKey.currentState?.restartAnimation(),
         3 => rotateTextKey.currentState?.restartAnimation(),
