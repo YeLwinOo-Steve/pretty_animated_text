@@ -176,9 +176,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                     children: const [
                       SpringDemo(),
                       ChimeBellDemo(),
-                      // ScaleTextDemo(
-                      //   scaleTextKey: scaleTextKey,
-                      // ),
+                      ScaleTextDemo(),
                       // RotateTextDemo(
                       //   rotateTextKey: rotateTextKey,
                       // ),
@@ -228,11 +226,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
-                      // ScaleTextDemo(
-                      //   scaleTextKey: scaleTextKey,
-                      //   type: AnimationType.word,
-                      //   duration: wordAnimationDuration,
-                      // ),
+                      ScaleTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
                       // RotateTextDemo(
                       //   rotateTextKey: rotateTextKey,
                       //   type: AnimationType.word,
@@ -298,7 +295,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _playAnimation(int page) => switch (page) {
         // 0 => springTextKey.currentState?.playAnimation(),
         // 1 => chimbellTextKey.currentState?.playAnimation(),
-        2 => scaleTextKey.currentState?.playAnimation(),
+        // 2 => scaleTextKey.currentState?.playAnimation(),
         3 => rotateTextKey.currentState?.playAnimation(),
         4 => rotateTextAntiKey.currentState?.playAnimation(),
         // 5 => blurTextKey.currentState?.playAnimation(),
@@ -314,7 +311,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _pauseAnimation(int page) => switch (page) {
         // 0 => springTextKey.currentState?.pauseAnimation(),
         // 1 => chimbellTextKey.currentState?.pauseAnimation(),
-        2 => scaleTextKey.currentState?.pauseAnimation(),
+        // 2 => scaleTextKey.currentState?.pauseAnimation(),
         3 => rotateTextKey.currentState?.pauseAnimation(),
         4 => rotateTextAntiKey.currentState?.pauseAnimation(),
         // 5 => blurTextKey.currentState?.pauseAnimation(),
@@ -329,7 +326,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _restartAnimation(int page) => switch (page) {
         // 0 => springTextKey.currentState?.restartAnimation(),
         // 1 => chimbellTextKey.currentState?.restartAnimation(),
-        2 => scaleTextKey.currentState?.restartAnimation(),
+        // 2 => scaleTextKey.currentState?.restartAnimation(),
         3 => rotateTextKey.currentState?.restartAnimation(),
         4 => rotateTextAntiKey.currentState?.restartAnimation(),
         // 5 => blurTextKey.currentState?.restartAnimation(),
