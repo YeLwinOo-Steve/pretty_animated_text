@@ -182,29 +182,22 @@ class _HomeWidgetState extends State<HomeWidget> {
                         direction: RotateAnimationType.anticlockwise,
                       ),
                       BlurTextDemo(),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextTBKey,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextBTKey,
-                      //   slideType: SlideAnimationType.bottomTop,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextAlternateTBKey,
-                      //   slideType: SlideAnimationType.alternateTB,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextLRKey,
-                      //   slideType: SlideAnimationType.leftRight,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextRLKey,
-                      //   slideType: SlideAnimationType.rightLeft,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextAlternateLRKey,
-                      //   slideType: SlideAnimationType.alternateLR,
-                      // ),
+                      OffsetTextDemo(),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.bottomTop,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.alternateTB,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.leftRight,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.rightLeft,
+                      ),
+                      OffsetTextDemo(
+                        slideType: SlideAnimationType.alternateLR,
+                      ),
                     ],
                   ),
                 ),
@@ -240,41 +233,35 @@ class _HomeWidgetState extends State<HomeWidget> {
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextTBKey,
-                      //   type: AnimationType.word,
-                      //   duration: wordAnimationDuration,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextBTKey,
-                      //   type: AnimationType.word,
-                      //   slideType: SlideAnimationType.bottomTop,
-                      //   duration: wordAnimationDuration,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextAlternateTBKey,
-                      //   type: AnimationType.word,
-                      //   slideType: SlideAnimationType.alternateTB,
-                      //   duration: wordAnimationDuration,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextLRKey,
-                      //   type: AnimationType.word,
-                      //   slideType: SlideAnimationType.leftRight,
-                      //   duration: wordAnimationDuration,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextRLKey,
-                      //   type: AnimationType.word,
-                      //   slideType: SlideAnimationType.rightLeft,
-                      //   duration: wordAnimationDuration,
-                      // ),
-                      // OffsetTextDemo(
-                      //   offsetTextKey: offsetTextAlternateLRKey,
-                      //   type: AnimationType.word,
-                      //   slideType: SlideAnimationType.alternateLR,
-                      //   duration: wordAnimationDuration,
-                      // ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.bottomTop,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.alternateTB,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.leftRight,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.rightLeft,
+                        duration: wordAnimationDuration,
+                      ),
+                      OffsetTextDemo(
+                        type: AnimationType.word,
+                        slideType: SlideAnimationType.alternateLR,
+                        duration: wordAnimationDuration,
+                      ),
                     ],
                   ),
                 ),
@@ -294,12 +281,12 @@ class _HomeWidgetState extends State<HomeWidget> {
         // 3 => rotateTextKey.currentState?.playAnimation(),
         // 4 => rotateTextAntiKey.currentState?.playAnimation(),
         // 5 => blurTextKey.currentState?.playAnimation(),
-        6 => offsetTextTBKey.currentState?.playAnimation(),
-        7 => offsetTextBTKey.currentState?.playAnimation(),
-        8 => offsetTextAlternateTBKey.currentState?.playAnimation(),
-        9 => offsetTextLRKey.currentState?.playAnimation(),
-        10 => offsetTextRLKey.currentState?.playAnimation(),
-        11 => offsetTextAlternateLRKey.currentState?.playAnimation(),
+        // 6 => offsetTextTBKey.currentState?.playAnimation(),
+        // 7 => offsetTextBTKey.currentState?.playAnimation(),
+        // 8 => offsetTextAlternateTBKey.currentState?.playAnimation(),
+        // 9 => offsetTextLRKey.currentState?.playAnimation(),
+        // 10 => offsetTextRLKey.currentState?.playAnimation(),
+        // 11 => offsetTextAlternateLRKey.currentState?.playAnimation(),
         _ => () {},
       };
 
@@ -310,12 +297,12 @@ class _HomeWidgetState extends State<HomeWidget> {
         // 3 => rotateTextKey.currentState?.pauseAnimation(),
         // 4 => rotateTextAntiKey.currentState?.pauseAnimation(),
         // 5 => blurTextKey.currentState?.pauseAnimation(),
-        6 => offsetTextTBKey.currentState?.pauseAnimation(),
-        7 => offsetTextBTKey.currentState?.pauseAnimation(),
-        8 => offsetTextAlternateTBKey.currentState?.pauseAnimation(),
-        9 => offsetTextLRKey.currentState?.pauseAnimation(),
-        10 => offsetTextRLKey.currentState?.pauseAnimation(),
-        11 => offsetTextAlternateLRKey.currentState?.pauseAnimation(),
+        // 6 => offsetTextTBKey.currentState?.pauseAnimation(),
+        // 7 => offsetTextBTKey.currentState?.pauseAnimation(),
+        // 8 => offsetTextAlternateTBKey.currentState?.pauseAnimation(),
+        // 9 => offsetTextLRKey.currentState?.pauseAnimation(),
+        // 10 => offsetTextRLKey.currentState?.pauseAnimation(),
+        // 11 => offsetTextAlternateLRKey.currentState?.pauseAnimation(),
         _ => () {},
       };
   void _restartAnimation(int page) => switch (page) {
@@ -325,12 +312,12 @@ class _HomeWidgetState extends State<HomeWidget> {
         // 3 => rotateTextKey.currentState?.restartAnimation(),
         // 4 => rotateTextAntiKey.currentState?.restartAnimation(),
         // 5 => blurTextKey.currentState?.restartAnimation(),
-        6 => offsetTextTBKey.currentState?.restartAnimation(),
-        7 => offsetTextBTKey.currentState?.restartAnimation(),
-        8 => offsetTextAlternateTBKey.currentState?.restartAnimation(),
-        9 => offsetTextLRKey.currentState?.restartAnimation(),
-        10 => offsetTextRLKey.currentState?.restartAnimation(),
-        11 => offsetTextAlternateLRKey.currentState?.restartAnimation(),
+        // 6 => offsetTextTBKey.currentState?.restartAnimation(),
+        // 7 => offsetTextBTKey.currentState?.restartAnimation(),
+        // 8 => offsetTextAlternateTBKey.currentState?.restartAnimation(),
+        // 9 => offsetTextLRKey.currentState?.restartAnimation(),
+        // 10 => offsetTextRLKey.currentState?.restartAnimation(),
+        // 11 => offsetTextAlternateLRKey.currentState?.restartAnimation(),
         _ => () {},
       };
 
