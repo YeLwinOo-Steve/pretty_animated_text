@@ -1,151 +1,92 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:pretty_animated_text/pretty_animated_text.dart';
-import 'package:pretty_animated_text/src/constants/constants.dart';
-import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
+import 'package:pretty_animated_text/animated_text_wrapper.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/text_align_by_text_alignment.dart';
-import 'package:pretty_animated_text/src/utils/text_transformation.dart';
-import 'package:pretty_animated_text/src/utils/total_duration.dart';
 
-class BlurText extends StatefulWidget {
-  final String text;
-  final AnimationType type;
-  final AnimationMode mode;
-  final TextAlignment textAlignment;
-  final double overlapFactor;
-  final Duration duration;
-  final TextStyle? textStyle;
+class BlurText extends AnimatedTextWrapper {
   const BlurText({
     super.key,
-    required this.text,
-    this.mode = AnimationMode.forward,
-    this.overlapFactor = kOverlapFactor,
-    this.textAlignment = TextAlignment.start,
-    this.textStyle,
-    this.type = AnimationType.word,
-    this.duration = const Duration(milliseconds: 200),
+    required super.text,
+    super.type,
+    super.mode,
+    super.textAlignment,
+    super.overlapFactor,
+    super.duration,
+    super.textStyle,
+    super.onPlay,
+    super.onComplete,
+    super.onPause,
+    super.onResume,
+    super.onRepeat,
+    super.autoPlay,
   });
 
   @override
-  State<BlurText> createState() => BlurTextState();
+  BlurTextState createState() => BlurTextState();
 }
 
-class BlurTextState extends State<BlurText>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class BlurTextState extends AnimatedTextWrapperState<BlurText> {
   late List<Animation<double>> _opacities;
   late List<Animation<double>> _blurSigmaList;
-  late final List<EffectDto> _data;
 
   @override
   void initState() {
     super.initState();
-    _data = switch (widget.type) {
-      AnimationType.letter => widget.text.splittedLetters,
-      _ => widget.text.splittedWords,
-    };
 
-    final wordCount = _data.length;
-    final double overlapFactor = widget.overlapFactor;
-
-    final int totalDuration = getTotalDuration(
-      wordCount: wordCount,
-      duration: widget.duration,
-      overlapFactor: overlapFactor,
+    final double intervalStep = intervalStepByOverlapFactor(
+      data.length,
+      widget.overlapFactor,
     );
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: totalDuration),
-      reverseDuration: Duration(milliseconds: totalDuration),
-    );
-
-    final double intervalStep =
-        intervalStepByOverlapFactor(wordCount, overlapFactor);
-
-    // Creating the opacity animation with staggered delays.
-    _opacities = _data.map((data) {
+    _opacities = data.map((item) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
+          widget.overlapFactor,
           curve: Curves.easeIn,
         ),
       );
     }).toList();
 
-    // Creating the blur sigma value animation
-    _blurSigmaList = _data.map((data) {
+    _blurSigmaList = data.map((item) {
       return Tween<double>(begin: 10.0, end: 0.0).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
+          widget.overlapFactor,
           curve: Curves.easeIn,
         ),
       );
     }).toList();
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-// Public methods to control the animation
-  void playAnimation() {
-    _controller.forward();
-  }
-
-  void pauseAnimation() {
-    _controller.stop();
-  }
-
-  void reverseAnimation() {
-    _controller.reverse();
-  }
-
-  void restartAnimation() {
-    _controller.reset();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _controller.animationByMode(widget.mode);
-    });
-  }
-
-  void repeatAnimation({bool reverse = false}) {
-    _controller.repeat(reverse: reverse);
   }
 
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-      animation: _controller,
+      animation: controller,
       builder: (context, child) {
         return RichText(
           textAlign: textAlignByTextAlign(widget.textAlignment),
           text: TextSpan(
-            children: _data
+            children: data
                 .map(
-                  (data) => WidgetSpan(
+                  (item) => WidgetSpan(
                     child: Opacity(
-                      opacity: _opacities[data.index].value,
+                      opacity: _opacities[item.index].value,
                       child: ImageFiltered(
                         imageFilter: ImageFilter.blur(
-                          sigmaX: _blurSigmaList[data.index].value,
-                          sigmaY: _blurSigmaList[data.index].value,
+                          sigmaX: _blurSigmaList[item.index].value,
+                          sigmaY: _blurSigmaList[item.index].value,
                           tileMode: TileMode.decal,
                         ),
                         child: Text(
-                          data.text,
+                          item.text,
                           style: widget.textStyle,
                         ),
                       ),
