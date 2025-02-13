@@ -78,7 +78,8 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
 
     if (widget.builder != null) {
       widget.builder!(controller);
-    } else if (widget.autoPlay) {
+    }
+    if (widget.autoPlay) {
       controller.forward();
     }
   }
@@ -101,9 +102,7 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
 
   @override
   void dispose() {
-    if (widget.controller == null) {
-      controller.dispose();
-    }
+    controller.dispose();
     super.dispose();
   }
 

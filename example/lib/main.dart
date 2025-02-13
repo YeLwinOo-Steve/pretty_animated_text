@@ -485,10 +485,8 @@ class RotateTextDemo extends StatelessWidget {
 class BlurTextDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
-  final GlobalKey? blurTextKey;
   const BlurTextDemo({
     super.key,
-    this.blurTextKey,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
   });
@@ -501,8 +499,8 @@ class BlurTextDemo extends StatelessWidget {
         duration: duration,
         text: _loremText,
         textStyle: _style,
-        onPlay: () => print('Animation started'),
-        onComplete: () => print('Animation completed'),
+        onPlay: () {},
+        onComplete: () {},
       ),
     );
   }
