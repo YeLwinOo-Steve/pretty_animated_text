@@ -1,159 +1,116 @@
 import 'package:flutter/material.dart';
-import 'package:pretty_animated_text/pretty_animated_text.dart';
-import 'package:pretty_animated_text/src/constants/constants.dart';
-import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
+import 'package:pretty_animated_text/animated_text_wrapper.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
-import 'dart:math';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
-import 'package:pretty_animated_text/src/utils/text_transformation.dart';
-import 'package:pretty_animated_text/src/utils/total_duration.dart';
 import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
+import 'dart:math';
 
-class SpringText extends StatefulWidget {
-  final TextStyle? textStyle;
-  final String text;
-  final double overlapFactor;
-  final TextAlignment textAlignment;
-  final AnimationMode mode;
-  final AnimationType type;
-  final Duration duration;
+/// A widget that animates text with a spring effect, making each character or word
+/// bounce into place with rotation and fade-in animation.
+class SpringText extends AnimatedTextWrapper {
   const SpringText({
-    required this.text,
-    this.textStyle,
-    this.mode = AnimationMode.forward,
-    this.overlapFactor = kOverlapFactor,
-    this.textAlignment = TextAlignment.start,
-    this.type = AnimationType.word,
-    this.duration = const Duration(milliseconds: 200),
     super.key,
+    required super.text,
+    super.type,
+    super.mode,
+    super.textAlignment,
+    super.overlapFactor,
+    super.duration,
+    super.textStyle,
+    super.controller,
+    super.onPlay,
+    super.onComplete,
+    super.onPause,
+    super.onResume,
+    super.onRepeat,
+    super.autoPlay,
+    super.builder,
   });
 
   @override
   SpringTextState createState() => SpringTextState();
 }
 
-class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
-  late AnimationController _controller;
-  late List<Animation<double>> _rotations;
-  late final List<EffectDto> _data;
+class SpringTextState extends AnimatedTextWrapperState<SpringText> {
+  /// Controls the opacity animation for each text segment
   late List<Animation<double>> _opacities;
-  late List<Animation<double>> _springAnimations; // To store spring animations
+
+  /// Controls the rotation animation for each text segment
+  late List<Animation<double>> _rotations;
+
+  /// Controls the spring bounce animation for each text segment
+  late List<Animation<double>> _springAnimations;
 
   @override
   void initState() {
     super.initState();
-    _data = switch (widget.type) {
-      AnimationType.letter => widget.text.splittedLetters,
-      _ => widget.text.splittedWords,
-    };
-    final wordCount = _data.length;
 
-    // Define an overlap factor: this is how much each animation overlaps with the previous one.
-    final double overlapFactor = widget.overlapFactor;
-
-    final double intervalStep =
-        intervalStepByOverlapFactor(wordCount, overlapFactor);
-    final int totalDuration = getTotalDuration(
-      wordCount: wordCount,
-      duration: widget.duration,
-      overlapFactor: widget.overlapFactor,
+    // Calculate the interval step based on the number of segments and overlap factor
+    final double intervalStep = intervalStepByOverlapFactor(
+      data.length,
+      widget.overlapFactor,
     );
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: totalDuration),
-      reverseDuration: Duration(milliseconds: totalDuration),
-    );
-
-    // Create opacity animations with staggered starts (50% overlap)
-    _opacities = _data.map((data) {
+    // Create opacity animations for each text segment
+    _opacities = data.map((item) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
+          widget.overlapFactor,
         ),
       );
     }).toList();
 
-    // Create rotation animations with the same staggered starts
-    _rotations = _data
-        .map(
-          (data) => Tween<double>(
-            begin: 180.0,
-            end: 0.0,
-          ).animate(
-            curvedAnimation(
-              _controller,
-              data.index,
-              intervalStep,
-              overlapFactor,
-            ),
-          ),
-        )
-        .toList();
+    // Create rotation animations for each text segment
+    _rotations = data.map((item) {
+      return Tween<double>(begin: 180.0, end: 0.0).animate(
+        curvedAnimation(
+          controller,
+          item.index,
+          intervalStep,
+          widget.overlapFactor,
+        ),
+      );
+    }).toList();
 
-    //  Add spring animation for each word
-    _springAnimations = _data.map(
-      (data) {
-        return Tween<double>(begin: 1, end: 0).animate(
-          curvedAnimation(
-            _controller,
-            data.index,
-            intervalStep,
-            overlapFactor,
-            curve: SpringCurve(),
-          ),
-        );
-      },
-    ).toList();
-
-    _controller.animationByMode(widget.mode);
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // Public methods to control the animation
-  void playAnimation() {
-    _controller.forward();
-  }
-
-  void pauseAnimation() {
-    _controller.stop();
-  }
-
-  void reverseAnimation() {
-    _controller.reverse();
-  }
-
-  void restartAnimation() {
-    _controller.reset();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _controller.animationByMode(widget.mode);
-    });
-  }
-
-  void repeatAnimation({bool reverse = false}) {
-    _controller.repeat(reverse: reverse);
+    // Create spring animations for vertical bounce effect
+    _springAnimations = data.map((item) {
+      return Tween<double>(begin: 1, end: 0).animate(
+        curvedAnimation(
+          controller,
+          item.index,
+          intervalStep,
+          widget.overlapFactor,
+          curve: SpringCurve(), // Custom spring curve for bouncy effect
+        ),
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       alignment: wrapAlignmentByTextAlign(widget.textAlignment),
-      children: _data
+      children: data
           .map(
             (dto) => AnimatedBuilder(
-              animation: _controller,
+              animation: controller,
               builder: (context, child) {
-                return _animatedBuilder(dto, child);
+                return Opacity(
+                  opacity: _opacities[dto.index].value,
+                  child: Transform(
+                    alignment: Alignment.bottomCenter,
+                    transform: Matrix4.identity()
+                      // Apply vertical translation with spring effect
+                      ..translate(0.0, _springAnimations[dto.index].value)
+                      // Apply Z-axis rotation for spinning effect
+                      ..rotateZ(_rotations[dto.index].value * pi / 180),
+                    child: child,
+                  ),
+                );
               },
               child: Text(
                 dto.text,
@@ -162,21 +119,6 @@ class SpringTextState extends State<SpringText> with TickerProviderStateMixin {
             ),
           )
           .toList(),
-    );
-  }
-
-  Widget _animatedBuilder(EffectDto data, Widget? child) {
-    return Opacity(
-      opacity: _opacities[data.index].value,
-      child: Transform(
-        alignment: Alignment.bottomCenter,
-        transform: Matrix4.identity()
-          // Apply the spring animation for translation
-          ..translate(0.0, _springAnimations[data.index].value)
-          // Apply rotation
-          ..rotateZ(_rotations[data.index].value * pi / 180),
-        child: child,
-      ),
     );
   }
 }

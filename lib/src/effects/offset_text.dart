@@ -1,149 +1,116 @@
 import 'package:flutter/material.dart';
+import 'package:pretty_animated_text/animated_text_wrapper.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
-import 'package:pretty_animated_text/src/constants/constants.dart';
-import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/offset_tween_by_slide_type.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
-import 'package:pretty_animated_text/src/utils/text_transformation.dart';
-import 'package:pretty_animated_text/src/utils/total_duration.dart';
 import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
 
-class OffsetText extends StatefulWidget {
-  final String text;
-  final AnimationMode mode;
-  final AnimationType type;
-  final double overlapFactor;
-  final TextAlignment textAlignment;
+/// A widget that animates text with a sliding effect, making each character or word
+/// slide into place from a specified direction with a fade-in animation.
+///
+/// The animation can be customized with different slide directions and timing effects.
+class OffsetText extends AnimatedTextWrapper {
+  /// The type of slide animation to apply (e.g., top to bottom, left to right)
+  /// This determines the direction from which the text will slide in
   final SlideAnimationType slideType;
-  final Duration duration;
-  final TextStyle? textStyle;
 
   const OffsetText({
     super.key,
-    required this.text,
-    this.mode = AnimationMode.forward,
-    this.overlapFactor = kOverlapFactor,
-    this.textAlignment = TextAlignment.start,
-    this.textStyle,
-    this.type = AnimationType.word,
+    required super.text,
+    super.type,
+    super.mode,
+    super.textAlignment,
+    super.overlapFactor,
+    super.duration,
+    super.textStyle,
+    super.controller,
+    super.onPlay,
+    super.onComplete,
+    super.onPause,
+    super.onResume,
+    super.onRepeat,
+    super.autoPlay,
+    super.builder,
     this.slideType = SlideAnimationType.topBottom,
-    this.duration = const Duration(milliseconds: 200),
   });
 
   @override
   OffsetTextState createState() => OffsetTextState();
 }
 
-class OffsetTextState extends State<OffsetText>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class OffsetTextState extends AnimatedTextWrapperState<OffsetText> {
+  /// Controls the offset (position) animation for each text segment
+  /// Each segment will slide from its starting position to its final position
   late List<Animation<Offset>> _offsets;
+
+  /// Controls the opacity animation for each text segment
+  /// Allows text to fade in as it slides into position
   late List<Animation<double>> _opacities;
-  late final List<EffectDto> _data;
 
   @override
   void initState() {
     super.initState();
-    _data = switch (widget.type) {
-      AnimationType.letter => widget.text.splittedLetters,
-      _ => widget.text.splittedWords,
-    };
 
-    final wordCount = _data.length;
-    final double overlapFactor = widget.overlapFactor;
-
-    final int totalDuration = getTotalDuration(
-      wordCount: wordCount,
-      duration: widget.duration,
-      overlapFactor: overlapFactor,
+    // Calculate the interval step based on the number of segments and overlap factor
+    // This determines how much delay there is between each segment's animation
+    final double intervalStep = intervalStepByOverlapFactor(
+      data.length,
+      widget.overlapFactor,
     );
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: totalDuration),
-      reverseDuration: Duration(milliseconds: totalDuration),
-    );
-
-    final double intervalStep =
-        intervalStepByOverlapFactor(wordCount, overlapFactor);
-
-    // Creating the offset animations with staggered delays.
-    _offsets = _data
-        .map(
-          (data) => offsetTweenBySlideType(
-            widget.slideType,
-            index: data.index,
-          ).animate(
-            curvedAnimation(
-              _controller,
-              data.index,
-              intervalStep,
-              overlapFactor,
-              curve: SpringCurve(),
-            ),
-          ),
-        )
-        .toList();
-
-    // Create opacity animations with staggered starts
-    _opacities = _data.map((data) {
-      return Tween<double>(begin: 0.0, end: 1.0).animate(
+    // Create offset animations with staggered delays and spring effect
+    // Each text segment will have its own offset animation
+    _offsets = data.map((item) {
+      return offsetTweenBySlideType(
+        widget.slideType,
+        index: item.index,
+      ).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
-          curve: Curves.easeIn,
+          widget.overlapFactor,
+          curve: SpringCurve(), // Adds a bouncy effect to the slide animation
         ),
       );
     }).toList();
 
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  // Public methods to control the animation
-  void playAnimation() {
-    _controller.forward();
-  }
-
-  void pauseAnimation() {
-    _controller.stop();
-  }
-
-  void reverseAnimation() {
-    _controller.reverse();
-  }
-
-  void restartAnimation() {
-    _controller.reset();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _controller.animationByMode(widget.mode);
-    });
-  }
-
-  void repeatAnimation({bool reverse = false}) {
-    _controller.repeat(reverse: reverse);
+    // Create opacity animations with staggered starts
+    // Each text segment will fade in as it slides into position
+    _opacities = data.map((item) {
+      return Tween<double>(begin: 0.0, end: 1.0).animate(
+        curvedAnimation(
+          controller,
+          item.index,
+          intervalStep,
+          widget.overlapFactor,
+          curve: Curves.easeIn, // Smooth fade-in effect
+        ),
+      );
+    }).toList();
   }
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
+      // Align the text based on the specified text alignment
       alignment: wrapAlignmentByTextAlign(widget.textAlignment),
-      children: _data
+      children: data
           .map(
             (dto) => AnimatedBuilder(
-              animation: _controller,
+              animation: controller,
               builder: (context, child) {
-                return _animatedBuilder(dto, child);
+                return Opacity(
+                  // Apply the fade-in effect
+                  opacity: _opacities[dto.index].value,
+                  child: Transform.translate(
+                    // Apply the sliding movement
+                    offset: _offsets[dto.index].value,
+                    child: child,
+                  ),
+                );
               },
               child: Text(
                 dto.text,
@@ -152,16 +119,6 @@ class OffsetTextState extends State<OffsetText>
             ),
           )
           .toList(),
-    );
-  }
-
-  Widget _animatedBuilder(EffectDto data, Widget? child) {
-    return Opacity(
-      opacity: _opacities[data.index].value,
-      child: Transform.translate(
-        offset: _offsets[data.index].value,
-        child: child,
-      ),
     );
   }
 }

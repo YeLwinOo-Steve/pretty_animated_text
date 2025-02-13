@@ -14,6 +14,7 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
   final TextAlignment textAlignment;
   final double overlapFactor;
   final Duration duration;
+  final AnimationController? controller;
   final TextStyle? textStyle;
   final VoidCallback? onPlay;
   final VoidCallback? onComplete;
@@ -21,6 +22,7 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
   final VoidCallback? onResume;
   final VoidCallback? onRepeat;
   final bool autoPlay;
+  final void Function(AnimationController controller)? builder;
 
   const AnimatedTextWrapper({
     super.key,
@@ -31,12 +33,14 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
     this.overlapFactor = kOverlapFactor,
     this.duration = const Duration(milliseconds: 200),
     this.textStyle,
+    this.controller,
     this.onPlay,
     this.onComplete,
     this.onPause,
     this.onResume,
     this.onRepeat,
     this.autoPlay = true,
+    this.builder,
   });
 
   @override
@@ -63,15 +67,18 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
       overlapFactor: widget.overlapFactor,
     );
 
-    controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: totalDuration),
-      reverseDuration: Duration(milliseconds: totalDuration),
-    );
+    controller = widget.controller ??
+        AnimationController(
+          vsync: this,
+          duration: Duration(milliseconds: totalDuration),
+          reverseDuration: Duration(milliseconds: totalDuration),
+        );
 
     controller.addStatusListener(_handleAnimationStatus);
 
-    if (widget.autoPlay) {
+    if (widget.builder != null) {
+      widget.builder!(controller);
+    } else if (widget.autoPlay) {
       controller.forward();
     }
   }
@@ -94,7 +101,9 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
 
   @override
   void dispose() {
-    controller.dispose();
+    if (widget.controller == null) {
+      controller.dispose();
+    }
     super.dispose();
   }
 

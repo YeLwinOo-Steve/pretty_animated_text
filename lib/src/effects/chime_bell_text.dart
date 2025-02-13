@@ -1,140 +1,102 @@
-import 'package:flutter/material.dart';
-import 'package:pretty_animated_text/pretty_animated_text.dart';
-import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'dart:math';
 
-import 'package:pretty_animated_text/src/dto/dto.dart';
-import 'package:pretty_animated_text/src/extensions/animation_playback_mode.dart';
+import 'package:flutter/material.dart';
+import 'package:pretty_animated_text/animated_text_wrapper.dart';
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
-import 'package:pretty_animated_text/src/utils/text_transformation.dart';
-import 'package:pretty_animated_text/src/utils/total_duration.dart';
 import 'package:pretty_animated_text/src/utils/wrap_alignment_by_text_align.dart';
 
-class ChimeBellText extends StatefulWidget {
-  final String text;
-  final AnimationType type;
-  final AnimationMode mode;
-  final double overlapFactor;
-  final TextAlignment textAlignment;
-  final Duration duration;
-  final TextStyle? textStyle;
-
+/// A widget that animates text with a chime bell effect, making each character or word
+/// appear with a 3D rotation and fade-in animation.
+class ChimeBellText extends AnimatedTextWrapper {
   const ChimeBellText({
     super.key,
-    required this.text,
-    this.mode = AnimationMode.forward,
-    this.overlapFactor = kOverlapFactor,
-    this.textAlignment = TextAlignment.start,
-    this.textStyle,
-    this.type = AnimationType.word,
-    this.duration = const Duration(milliseconds: 200),
+    required super.text,
+    super.type,
+    super.mode,
+    super.textAlignment,
+    super.overlapFactor,
+    super.duration,
+    super.textStyle,
+    super.controller,
+    super.onPlay,
+    super.onComplete,
+    super.onPause,
+    super.onResume,
+    super.onRepeat,
+    super.autoPlay,
+    super.builder,
   });
 
   @override
   ChimeBellTextState createState() => ChimeBellTextState();
 }
 
-class ChimeBellTextState extends State<ChimeBellText>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class ChimeBellTextState extends AnimatedTextWrapperState<ChimeBellText> {
+  /// Controls the opacity animation for each text segment
   late List<Animation<double>> _opacities;
+
+  /// Controls the rotation animation for each text segment
   late List<Animation<double>> _rotations;
-  late final List<EffectDto> _data;
 
   @override
   void initState() {
     super.initState();
-    _data = switch (widget.type) {
-      AnimationType.letter => widget.text.splittedLetters,
-      _ => widget.text.splittedWords,
-    };
-    final wordCount = _data.length;
-    final double overlapFactor = widget.overlapFactor;
 
-    final int totalDuration = getTotalDuration(
-      wordCount: wordCount,
-      duration: widget.duration,
-      overlapFactor: overlapFactor,
+    // Calculate the interval step based on the number of segments and overlap factor
+    final double intervalStep = intervalStepByOverlapFactor(
+      data.length,
+      widget.overlapFactor,
     );
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: totalDuration),
-      reverseDuration: Duration(milliseconds: totalDuration),
-    );
-
-    final double intervalStep =
-        intervalStepByOverlapFactor(wordCount, overlapFactor);
-
-    // Creating the opacity and rotation animations with staggered delays.
-    _opacities = _data.map((data) {
+    // Create opacity animations for each text segment
+    _opacities = data.map((item) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
+          widget.overlapFactor,
         ),
       );
     }).toList();
 
-    _rotations = _data.map((data) {
+    // Create rotation animations for each text segment with a spring curve
+    _rotations = data.map((item) {
       return Tween<double>(begin: 180, end: 0).animate(
         curvedAnimation(
-          _controller,
-          data.index,
+          controller,
+          item.index,
           intervalStep,
-          overlapFactor,
+          widget.overlapFactor,
           curve: SpringCurve(),
         ),
       );
     }).toList();
-
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-// Public methods to control the animation
-  void playAnimation() {
-    _controller.forward();
-  }
-
-  void pauseAnimation() {
-    _controller.stop();
-  }
-
-  void reverseAnimation() {
-    _controller.reverse();
-  }
-
-  void restartAnimation() {
-    _controller.reset();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _controller.animationByMode(widget.mode);
-    });
-  }
-
-  void repeatAnimation({bool reverse = false}) {
-    _controller.repeat(reverse: reverse);
   }
 
   @override
   Widget build(BuildContext context) {
     return Wrap(
       alignment: wrapAlignmentByTextAlign(widget.textAlignment),
-      children: _data
+      children: data
           .map(
             (dto) => AnimatedBuilder(
-              animation: _controller,
+              animation: controller,
               builder: (context, child) {
-                return _animatedBuilder(dto, child);
+                return Opacity(
+                  opacity: _opacities[dto.index].value,
+                  child: Transform(
+                    transform: Matrix4.identity()
+                      ..setEntry(3, 2, 0.015) // Adds perspective effect
+                      ..rotateX(_rotations[dto.index].value *
+                          pi /
+                          360), // 3D rotation around X axis
+                    alignment: Alignment.topCenter,
+                    child: child,
+                  ),
+                );
               },
               child: Text(
                 dto.text,
@@ -143,19 +105,6 @@ class ChimeBellTextState extends State<ChimeBellText>
             ),
           )
           .toList(),
-    );
-  }
-
-  Opacity _animatedBuilder(EffectDto data, Widget? child) {
-    return Opacity(
-      opacity: _opacities[data.index].value,
-      child: Transform(
-        transform: Matrix4.identity()
-          ..setEntry(3, 2, 0.015) // Perspective effect
-          ..rotateX(_rotations[data.index].value * pi / 360), // 3D rotation
-        alignment: Alignment.topCenter,
-        child: child,
-      ),
     );
   }
 }
