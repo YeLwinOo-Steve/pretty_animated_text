@@ -22,6 +22,7 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
   final VoidCallback? onResume;
   final VoidCallback? onRepeat;
   final bool autoPlay;
+  final void Function(AnimationController controller)? builder;
 
   const AnimatedTextWrapper({
     super.key,
@@ -39,6 +40,7 @@ abstract class AnimatedTextWrapper extends StatefulWidget {
     this.onResume,
     this.onRepeat,
     this.autoPlay = true,
+    this.builder,
   });
 
   @override
@@ -74,7 +76,9 @@ abstract class AnimatedTextWrapperState<T extends AnimatedTextWrapper>
 
     controller.addStatusListener(_handleAnimationStatus);
 
-    if (widget.autoPlay) {
+    if (widget.builder != null) {
+      widget.builder!(controller);
+    } else if (widget.autoPlay) {
       controller.forward();
     }
   }

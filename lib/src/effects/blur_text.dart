@@ -23,6 +23,7 @@ class BlurText extends AnimatedTextWrapper {
     super.onResume,
     super.onRepeat,
     super.autoPlay,
+    super.builder,
   });
 
   @override
