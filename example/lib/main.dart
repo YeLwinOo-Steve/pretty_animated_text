@@ -546,7 +546,9 @@ class BlurTextDemo extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: BlurText(
-        text: 'A quick brown fox jumps over the lazy dog and the lazy dog got up and barked at the quick brown fox.',
+        type: type,
+        duration: duration,
+        text: _loremText,
         onPlay: () => print('Animation started'),
         onComplete: () => print('Animation completed'),
       ),

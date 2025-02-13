@@ -16,6 +16,7 @@ class BlurText extends AnimatedTextWrapper {
     super.overlapFactor,
     super.duration,
     super.textStyle,
+    super.controller,
     super.onPlay,
     super.onComplete,
     super.onPause,
