@@ -34,26 +34,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   final curve = Curves.easeInOut;
   int selectedValue = 0;
   final int length = 12;
-  final GlobalKey<SpringTextState> springTextKey = GlobalKey<SpringTextState>();
-  final GlobalKey<ChimeBellTextState> chimbellTextKey =
-      GlobalKey<ChimeBellTextState>();
-  final GlobalKey<ScaleTextState> scaleTextKey = GlobalKey<ScaleTextState>();
-  final GlobalKey<BlurTextState> blurTextKey = GlobalKey<BlurTextState>();
-  final GlobalKey<RotateTextState> rotateTextKey = GlobalKey<RotateTextState>();
-  final GlobalKey<RotateTextState> rotateTextAntiKey =
-      GlobalKey<RotateTextState>();
-  final GlobalKey<OffsetTextState> offsetTextTBKey =
-      GlobalKey<OffsetTextState>();
-  final GlobalKey<OffsetTextState> offsetTextBTKey =
-      GlobalKey<OffsetTextState>();
-  final GlobalKey<OffsetTextState> offsetTextAlternateTBKey =
-      GlobalKey<OffsetTextState>();
-  final GlobalKey<OffsetTextState> offsetTextLRKey =
-      GlobalKey<OffsetTextState>();
-  final GlobalKey<OffsetTextState> offsetTextRLKey =
-      GlobalKey<OffsetTextState>();
-  final GlobalKey<OffsetTextState> offsetTextAlternateLRKey =
-      GlobalKey<OffsetTextState>();
+
   @override
   void dispose() {
     letterController.dispose();
@@ -331,7 +312,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               count: length,
               effect: ScrollingDotsEffect(
                 activeDotColor: Colors.indigo,
-                dotColor: Colors.indigo.withOpacity(0.42),
+                dotColor: Colors.indigo.withValues(alpha: 0.42),
                 dotHeight: 8,
                 dotWidth: 8,
               ),
