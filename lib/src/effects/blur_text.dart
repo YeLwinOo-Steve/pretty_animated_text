@@ -6,6 +6,8 @@ import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.dart';
 import 'package:pretty_animated_text/src/utils/text_align_by_text_alignment.dart';
 
+/// A widget that animates text with a chime bell effect, making each character or word
+/// appear with a 3D rotation and fade-in animation.
 class BlurText extends AnimatedTextWrapper {
   const BlurText({
     super.key,
@@ -31,18 +33,23 @@ class BlurText extends AnimatedTextWrapper {
 }
 
 class BlurTextState extends AnimatedTextWrapperState<BlurText> {
+  /// Controls the opacity animation for each text segment
   late List<Animation<double>> _opacities;
+
+  /// Controls the rotation animation for each text segment
   late List<Animation<double>> _blurSigmaList;
 
   @override
   void initState() {
     super.initState();
 
+    // Calculate the interval step based on the number of segments and overlap factor
     final double intervalStep = intervalStepByOverlapFactor(
       data.length,
       widget.overlapFactor,
     );
 
+    // Create opacity animations for each text segment
     _opacities = data.map((item) {
       return Tween<double>(begin: 0.0, end: 1.0).animate(
         curvedAnimation(

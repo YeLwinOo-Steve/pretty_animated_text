@@ -177,9 +177,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       // SpringDemo(
                       //   springTextKey: springTextKey,
                       // ),
-                      // ChimeBellDemo(
-                      //   chimbellTextKey: chimbellTextKey,
-                      // ),
+                      const ChimeBellDemo(),
                       // ScaleTextDemo(
                       //   scaleTextKey: scaleTextKey,
                       // ),
@@ -225,17 +223,16 @@ class _HomeWidgetState extends State<HomeWidget> {
                   flex: 9,
                   child: PageView(
                     controller: wordController,
-                    children: [
+                    children: const [
                       // SpringDemo(
                       //   springTextKey: springTextKey,
                       //   type: AnimationType.word,
                       //   duration: wordAnimationDuration,
                       // ),
-                      // ChimeBellDemo(
-                      //   chimbellTextKey: chimbellTextKey,
-                      //   type: AnimationType.word,
-                      //   duration: wordAnimationDuration,
-                      // ),
+                      ChimeBellDemo(
+                        type: AnimationType.word,
+                        duration: wordAnimationDuration,
+                      ),
                       // ScaleTextDemo(
                       //   scaleTextKey: scaleTextKey,
                       //   type: AnimationType.word,
@@ -252,8 +249,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                       //   direction: RotateAnimationType.anticlockwise,
                       //   duration: wordAnimationDuration,
                       // ),
-                      BlurTextDemo(
-                        blurTextKey: blurTextKey,
+                      const BlurTextDemo(
                         type: AnimationType.word,
                         duration: wordAnimationDuration,
                       ),
@@ -306,7 +302,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _playAnimation(int page) => switch (page) {
         0 => springTextKey.currentState?.playAnimation(),
-        1 => chimbellTextKey.currentState?.playAnimation(),
+        // 1 => chimbellTextKey.currentState?.playAnimation(),
         2 => scaleTextKey.currentState?.playAnimation(),
         3 => rotateTextKey.currentState?.playAnimation(),
         4 => rotateTextAntiKey.currentState?.playAnimation(),
@@ -322,7 +318,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _pauseAnimation(int page) => switch (page) {
         0 => springTextKey.currentState?.pauseAnimation(),
-        1 => chimbellTextKey.currentState?.pauseAnimation(),
+        // 1 => chimbellTextKey.currentState?.pauseAnimation(),
         2 => scaleTextKey.currentState?.pauseAnimation(),
         3 => rotateTextKey.currentState?.pauseAnimation(),
         4 => rotateTextAntiKey.currentState?.pauseAnimation(),
@@ -337,7 +333,7 @@ class _HomeWidgetState extends State<HomeWidget> {
       };
   void _restartAnimation(int page) => switch (page) {
         0 => springTextKey.currentState?.restartAnimation(),
-        1 => chimbellTextKey.currentState?.restartAnimation(),
+        // 1 => chimbellTextKey.currentState?.restartAnimation(),
         2 => scaleTextKey.currentState?.restartAnimation(),
         3 => rotateTextKey.currentState?.restartAnimation(),
         4 => rotateTextAntiKey.currentState?.restartAnimation(),
@@ -549,6 +545,7 @@ class BlurTextDemo extends StatelessWidget {
         type: type,
         duration: duration,
         text: _loremText,
+        textStyle: _style,
         onPlay: () => print('Animation started'),
         onComplete: () => print('Animation completed'),
       ),
