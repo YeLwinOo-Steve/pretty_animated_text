@@ -3,7 +3,6 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:pretty_animated_text/src/constants/constants.dart';
 import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 
-
 /// Configuration for text animations
 class AnimationConfig {
   /// The duration of the animation
@@ -43,7 +42,7 @@ class AnimationConfig {
   final void Function(AnimatedTextController)? onResume;
 
   /// The callback when the animation repeats
-  final void Function(AnimatedTextController)? onRepeat;
+  final void Function(AnimatedTextController, int)? onRepeat;
 
   /// The type of animation (letter or word)
   final AnimationType type;
@@ -83,7 +82,7 @@ class AnimationConfig {
     void Function(AnimatedTextController)? onDismissed,
     void Function(AnimatedTextController)? onPause,
     void Function(AnimatedTextController)? onResume,
-    void Function(AnimatedTextController)? onRepeat,
+    void Function(AnimatedTextController, int)? onRepeat,
     AnimationType? type,
     TextAlignment? textAlignment,
   }) {

@@ -3,6 +3,7 @@ import 'package:pretty_animated_text/pretty_animated_text.dart';
 import '../core/constants.dart';
 
 AnimationConfig _buildConfig(
+  Type runtimeType,
   AnimationType type,
   Duration duration,
   void Function(AnimatedTextController)? onCreated,
@@ -11,12 +12,12 @@ AnimationConfig _buildConfig(
     type: type,
     duration: duration,
     repeat: false, // We control repeat via buttons now
-    onPlay: (c) => debugPrint('${type.name} animation played!'),
-    onPause: (c) => debugPrint('${type.name} animation paused!'),
-    onComplete: (c) => debugPrint('${type.name} animation completed!'),
+    onPlay: (c) => debugPrint('$runtimeType animation played!'),
+    onPause: (c) => debugPrint('$runtimeType animation paused!'),
+    onComplete: (c) => debugPrint('$runtimeType animation completed!'),
     repeatCount: 3,
-    onRepeat: (c) => debugPrint('${type.name} animation repeated!'),
-    onDismissed: (c) => debugPrint('${type.name} animation dismissed!'),
+    onRepeat: (c, r) => debugPrint('$runtimeType animation repeated! $r times'),
+    onDismissed: (c) => debugPrint('$runtimeType animation dismissed!'),
   );
 }
 
@@ -36,7 +37,7 @@ class ChimeBellDemo extends StatelessWidget {
   Widget build(BuildContext context) => ChimeBellText(
         text: loremText,
         style: demoTextStyle,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }
@@ -57,7 +58,7 @@ class SpringDemo extends StatelessWidget {
   Widget build(BuildContext context) => SpringText(
         text: loremText,
         style: demoTextStyle,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }
@@ -78,7 +79,7 @@ class ScaleTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => ScaleText(
         text: loremText,
         style: demoTextStyle,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }
@@ -102,7 +103,7 @@ class RotateTextDemo extends StatelessWidget {
         text: loremText,
         style: demoTextStyle,
         direction: direction,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }
@@ -123,7 +124,7 @@ class BlurTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => BlurText(
         text: loremText,
         style: demoTextStyle,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }
@@ -147,7 +148,7 @@ class SlideTextDemo extends StatelessWidget {
         text: loremText,
         style: demoTextStyle,
         slideType: slideType,
-        config: _buildConfig(type, duration, onControllerCreated),
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
 }

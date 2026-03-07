@@ -54,6 +54,8 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   late AnimatedTextController _textController;
   int _repeatCount = 0;
   bool _isReversing = false;
+  bool _hasPlayedOnce = false;
+  bool _isRepeating = false;
 
   @override
   void initState() {
@@ -125,14 +127,17 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   void _handleAnimationStatus(AnimationStatus status) {
     switch (status) {
       case AnimationStatus.forward:
-        widget.config.onPlay?.call(_textController);
+        if (!_hasPlayedOnce) {
+          _hasPlayedOnce = true;
+          widget.config.onPlay?.call(_textController);
+        }
         break;
       case AnimationStatus.completed:
         widget.config.onComplete?.call(_textController);
         if (widget.config.reverse && !_isReversing) {
           _isReversing = true;
           _controller.reverse();
-        } else if (widget.config.repeat) {
+        } else if (_isRepeating || widget.config.repeat) {
           _handleRepeat();
         }
         break;
@@ -140,13 +145,12 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
         widget.config.onDismissed?.call(_textController);
         if (widget.config.reverse) {
           _isReversing = false;
-          if (widget.config.repeat) {
+          if (_isRepeating || widget.config.repeat) {
             _handleRepeat();
           }
         }
         break;
       case AnimationStatus.reverse:
-        widget.config.onRepeat?.call(_textController);
         break;
     }
   }
@@ -155,9 +159,12 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
     if (widget.config.repeatCount != null) {
       _repeatCount++;
       if (_repeatCount >= widget.config.repeatCount!) {
+        _isRepeating = false;
         return;
       }
     }
+
+    widget.config.onRepeat?.call(_textController, _repeatCount);
 
     if (widget.config.repeatDelay > Duration.zero) {
       Future.delayed(widget.config.repeatDelay, () {
@@ -187,6 +194,8 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   void _startAnimation() {
     _repeatCount = 0;
     _isReversing = false;
+    _hasPlayedOnce = false;
+    _isRepeating = false;
     _controller.forward();
   }
 
@@ -194,8 +203,9 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   void play() {
     _repeatCount = 0;
     _isReversing = false;
+    _hasPlayedOnce = false;
+    _isRepeating = false;
     _controller.forward();
-    widget.config.onPlay?.call(_textController);
   }
 
   void pause() {
@@ -225,27 +235,32 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   void restart() {
     _repeatCount = 0;
     _isReversing = false;
+    _hasPlayedOnce = false;
+    _isRepeating = false;
     _controller.reset();
     Future.delayed(const Duration(milliseconds: 10), () {
       _controller.forward();
-      widget.config.onPlay?.call(_textController);
     });
   }
 
   void repeat({bool reverse = false}) {
     _repeatCount = 0;
     _isReversing = false;
-    if (reverse) {
-      _controller.repeat(reverse: true);
-    } else {
-      _controller.repeat(reverse: false);
-    }
-    widget.config.onPlay?.call(_textController);
+    _hasPlayedOnce = false;
+    _isRepeating = true;
+    _controller.reset();
+    _controller.forward();
   }
 
   @override
   void didUpdateWidget(AnimatedTextBase oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    // Re-notify controller when the callback changes (e.g., page becomes current)
+    if (oldWidget.onControllerCreated != widget.onControllerCreated) {
+      widget.onControllerCreated?.call(_textController);
+    }
+
     if (oldWidget.config != widget.config || oldWidget.text != widget.text) {
       _controller.duration = widget.config.duration;
       _repeatCount = 0;
