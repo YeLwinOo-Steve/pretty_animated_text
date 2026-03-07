@@ -7,6 +7,7 @@ import 'models/animation_demo_item.dart';
 import 'widgets/control_button.dart';
 import 'widgets/header.dart';
 import 'widgets/mode_toggle_round.dart';
+import 'widgets/variation_selector.dart';
 
 class HomeWidget extends StatefulWidget {
   const HomeWidget({super.key});
@@ -24,65 +25,120 @@ class _HomeWidgetState extends State<HomeWidget> {
   bool _isWordMode = false;
   int _currentPage = 0;
 
+  /// Tracks the selected variation index for each demo page.
+  late final List<int> _variationIndices;
+
   late final List<AnimationDemoItem> _demos;
+
+  // ─── Slide variation options ───────────────────────────────────────
+  static const _slideVariations = [
+    VariationOption<SlideAnimationType>(  
+      icon: Icons.arrow_forward,
+      value: SlideAnimationType.leftRight,
+    ),
+    VariationOption<SlideAnimationType>(
+      icon: Icons.arrow_back,
+      value: SlideAnimationType.rightLeft,
+    ),
+    VariationOption<SlideAnimationType>(
+      icon: Icons.arrow_downward,
+      value: SlideAnimationType.topBottom,
+    ),
+    VariationOption<SlideAnimationType>(
+      icon: Icons.arrow_upward,
+      value: SlideAnimationType.bottomTop,
+    ),
+    VariationOption<SlideAnimationType>(
+      icon: Icons.swap_vert,
+      value: SlideAnimationType.alternateTB,
+    ),
+    VariationOption<SlideAnimationType>(
+      icon: Icons.swap_horiz,
+      value: SlideAnimationType.alternateLR,
+    ),
+  ];
+
+  // ─── Rotate variation options ──────────────────────────────────────
+  static const _rotateVariations = [
+    VariationOption<RotateAnimationType>(
+      label: 'Clockwise',
+      icon: Icons.rotate_right,
+      value: RotateAnimationType.clockwise,
+    ),
+    VariationOption<RotateAnimationType>(
+      label: 'Anti-clockwise',
+      icon: Icons.rotate_left,
+      value: RotateAnimationType.anticlockwise,
+    ),
+  ];
 
   @override
   void initState() {
     super.initState();
     _demos = [
       AnimationDemoItem(
-          title: 'Scale',
-          buildLetter: (onCreated) =>
-              ScaleTextDemo(onControllerCreated: onCreated),
-          buildWord: (onCreated) => ScaleTextDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              onControllerCreated: onCreated)),
+        title: 'Scale',
+        buildLetter: (onCreated, _) =>
+            ScaleTextDemo(onControllerCreated: onCreated),
+        buildWord: (onCreated, _) => ScaleTextDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            onControllerCreated: onCreated),
+      ),
       AnimationDemoItem(
-          title: 'Slide',
-          buildLetter: (onCreated) => SlideTextDemo(
-              slideType: SlideAnimationType.leftRight,
-              onControllerCreated: onCreated),
-          buildWord: (onCreated) => SlideTextDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              slideType: SlideAnimationType.leftRight,
-              onControllerCreated: onCreated)),
+        title: 'Slide',
+        variations: _slideVariations,
+        buildLetter: (onCreated, vi) => SlideTextDemo(
+            slideType: _slideVariations[vi].value,
+            onControllerCreated: onCreated),
+        buildWord: (onCreated, vi) => SlideTextDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            slideType: _slideVariations[vi].value,
+            onControllerCreated: onCreated),
+      ),
       AnimationDemoItem(
-          title: 'Rotate',
-          buildLetter: (onCreated) => RotateTextDemo(
-              direction: RotateAnimationType.clockwise,
-              onControllerCreated: onCreated),
-          buildWord: (onCreated) => RotateTextDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              direction: RotateAnimationType.clockwise,
-              onControllerCreated: onCreated)),
+        title: 'Rotate',
+        variations: _rotateVariations,
+        buildLetter: (onCreated, vi) => RotateTextDemo(
+            direction: _rotateVariations[vi].value,
+            onControllerCreated: onCreated),
+        buildWord: (onCreated, vi) => RotateTextDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            direction: _rotateVariations[vi].value,
+            onControllerCreated: onCreated),
+      ),
       AnimationDemoItem(
-          title: 'Chime Bell',
-          buildLetter: (onCreated) =>
-              ChimeBellDemo(onControllerCreated: onCreated),
-          buildWord: (onCreated) => ChimeBellDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              onControllerCreated: onCreated)),
+        title: 'Chime Bell',
+        buildLetter: (onCreated, _) =>
+            ChimeBellDemo(onControllerCreated: onCreated),
+        buildWord: (onCreated, _) => ChimeBellDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            onControllerCreated: onCreated),
+      ),
       AnimationDemoItem(
-          title: 'Spring',
-          buildLetter: (onCreated) =>
-              SpringDemo(onControllerCreated: onCreated),
-          buildWord: (onCreated) => SpringDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              onControllerCreated: onCreated)),
+        title: 'Spring',
+        buildLetter: (onCreated, _) =>
+            SpringDemo(onControllerCreated: onCreated),
+        buildWord: (onCreated, _) => SpringDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            onControllerCreated: onCreated),
+      ),
       AnimationDemoItem(
-          title: 'Blur',
-          buildLetter: (onCreated) =>
-              BlurTextDemo(onControllerCreated: onCreated),
-          buildWord: (onCreated) => BlurTextDemo(
-              type: AnimationType.word,
-              duration: wordAnimationDuration,
-              onControllerCreated: onCreated)),
+        title: 'Blur',
+        buildLetter: (onCreated, _) =>
+            BlurTextDemo(onControllerCreated: onCreated),
+        buildWord: (onCreated, _) => BlurTextDemo(
+            type: AnimationType.word,
+            duration: wordAnimationDuration,
+            onControllerCreated: onCreated),
+      ),
     ];
+
+    _variationIndices = List.filled(_demos.length, 0);
   }
 
   @override
@@ -101,6 +157,16 @@ class _HomeWidgetState extends State<HomeWidget> {
       _isWordMode = isWord;
     });
     // Give time for widget to build and controller to be registered
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleRepeat();
+    });
+  }
+
+  void _onVariationChanged(int pageIndex, int variationIndex) {
+    if (_variationIndices[pageIndex] == variationIndex) return;
+    setState(() {
+      _variationIndices[pageIndex] = variationIndex;
+    });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleRepeat();
     });
@@ -234,6 +300,9 @@ class _HomeWidgetState extends State<HomeWidget> {
   }
 
   Widget _buildMainContent(ColorScheme colorScheme, bool isDesktop) {
+    final currentDemo = _demos[_currentPage];
+    final currentVariationIndex = _variationIndices[_currentPage];
+
     return Column(
       children: [
         Expanded(
@@ -252,14 +321,21 @@ class _HomeWidgetState extends State<HomeWidget> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        _demos[_currentPage].title,
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: colorScheme.onSurface,
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Text(
+                              currentDemo.title,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
+                      const SizedBox(width: 12),
                       ModeToggleRound(
                         isWordMode: _isWordMode,
                         onChanged: _onModeChanged,
@@ -281,6 +357,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                     itemBuilder: (context, index) {
                       final demo = _demos[index];
                       final isCurrentPage = index == _currentPage;
+                      final vi = _variationIndices[index];
 
                       void onControllerCreated(AnimatedTextController c) {
                         if (isCurrentPage) {
@@ -292,10 +369,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                         padding: const EdgeInsets.fromLTRB(48, 0, 48, 48),
                         child: Center(
                           key: ValueKey(
-                              '${demo.title}_${_isWordMode}_$isCurrentPage'),
+                              '${demo.title}_${_isWordMode}_${vi}_$isCurrentPage'),
                           child: _isWordMode
-                              ? demo.buildWord(onControllerCreated)
-                              : demo.buildLetter(onControllerCreated),
+                              ? demo.buildWord(onControllerCreated, vi)
+                              : demo.buildLetter(onControllerCreated, vi),
                         ),
                       );
                     },
@@ -303,7 +380,26 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
-                  child: _buildBottomControls(colorScheme, isDesktop),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      if (currentDemo.hasVariations) ...[
+                        const SizedBox(width: 16),
+                        Flexible(
+                          child: VariationSelector(
+                            variations: currentDemo.variations,
+                            selectedIndex: currentVariationIndex,
+                            onChanged: (index) =>
+                                _onVariationChanged(_currentPage, index),
+                            colorScheme: colorScheme,
+                          ),
+                        ),
+                      ] else ...[
+                        const SizedBox.shrink()
+                      ],
+                      _buildBottomControls(colorScheme, isDesktop),
+                    ],
+                  ),
                 ),
               ],
             ),
