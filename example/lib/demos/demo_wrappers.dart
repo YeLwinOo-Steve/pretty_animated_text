@@ -24,12 +24,14 @@ AnimationConfig _buildConfig(
 class ChimeBellDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const ChimeBellDemo({
     super.key,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -37,6 +39,7 @@ class ChimeBellDemo extends StatelessWidget {
   Widget build(BuildContext context) => ChimeBellText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
@@ -45,12 +48,14 @@ class ChimeBellDemo extends StatelessWidget {
 class SpringDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const SpringDemo({
     super.key,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -58,6 +63,7 @@ class SpringDemo extends StatelessWidget {
   Widget build(BuildContext context) => SpringText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
@@ -66,12 +72,14 @@ class SpringDemo extends StatelessWidget {
 class ScaleTextDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const ScaleTextDemo({
     super.key,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -79,6 +87,7 @@ class ScaleTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => ScaleText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
@@ -88,6 +97,7 @@ class RotateTextDemo extends StatelessWidget {
   final AnimationType type;
   final RotateAnimationType direction;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const RotateTextDemo({
@@ -95,6 +105,7 @@ class RotateTextDemo extends StatelessWidget {
     this.direction = RotateAnimationType.clockwise,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -102,6 +113,7 @@ class RotateTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => RotateText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         direction: direction,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
@@ -111,12 +123,14 @@ class RotateTextDemo extends StatelessWidget {
 class BlurTextDemo extends StatelessWidget {
   final AnimationType type;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const BlurTextDemo({
     super.key,
     this.type = AnimationType.letter,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -124,6 +138,7 @@ class BlurTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => BlurText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,
       );
@@ -133,6 +148,7 @@ class SlideTextDemo extends StatelessWidget {
   final AnimationType type;
   final SlideAnimationType slideType;
   final Duration duration;
+  final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const SlideTextDemo({
@@ -140,6 +156,7 @@ class SlideTextDemo extends StatelessWidget {
     this.type = AnimationType.letter,
     this.slideType = SlideAnimationType.topBottom,
     this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
     this.onControllerCreated,
   });
 
@@ -147,6 +164,7 @@ class SlideTextDemo extends StatelessWidget {
   Widget build(BuildContext context) => SlideText(
         text: loremText,
         style: demoTextStyle,
+        textAlign: textAlign,
         slideType: slideType,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
         onControllerCreated: onControllerCreated,

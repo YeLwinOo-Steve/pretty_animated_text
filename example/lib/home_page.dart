@@ -7,6 +7,7 @@ import 'models/animation_demo_item.dart';
 import 'widgets/control_button.dart';
 import 'widgets/header.dart';
 import 'widgets/mode_toggle_round.dart';
+import 'widgets/text_align_toggle.dart';
 import 'widgets/variation_selector.dart';
 
 class HomeWidget extends StatefulWidget {
@@ -24,6 +25,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   bool _isWordMode = false;
   int _currentPage = 0;
+  TextAlign _textAlign = TextAlign.start;
 
   /// Tracks the selected variation index for each demo page.
   late final List<int> _variationIndices;
@@ -78,62 +80,70 @@ class _HomeWidgetState extends State<HomeWidget> {
     _demos = [
       AnimationDemoItem(
         title: 'Scale',
-        buildLetter: (onCreated, _) =>
-            ScaleTextDemo(onControllerCreated: onCreated),
-        buildWord: (onCreated, _) => ScaleTextDemo(
+        buildLetter: (onCreated, _, ta) =>
+            ScaleTextDemo(textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta) => ScaleTextDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Slide',
         variations: _slideVariations,
-        buildLetter: (onCreated, vi) => SlideTextDemo(
+        buildLetter: (onCreated, vi, ta) => SlideTextDemo(
             slideType: _slideVariations[vi].value,
+            textAlign: ta,
             onControllerCreated: onCreated),
-        buildWord: (onCreated, vi) => SlideTextDemo(
+        buildWord: (onCreated, vi, ta) => SlideTextDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
             slideType: _slideVariations[vi].value,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Rotate',
         variations: _rotateVariations,
-        buildLetter: (onCreated, vi) => RotateTextDemo(
+        buildLetter: (onCreated, vi, ta) => RotateTextDemo(
             direction: _rotateVariations[vi].value,
+            textAlign: ta,
             onControllerCreated: onCreated),
-        buildWord: (onCreated, vi) => RotateTextDemo(
+        buildWord: (onCreated, vi, ta) => RotateTextDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
             direction: _rotateVariations[vi].value,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Chime Bell',
-        buildLetter: (onCreated, _) =>
-            ChimeBellDemo(onControllerCreated: onCreated),
-        buildWord: (onCreated, _) => ChimeBellDemo(
+        buildLetter: (onCreated, _, ta) =>
+            ChimeBellDemo(textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta) => ChimeBellDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Spring',
-        buildLetter: (onCreated, _) =>
-            SpringDemo(onControllerCreated: onCreated),
-        buildWord: (onCreated, _) => SpringDemo(
+        buildLetter: (onCreated, _, ta) =>
+            SpringDemo(textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta) => SpringDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Blur',
-        buildLetter: (onCreated, _) =>
-            BlurTextDemo(onControllerCreated: onCreated),
-        buildWord: (onCreated, _) => BlurTextDemo(
+        buildLetter: (onCreated, _, ta) =>
+            BlurTextDemo(textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta) => BlurTextDemo(
             type: AnimationType.word,
             duration: wordAnimationDuration,
+            textAlign: ta,
             onControllerCreated: onCreated),
       ),
     ];
@@ -166,6 +176,16 @@ class _HomeWidgetState extends State<HomeWidget> {
     if (_variationIndices[pageIndex] == variationIndex) return;
     setState(() {
       _variationIndices[pageIndex] = variationIndex;
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _handleRepeat();
+    });
+  }
+
+  void _onTextAlignChanged(TextAlign align) {
+    if (_textAlign == align) return;
+    setState(() {
+      _textAlign = align;
     });
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleRepeat();
@@ -335,6 +355,11 @@ class _HomeWidgetState extends State<HomeWidget> {
                           ],
                         ),
                       ),
+                      TextAlignToggle(
+                        selected: _textAlign,
+                        onChanged: _onTextAlignChanged,
+                        colorScheme: colorScheme,
+                      ),
                       const SizedBox(width: 12),
                       ModeToggleRound(
                         isWordMode: _isWordMode,
@@ -369,10 +394,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                         padding: const EdgeInsets.fromLTRB(48, 0, 48, 48),
                         child: Center(
                           key: ValueKey(
-                              '${demo.title}_${_isWordMode}_${vi}_$isCurrentPage'),
+                              '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_$isCurrentPage'),
                           child: _isWordMode
-                              ? demo.buildWord(onControllerCreated, vi)
-                              : demo.buildLetter(onControllerCreated, vi),
+                              ? demo.buildWord(onControllerCreated, vi, _textAlign)
+                              : demo.buildLetter(onControllerCreated, vi, _textAlign),
                         ),
                       );
                     },

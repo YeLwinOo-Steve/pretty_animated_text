@@ -17,9 +17,13 @@ class VariationOption<T> {
 class AnimationDemoItem {
   final String title;
   final Widget Function(
-      void Function(AnimatedTextController), int variationIndex) buildLetter;
+      void Function(AnimatedTextController) onCreated,
+      int variationIndex,
+      TextAlign textAlign) buildLetter;
   final Widget Function(
-      void Function(AnimatedTextController), int variationIndex) buildWord;
+      void Function(AnimatedTextController) onCreated,
+      int variationIndex,
+      TextAlign textAlign) buildWord;
 
   /// The list of variation options for this animation.
   /// Empty means no variations are available.
