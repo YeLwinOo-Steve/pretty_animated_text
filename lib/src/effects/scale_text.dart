@@ -37,6 +37,7 @@ class ScaleText extends StatelessWidget {
       style: style,
       textAlign: textAlign,
       config: config,
+      onControllerCreated: onControllerCreated,
       
       builder: (context, animations, segments) {
         return Wrap(

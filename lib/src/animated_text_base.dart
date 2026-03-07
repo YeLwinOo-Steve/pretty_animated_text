@@ -7,7 +7,11 @@ import 'package:pretty_animated_text/src/utils/interval_step_by_overlap_factor.d
 import 'package:pretty_animated_text/src/utils/custom_curved_animation.dart';
 import 'package:pretty_animated_text/src/utils/total_duration.dart';
 
-/// Base widget for text animations that provides efficient animation handling
+/// Base widget for text animations that provides efficient animation handling.
+///
+/// This widget creates a Flutter [AnimationController] and attaches it to the
+/// [AnimatedTextController]. The controller is the single source of truth
+/// for all animation state and control logic.
 class AnimatedTextBase extends StatefulWidget {
   /// The text to animate
   final String text;
@@ -25,10 +29,12 @@ class AnimatedTextBase extends StatefulWidget {
   final Widget Function(BuildContext context,
       List<Animation<double>> animations, List<String> segments) builder;
 
-  /// Optional controller to control the animation
+  /// Optional external controller to control the animation.
+  /// If not provided, an internal controller is created.
   final AnimatedTextController? controller;
 
-  /// Callback when the controller is created
+  /// Callback when the controller is created/available.
+  /// Fires in initState and whenever the callback reference changes.
   final void Function(AnimatedTextController)? onControllerCreated;
 
   const AnimatedTextBase({
@@ -52,10 +58,7 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
   late List<Animation<double>> _animations;
   late List<String> _segments;
   late AnimatedTextController _textController;
-  int _repeatCount = 0;
-  bool _isReversing = false;
-  bool _hasPlayedOnce = false;
-  bool _isRepeating = false;
+  bool _ownsController = false;
 
   @override
   void initState() {
@@ -66,6 +69,7 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
         ? widget.text.splittedLetters.map((dto) => dto.text).toList()
         : widget.text.splittedWords.map((dto) => dto.text).toList();
 
+    // Create the Flutter AnimationController
     final int totalDuration = getTotalDuration(
       wordCount: _segments.length,
       duration: widget.config.duration,
@@ -77,23 +81,30 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
       duration: Duration(milliseconds: totalDuration),
       reverseDuration: Duration(milliseconds: totalDuration),
     );
-    // Create text controller
-    _textController = widget.controller ?? AnimatedTextController();
-    _textController.animationController = _controller;
-    _textController.onPlay = play;
-    _textController.onPause = pause;
-    _textController.onResume = resume;
-    _textController.onReverse = reverse;
-    _textController.onRestart = restart;
-    _textController.onRepeat = repeat;
 
-    // Notify parent about controller creation
+    // Use external controller or create internal one
+    if (widget.controller != null) {
+      _textController = widget.controller!;
+      _ownsController = false;
+    } else {
+      _textController = AnimatedTextController();
+      _ownsController = true;
+    }
+
+    // Attach the Flutter AnimationController to the text controller
+    _textController.attach(_controller, widget.config);
+
+    // Notify parent about controller availability
     widget.onControllerCreated?.call(_textController);
 
-    // Add status listener for callbacks
-    _controller.addStatusListener(_handleAnimationStatus);
-
     // Create overlapped animations for each segment
+    _buildSegmentAnimations();
+
+    // Start the initial animation
+    _textController.startInitialAnimation();
+  }
+
+  void _buildSegmentAnimations() {
     final segmentCount = _segments.length;
     final intervalStep =
         intervalStepByOverlapFactor(segmentCount, widget.config.overlapFactor);
@@ -109,147 +120,6 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
         ),
       );
     });
-
-    // Initialize external controller if provided
-    if (widget.controller != null) {
-      widget.controller!.animationController = _controller;
-      widget.controller!.onPlay = play;
-      widget.controller!.onPause = pause;
-      widget.controller!.onResume = resume;
-      widget.controller!.onReverse = reverse;
-      widget.controller!.onRestart = restart;
-      widget.controller!.onRepeat = repeat;
-    }
-
-    _setupAnimation();
-  }
-
-  void _handleAnimationStatus(AnimationStatus status) {
-    switch (status) {
-      case AnimationStatus.forward:
-        if (!_hasPlayedOnce) {
-          _hasPlayedOnce = true;
-          widget.config.onPlay?.call(_textController);
-        }
-        break;
-      case AnimationStatus.completed:
-        widget.config.onComplete?.call(_textController);
-        if (widget.config.reverse && !_isReversing) {
-          _isReversing = true;
-          _controller.reverse();
-        } else if (_isRepeating || widget.config.repeat) {
-          _handleRepeat();
-        }
-        break;
-      case AnimationStatus.dismissed:
-        widget.config.onDismissed?.call(_textController);
-        if (widget.config.reverse) {
-          _isReversing = false;
-          if (_isRepeating || widget.config.repeat) {
-            _handleRepeat();
-          }
-        }
-        break;
-      case AnimationStatus.reverse:
-        break;
-    }
-  }
-
-  void _handleRepeat() {
-    if (widget.config.repeatCount != null) {
-      _repeatCount++;
-      if (_repeatCount >= widget.config.repeatCount!) {
-        _isRepeating = false;
-        return;
-      }
-    }
-
-    widget.config.onRepeat?.call(_textController, _repeatCount);
-
-    if (widget.config.repeatDelay > Duration.zero) {
-      Future.delayed(widget.config.repeatDelay, () {
-        if (mounted) {
-          _controller.reset();
-          _controller.forward();
-        }
-      });
-    } else {
-      _controller.reset();
-      _controller.forward();
-    }
-  }
-
-  void _setupAnimation() {
-    if (widget.config.delay > Duration.zero) {
-      Future.delayed(widget.config.delay, () {
-        if (mounted) {
-          _startAnimation();
-        }
-      });
-    } else {
-      _startAnimation();
-    }
-  }
-
-  void _startAnimation() {
-    _repeatCount = 0;
-    _isReversing = false;
-    _hasPlayedOnce = false;
-    _isRepeating = false;
-    _controller.forward();
-  }
-
-  // Public methods to control animation
-  void play() {
-    _repeatCount = 0;
-    _isReversing = false;
-    _hasPlayedOnce = false;
-    _isRepeating = false;
-    _controller.forward();
-  }
-
-  void pause() {
-    _controller.stop();
-    widget.config.onPause?.call(_textController);
-  }
-
-  void resume() {
-    if (_isReversing) {
-      _controller.reverse();
-    } else {
-      _controller.forward();
-    }
-    widget.config.onResume?.call(_textController);
-  }
-
-  void reverse() {
-    if (_controller.value == 0.0) {
-      _controller.forward();
-    } else {
-      _isReversing = true;
-      _controller.reverse();
-    }
-    widget.config.onPlay?.call(_textController);
-  }
-
-  void restart() {
-    _repeatCount = 0;
-    _isReversing = false;
-    _hasPlayedOnce = false;
-    _isRepeating = false;
-    _controller.reset();
-    Future.delayed(const Duration(milliseconds: 10), () {
-      _controller.forward();
-    });
-  }
-
-  void repeat({bool reverse = false}) {
-    _repeatCount = 0;
-    _isReversing = false;
-    _hasPlayedOnce = false;
-    _isRepeating = true;
-    _controller.reset();
-    _controller.forward();
   }
 
   @override
@@ -263,35 +133,31 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
 
     if (oldWidget.config != widget.config || oldWidget.text != widget.text) {
       _controller.duration = widget.config.duration;
-      _repeatCount = 0;
-      _isReversing = false;
 
-      // Recreate animations with new configuration
-      final segmentCount = _segments.length;
-      final intervalStep = intervalStepByOverlapFactor(
-          segmentCount, widget.config.overlapFactor);
+      // Update the config on the controller
+      _textController.updateConfig(widget.config);
 
-      _animations = List.generate(segmentCount, (index) {
-        return Tween<double>(begin: 0.0, end: 1.0).animate(
-          curvedAnimation(
-            _controller,
-            index,
-            intervalStep,
-            widget.config.overlapFactor,
-            curve: Curves.easeInOut,
-          ),
-        );
-      });
+      // Recreate segment animations with new configuration
+      _buildSegmentAnimations();
 
-      _setupAnimation();
+      // Restart the animation
+      _textController.startInitialAnimation();
     }
   }
 
   @override
   void dispose() {
-    _controller.removeStatusListener(_handleAnimationStatus);
+    // Detach the controller (makes it inert, safe for stale references)
+    _textController.detach();
+
+    // Dispose the Flutter AnimationController
     _controller.dispose();
-    _textController.dispose();
+
+    // Only dispose the text controller if we own it (created internally)
+    if (_ownsController) {
+      _textController.dispose();
+    }
+
     super.dispose();
   }
 

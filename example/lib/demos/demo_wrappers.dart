@@ -11,7 +11,7 @@ AnimationConfig _buildConfig(
   return AnimationConfig(
     type: type,
     duration: duration,
-    repeat: false, // We control repeat via buttons now
+    repeat: true,
     onPlay: (c) => debugPrint('$runtimeType animation played!'),
     onPause: (c) => debugPrint('$runtimeType animation paused!'),
     onComplete: (c) => debugPrint('$runtimeType animation completed!'),

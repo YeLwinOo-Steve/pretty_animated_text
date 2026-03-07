@@ -88,7 +88,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   void dispose() {
     _pageController.dispose();
-    _currentController?.dispose();
     super.dispose();
   }
 
