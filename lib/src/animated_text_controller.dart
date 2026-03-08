@@ -31,6 +31,9 @@ class AnimatedTextController with ChangeNotifier {
   /// Whether the animation is paused (stopped mid-way)
   bool get isPaused => !isAnimating && progress > 0.0 && progress < 1.0;
 
+  /// Whether the animation is currently repeating
+  bool get isRepeating => _isRepeating;
+
   /// Whether the animation has completed
   bool get isCompleted =>
       _animationController?.status == AnimationStatus.completed;
@@ -79,6 +82,7 @@ class AnimatedTextController with ChangeNotifier {
     _isReversing = false;
     _hasPlayedOnce = false;
     _isRepeating = false;
+    _animationController!.reset();
     _animationController!.forward();
     notifyListeners();
   }

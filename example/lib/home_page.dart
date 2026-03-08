@@ -158,7 +158,17 @@ class _HomeWidgetState extends State<HomeWidget> {
     super.dispose();
   }
 
-  void _handlePlay() => _currentController?.play();
+  void _handlePlay() {
+    if (_currentController == null) return;
+    if (_currentController!.isAnimating) return;
+    
+    if (_currentController!.isPaused || _currentController!.isRepeating) {
+      _currentController!.resume();
+    } else {
+      _currentController!.play();
+    }
+  }
+  
   void _handlePause() => _currentController?.pause();
   void _handleRepeat() => _currentController?.repeat();
 
