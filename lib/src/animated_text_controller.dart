@@ -7,27 +7,23 @@ import 'package:pretty_animated_text/src/animation_config.dart';
 /// - External code (e.g. parent widget) controls animations via
 ///   [play], [pause], [resume], [repeat], [restart], [reverse]
 /// - When the widget is disposed, it detaches the animation controller
-class AnimatedTextController {
+class AnimatedTextController with ChangeNotifier {
   AnimationController? _animationController;
   AnimationConfig? _config;
-
-  // --- Animation state ---
   int _repeatCount = 0;
   bool _isReversing = false;
   bool _isRepeating = false;
   bool _hasPlayedOnce = false;
   bool _isDisposed = false;
 
-  // --- External listeners ---
   void Function(AnimationStatus)? _statusCallback;
   void Function(double)? _progressCallback;
 
-  // =========================================================================
-  // Read-only properties
-  // =========================================================================
-
   /// Current progress of the animation (0.0 to 1.0)
   double get progress => _animationController?.value ?? 0.0;
+
+  /// Current repeat count
+  int get repeatCount => _repeatCount;
 
   /// Whether the animation is currently animating
   bool get isAnimating => _animationController?.isAnimating ?? false;
@@ -48,10 +44,6 @@ class AnimatedTextController {
 
   /// Whether this controller is attached to an [AnimationController]
   bool get isAttached => _animationController != null && !_isDisposed;
-
-  // =========================================================================
-  // Attach / Detach — called by AnimatedTextBase
-  // =========================================================================
 
   /// Attach a Flutter [AnimationController] and [AnimationConfig] to this
   /// controller. Called by the widget's State in initState.
@@ -80,10 +72,6 @@ class AnimatedTextController {
     _config = config;
   }
 
-  // =========================================================================
-  // Control methods
-  // =========================================================================
-
   /// Play the animation from the beginning (resets state).
   void play() {
     if (!isAttached) return;
@@ -92,6 +80,7 @@ class AnimatedTextController {
     _hasPlayedOnce = false;
     _isRepeating = false;
     _animationController!.forward();
+    notifyListeners();
   }
 
   /// Pause (stop) the animation at the current position.
@@ -99,6 +88,7 @@ class AnimatedTextController {
     if (!isAttached) return;
     _animationController!.stop();
     _config?.onPause?.call(this);
+    notifyListeners();
   }
 
   /// Resume the animation from the current position.
@@ -111,6 +101,7 @@ class AnimatedTextController {
       _animationController!.forward();
     }
     _config?.onResume?.call(this);
+    notifyListeners();
   }
 
   /// Reverse the animation direction.
@@ -122,6 +113,7 @@ class AnimatedTextController {
       _isReversing = true;
       _animationController!.reverse();
     }
+    notifyListeners();
   }
 
   /// Restart the animation from the beginning.
@@ -148,6 +140,7 @@ class AnimatedTextController {
     _isRepeating = true;
     _animationController!.reset();
     _animationController!.forward();
+    notifyListeners();
   }
 
   /// Start the initial animation (called internally after attach).
@@ -169,11 +162,8 @@ class AnimatedTextController {
     } else {
       _animationController!.forward();
     }
+    notifyListeners();
   }
-
-  // =========================================================================
-  // External listener setters
-  // =========================================================================
 
   /// Set a callback for animation status changes
   set onStatusChange(void Function(AnimationStatus) callback) =>
@@ -182,10 +172,6 @@ class AnimatedTextController {
   /// Set a callback for animation progress changes
   set onProgressChange(void Function(double) callback) =>
       _progressCallback = callback;
-
-  // =========================================================================
-  // Internal status handling — single source of truth
-  // =========================================================================
 
   void _handleAnimationStatus(AnimationStatus status) {
     // Forward external listener
@@ -219,6 +205,7 @@ class AnimatedTextController {
       case AnimationStatus.reverse:
         break;
     }
+    notifyListeners();
   }
 
   void _handleRepeat() {
@@ -244,21 +231,19 @@ class AnimatedTextController {
       _animationController!.reset();
       _animationController!.forward();
     }
+    notifyListeners();
   }
 
   void _handleProgressChange() {
     _progressCallback?.call(progress);
   }
 
-  // =========================================================================
-  // Lifecycle
-  // =========================================================================
-
   /// Dispose the controller. After this, the controller should not be used.
+  @override
   void dispose() {
     detach();
-    _statusCallback = null;
     _progressCallback = null;
     _isDisposed = true;
+    super.dispose();
   }
 }

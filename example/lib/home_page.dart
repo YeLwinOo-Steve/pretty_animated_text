@@ -19,6 +19,8 @@ class HomeWidget extends StatefulWidget {
 
 class _HomeWidgetState extends State<HomeWidget> {
   AnimatedTextController? _currentController;
+  final ValueNotifier<AnimatedTextController?> _controllerNotifier =
+      ValueNotifier(null);
   final PageController _pageController = PageController();
   final Duration _pageTransitionDuration = const Duration(milliseconds: 400);
   final Curve _curve = Curves.fastOutSlowIn;
@@ -152,6 +154,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   @override
   void dispose() {
     _pageController.dispose();
+    _controllerNotifier.dispose();
     super.dispose();
   }
 
@@ -338,27 +341,39 @@ class _HomeWidgetState extends State<HomeWidget> {
                   padding: const EdgeInsets.all(24.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
-                        child: Text(
-                          currentDemo.title,
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: colorScheme.onSurface,
-                          ),
+                        child: Row(
+                          children: [
+                            Text(
+                              currentDemo.title,
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: colorScheme.onSurface,
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            _statusChip(colorScheme),
+                          ],
                         ),
                       ),
-                      TextAlignToggle(
-                        selected: _textAlign,
-                        onChanged: _onTextAlignChanged,
-                        colorScheme: colorScheme,
-                      ),
-                      const SizedBox(width: 12),
-                      ModeToggleRound(
-                        isWordMode: _isWordMode,
-                        onChanged: _onModeChanged,
-                        colorScheme: colorScheme,
+                      Column(
+                        spacing: 12,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          ModeToggleRound(
+                            isWordMode: _isWordMode,
+                            onChanged: _onModeChanged,
+                            colorScheme: colorScheme,
+                          ),
+                          TextAlignToggle(
+                            selected: _textAlign,
+                            onChanged: _onTextAlignChanged,
+                            colorScheme: colorScheme,
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -380,7 +395,14 @@ class _HomeWidgetState extends State<HomeWidget> {
 
                       void onControllerCreated(AnimatedTextController c) {
                         if (isCurrentPage) {
-                          _currentController = c;
+                          if (_currentController != c) {
+                            _currentController = c;
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              if (mounted) {
+                                _controllerNotifier.value = c;
+                              }
+                            });
+                          }
                         }
                       }
 
@@ -401,23 +423,17 @@ class _HomeWidgetState extends State<HomeWidget> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  child: Column(
+                    spacing: 16,
                     children: [
-                      if (currentDemo.hasVariations) ...[
-                        const SizedBox(width: 16),
-                        Flexible(
-                          child: VariationSelector(
-                            variations: currentDemo.variations,
-                            selectedIndex: currentVariationIndex,
-                            onChanged: (index) =>
-                                _onVariationChanged(_currentPage, index),
-                            colorScheme: colorScheme,
-                          ),
+                      if (currentDemo.hasVariations)
+                        VariationSelector(
+                          variations: currentDemo.variations,
+                          selectedIndex: currentVariationIndex,
+                          onChanged: (index) =>
+                              _onVariationChanged(_currentPage, index),
+                          colorScheme: colorScheme,
                         ),
-                      ] else ...[
-                        const SizedBox.shrink()
-                      ],
                       _buildBottomControls(colorScheme, isDesktop),
                     ],
                   ),
@@ -427,6 +443,50 @@ class _HomeWidgetState extends State<HomeWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  ValueListenableBuilder<AnimatedTextController?> _statusChip(
+      ColorScheme colorScheme) {
+    return ValueListenableBuilder<AnimatedTextController?>(
+      valueListenable: _controllerNotifier,
+      builder: (context, controller, _) {
+        return ListenableBuilder(
+          listenable: controller ?? ChangeNotifier(),
+          builder: (context, _) {
+            String statusText = 'Stopped';
+            if (controller != null) {
+              if (controller.isAnimating) {
+                statusText = 'Playing';
+                if (controller.repeatCount > 0) {
+                  statusText += ' (Repeat: ${controller.repeatCount})';
+                }
+              } else if (controller.isPaused) {
+                statusText = 'Paused';
+              } else if (controller.isCompleted) {
+                statusText = 'Completed';
+              } else if (controller.isDismissed) {
+                statusText = 'Dismissed';
+              }
+            }
+            return Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: colorScheme.primaryContainer,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Text(
+                statusText,
+                style: TextStyle(
+                  color: colorScheme.onPrimaryContainer,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 
