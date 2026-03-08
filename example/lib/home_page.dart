@@ -34,7 +34,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   // ─── Slide variation options ───────────────────────────────────────
   static const _slideVariations = [
-    VariationOption<SlideAnimationType>(  
+    VariationOption<SlideAnimationType>(
       icon: Icons.arrow_forward,
       value: SlideAnimationType.leftRight,
     ),
@@ -342,17 +342,13 @@ class _HomeWidgetState extends State<HomeWidget> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
-                        child: Row(
-                          children: [
-                            Text(
-                              currentDemo.title,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
-                              ),
-                            ),
-                          ],
+                        child: Text(
+                          currentDemo.title,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: colorScheme.onSurface,
+                          ),
                         ),
                       ),
                       TextAlignToggle(
@@ -396,8 +392,10 @@ class _HomeWidgetState extends State<HomeWidget> {
                           key: ValueKey(
                               '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_$isCurrentPage'),
                           child: _isWordMode
-                              ? demo.buildWord(onControllerCreated, vi, _textAlign)
-                              : demo.buildLetter(onControllerCreated, vi, _textAlign),
+                              ? demo.buildWord(
+                                  onControllerCreated, vi, _textAlign)
+                              : demo.buildLetter(
+                                  onControllerCreated, vi, _textAlign),
                         ),
                       );
                     },
