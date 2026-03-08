@@ -80,11 +80,7 @@ class _SocialButton extends StatelessWidget {
           decoration: BoxDecoration(
             color: Colors.white,
             shape: BoxShape.circle,
-            border: Border.all(
-                color: Theme.of(context)
-                    .colorScheme
-                    .outlineVariant
-                    .withValues(alpha: 0.5)),
+            border: Border.all(color: Theme.of(context).colorScheme.outline),
           ),
           child: Image.asset(assetPath),
         ),

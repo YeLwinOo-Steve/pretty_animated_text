@@ -32,7 +32,6 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   late final List<AnimationDemoItem> _demos;
 
-  // ─── Slide variation options ───────────────────────────────────────
   static const _slideVariations = [
     VariationOption<SlideAnimationType>(
       icon: Icons.arrow_forward,
@@ -60,7 +59,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     ),
   ];
 
-  // ─── Rotate variation options ──────────────────────────────────────
   static const _rotateVariations = [
     VariationOption<RotateAnimationType>(
       label: 'Clockwise',

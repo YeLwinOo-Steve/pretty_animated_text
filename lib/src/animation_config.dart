@@ -84,7 +84,7 @@ class AnimationConfig {
     void Function(AnimatedTextController)? onResume,
     void Function(AnimatedTextController, int)? onRepeat,
     AnimationType? type,
-    TextAlignment? textAlignment,
+    TextAlign? textAlign,
   }) {
     return AnimationConfig(
       duration: duration ?? this.duration,

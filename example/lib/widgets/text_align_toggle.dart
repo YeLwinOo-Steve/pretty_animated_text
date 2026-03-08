@@ -18,6 +18,7 @@ class TextAlignToggle extends StatelessWidget {
     (value: TextAlign.start, icon: Icons.format_align_left, label: 'Start'),
     (value: TextAlign.center, icon: Icons.format_align_center, label: 'Center'),
     (value: TextAlign.end, icon: Icons.format_align_right, label: 'End'),
+    (value: TextAlign.justify, icon: Icons.format_align_justify, label: 'Justify'),
   ];
 
   @override

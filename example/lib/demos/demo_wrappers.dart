@@ -37,7 +37,7 @@ class ChimeBellDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ChimeBellText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
@@ -61,7 +61,7 @@ class SpringDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SpringText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
@@ -85,7 +85,7 @@ class ScaleTextDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ScaleText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
@@ -111,7 +111,7 @@ class RotateTextDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => RotateText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         direction: direction,
@@ -136,7 +136,7 @@ class BlurTextDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => BlurText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         config: _buildConfig(runtimeType, type, duration, onControllerCreated),
@@ -162,7 +162,7 @@ class SlideTextDemo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => SlideText(
-        text: loremText,
+        text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
         slideType: slideType,
