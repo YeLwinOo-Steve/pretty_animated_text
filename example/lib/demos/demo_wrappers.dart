@@ -16,6 +16,7 @@ AnimationConfig _buildConfig(
     onPause: (c) => debugPrint('$runtimeType animation paused!'),
     onComplete: (c) => debugPrint('$runtimeType animation completed!'),
     repeatCount: 3,
+    reverse: true,
     onRepeat: (c, r) => debugPrint('$runtimeType animation repeated! $r times'),
     onDismissed: (c) => debugPrint('$runtimeType animation dismissed!'),
   );
