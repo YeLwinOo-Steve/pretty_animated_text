@@ -1,8 +1,8 @@
 # Pretty Animated Text
 
-[![Buy Me A Coffee](https://img.shields.io/badge/Donate-Buy%20Me%20A%20Coffee-teal.svg)](https://buymeacoffee.com/yloo2)
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-orange.svg)](https://buymeacoffee.com/yloo2)
 
-## <img src="assets/Telescope.webp" width="36px"> Overview
+## Overview
 
 A text animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
@@ -11,11 +11,11 @@ Physics-based animations are utilized for text animations, providing a smooth an
 > This project heavily inspires on [jasudev's AnimateText for SwiftUI package](https://github.com/jasudev/AnimateText)
 
 
-## <img src="assets/Spider Web.webp" width="36px">  Preview Website
+##  Preview Website
 
 Link: https://pretty-animated-text.vercel.app
 
-### <img src="assets/Rocket.png" width="36px">️ Key Features: 
+### Key Features: 
 
 - Various text animation types:
   - Spring animation
@@ -28,27 +28,28 @@ Link: https://pretty-animated-text.vercel.app
 - Customizable animation duration and styles
 - Easy to integrate into existing Flutter projects
 
-## <img src="assets/Fire.png" width="36px">️ Installation
+## Installation
 To use this package, add `pretty_animated_text` as a dependency in your `pubspec.yaml` file:
 
 `flutter pub add pretty_animated_text`
 
-### <img src="assets/Comet.png" width="36px">️ How to
+### How to
 
-There are two main animation types that you can trigger.
+Animations are configured using `AnimationConfig`. There are two main animation types that you can trigger inside the config:
 - for word by word → `AnimationType.word`
 - for letter by letter → `AnimationType.letter`
 
+You can also pass callbacks to react to animation lifecycle events:
+- `onPlay`: Triggered when the animation starts.
+- `onComplete`: Triggered when the animation finishes.
+- `onPause`, `onResume`, `onDismissed`, etc.
 
 And for texts such as `RotateText` and `OffsetText`, you can trigger some more variations like rotation direction and slide offset.
 
-Currently, the plugin supports 6 alignment styles.
-  - `TextAlignment.start`
-  - `TextAlignment.center`
-  - `TextAlignment.end`
-  - `TextAlignment.spaceAround`
-  - `TextAlignment.spaceBetween`
-  - `TextAlignment.spaceEvenly`
+Currently, the plugin supports default Flutter text alignments:
+  - `TextAlign.start`
+  - `TextAlign.center`
+  - `TextAlign.end`
 
 
 
@@ -74,39 +75,49 @@ Currently, the plugin supports 6 alignment styles.
 - Spring Text
   ```dart
     SpringText(
-          text: 'Lorem ipsum dolor sit amet ...',
-          duration: const Duration(seconds: 4), 
-          type: AnimationType.word,
-          textStyle: const TextStyle(fontSize: 18),
-        )
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: AnimationConfig(
+        duration: const Duration(seconds: 4), 
+        type: AnimationType.word,
+        onPlay: (controller) => print('Animation started'),
+        onComplete: (controller) => print('Animation completed'),
+      ),
+    )
   ```
 - Chime Bell Text
   ```dart
     ChimeBellText(
-        text: 'Lorem ipsum dolor sit amet ...',
-        duration: const Duration(seconds: 4), 
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        duration: Duration(seconds: 4), 
         type: AnimationType.word,
-        textStyle: const TextStyle(fontSize: 18),
       ),
+    )
   ```
 - Scale Text
   ```dart
     ScaleText(
-        text: 'Lorem ipsum dolor sit amet ...',
-        duration: const Duration(seconds: 4), 
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        duration: Duration(seconds: 4), 
         type: AnimationType.word,
-        textStyle: const TextStyle(fontSize: 18),
       ),
+    )
   ```
 - Blur Text
   
   ```dart
     BlurText(
-        text: 'Lorem ipsum dolor sit amet ...',
-        duration: const Duration(seconds: 4), 
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        duration: Duration(seconds: 4), 
         type: AnimationType.word,
-        textStyle: const TextStyle(fontSize: 18),
       ),
+    )
   ```
 - Rotate Text
   
@@ -116,12 +127,14 @@ Currently, the plugin supports 6 alignment styles.
 
   ```dart
     RotateText(
-        text: 'Lorem ipsum dolor sit amet ...',
-        direction: RotateAnimationType.clockwise,
-        duration: const Duration(seconds: 4), 
+      text: 'Lorem ipsum dolor sit amet ...',
+      direction: RotateAnimationType.clockwise,
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        duration: Duration(seconds: 4), 
         type: AnimationType.word,
-        textStyle: const TextStyle(fontSize: 18),
       ),
+    )
   ```
 - Offset Text
   
@@ -135,21 +148,23 @@ Currently, the plugin supports 6 alignment styles.
 
   ```dart
     OffsetText(
-        text: 'Lorem ipsum dolor sit amet ...',
-        duration: const Duration(seconds: 4), 
+      text: 'Lorem ipsum dolor sit amet ...',
+      slideType: SlideAnimationType.topBottom,
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        duration: Duration(seconds: 4), 
         type: AnimationType.word,
-        slideType: SlideAnimationType.topBottom,
-        textStyle: const TextStyle(fontSize: 18),
       ),
+    )
   ```
 
-### <img src="assets/Eyes.png" width="36px">️  Project License:
+###  Project License:
 This project is licensed under [MIT License](LICENSE).
 
 Feel free to check it out and give it a  <img src="assets/Star.png" width="36px">️ if you love it. 
 Follow me for more updates and more projects
 
-> Suggestions are warmly welcome & more updates are coming along the way ...  <img src="assets/Folded Hands Medium Skin Tone.png" width="36px">️ 
+> Suggestions are warmly welcome & more updates are coming along the way ...️ 
 
 
 Copyright (©️) 2024 __YE LWIN OO__

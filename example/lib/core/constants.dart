@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const loremText = 'Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit.';
+const loremText = 'Bring motion to your text. Keep your UI elegant!';
 
 const demoTextStyle = TextStyle(
   fontSize: 48,
