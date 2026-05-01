@@ -3,7 +3,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'core/constants.dart';
 import 'home_page.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Preload demo fonts so the first frame of the Scale demo (and any other
+  // effect using these styles) renders with the correct typeface instead of
+  // the fallback while google_fonts fetches in the background.
+  await GoogleFonts.pendingFonts([
+    GoogleFonts.comicNeue(fontWeight: FontWeight.w900),
+    GoogleFonts.plusJakartaSans(),
+  ]);
+
   runApp(const PrettyAnimatedTextApp());
 }
 

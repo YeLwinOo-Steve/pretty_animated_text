@@ -47,9 +47,25 @@ class ScaleText extends StatelessWidget {
                   ? WrapAlignment.end
                   : WrapAlignment.start,
           children: List.generate(segments.length, (index) {
-            return Transform.scale(
-              scale: animations[index].value,
-              alignment: Alignment.center,
+            final scaleAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(
+                parent: animations[index],
+                curve: config.curve,
+              ),
+            );
+
+            return AnimatedBuilder(
+              animation: scaleAnimation,
+              builder: (context, child) {
+                return Transform.scale(
+                  scale: scaleAnimation.value.clamp(0.0, 1.0),
+                  alignment: Alignment.center,
+                  child: Opacity(
+                    opacity: animations[index].value.clamp(0.0, 1.0),
+                    child: child,
+                  ),
+                );
+              },
               child: ParagraphText(
                 segments[index],
                 style: style,

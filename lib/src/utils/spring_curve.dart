@@ -11,7 +11,7 @@ class SpringCurve extends Curve {
   const SpringCurve({
     this.mass = 1.0,
     this.stiffness = 80.0,
-    this.damping = 10.0,
+    this.damping = 16.0,
     this.duration = 1.0,
   });
 
@@ -34,6 +34,9 @@ class SpringCurve extends Curve {
     if (t == 1.0) return 1.0;
 
     // Creating this simulation on the fly is computationally very lightweight.
+    // Use a looser tolerance than Flutter's default (1e-3) so [isDone] reports
+    // convergence before the residual oscillation is large enough to render as
+    // a visible shake on high-magnitude tweens (e.g. scale 0->1, rotation 180->0).
     final simulation = SpringSimulation(
       SpringDescription(
         mass: mass,
@@ -43,10 +46,16 @@ class SpringCurve extends Curve {
       0.0, // initial position
       1.0, // target position
       0.0, // initial velocity
+      tolerance: const Tolerance(distance: 0.01, velocity: 0.05),
     );
 
     // Evaluate the simulation at the scaled elapsed time
     final time = t * duration;
+
+    // Snap to the settled value once the simulation has effectively converged
+    // to eliminate trailing micro-oscillation (perceived as "shake" at the end).
+    if (simulation.isDone(time)) return 1.0;
+
     return simulation.x(time);
   }
 }
