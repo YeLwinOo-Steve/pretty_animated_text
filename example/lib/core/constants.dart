@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 // Demo Content
 const demoText = 'Bring motion to your text. Keep your UI elegant!';
 
-final demoTextStyle = GoogleFonts.plusJakartaSans(
+final demoTextStyle = GoogleFonts.comicNeue(
   fontSize: 52,
   fontWeight: FontWeight.w900,
   color: const Color(0xFF1E293B),
