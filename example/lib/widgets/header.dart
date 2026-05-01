@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Header extends StatelessWidget {
@@ -13,23 +14,73 @@ class Header extends StatelessWidget {
         Row(
           children: [
             Container(
-              padding: const EdgeInsets.all(12),
+              width: 52,
+              height: 52,
               decoration: BoxDecoration(
-                color: colorScheme.primary,
-                borderRadius: BorderRadius.circular(16),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFF818CF8), Color(0xFF6366F1), Color(0xFF4F46E5)],
+                ),
+                borderRadius: BorderRadius.circular(18),
+                boxShadow: const [
+                  BoxShadow(
+                    color: Color(0x406366F1),
+                    blurRadius: 20,
+                    offset: Offset(0, 6),
+                  ),
+                ],
               ),
-              child: const Icon(Icons.text_fields_rounded,
-                  color: Colors.white, size: 28),
+              child: Stack(
+                children: [
+                  Positioned(
+                    top: 4,
+                    left: 6,
+                    right: 6,
+                    child: Container(
+                      height: 1,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          colors: [
+                            Colors.white.withValues(alpha: 0.0),
+                            Colors.white.withValues(alpha: 0.4),
+                            Colors.white.withValues(alpha: 0.0),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  const Center(
+                    child: Icon(Icons.text_fields_rounded,
+                        color: Colors.white, size: 28),
+                  ),
+                ],
+              ),
             ),
-            const SizedBox(width: 16),
-            Text(
-              'Pretty Animated Text',
-              style: TextStyle(
-                fontSize: 28,
-                fontWeight: FontWeight.w800,
-                color: colorScheme.onSurface,
-                letterSpacing: -0.5,
-              ),
+            const SizedBox(width: 14),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Pretty Animated Text',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w800,
+                    color: colorScheme.onSurface,
+                    letterSpacing: -0.5,
+                    height: 1.1,
+                  ),
+                ),
+                Text(
+                  'Flutter animation showcase',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onSurfaceVariant,
+                    letterSpacing: 0.1,
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -38,22 +89,22 @@ class Header extends StatelessWidget {
             _SocialButton(
               url: 'https://pub.dev/packages/pretty_animated_text',
               assetPath: 'assets/pub.png',
-              tooltip: 'Pub.dev',
+              tooltip: 'View on Pub.dev',
             ),
-            SizedBox(width: 12),
+            SizedBox(width: 10),
             _SocialButton(
               url: 'https://github.com/YeLwinOo-Steve/pretty_animated_text',
               assetPath: 'assets/github.png',
-              tooltip: 'GitHub',
+              tooltip: 'View on GitHub',
             ),
           ],
-        )
+        ),
       ],
     );
   }
 }
 
-class _SocialButton extends StatelessWidget {
+class _SocialButton extends StatefulWidget {
   final String url;
   final String assetPath;
   final String tooltip;
@@ -61,28 +112,60 @@ class _SocialButton extends StatelessWidget {
   const _SocialButton(
       {required this.url, required this.assetPath, required this.tooltip});
 
+  @override
+  State<_SocialButton> createState() => _SocialButtonState();
+}
+
+class _SocialButtonState extends State<_SocialButton> {
+  bool _hovered = false;
+
   Future<void> _launch() async {
-    final uri = Uri.parse(url);
-    if (!await launchUrl(uri)) throw Exception('Could not launch $url');
+    final uri = Uri.parse(widget.url);
+    if (!await launchUrl(uri)) throw Exception('Could not launch ${widget.url}');
   }
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Tooltip(
-      message: tooltip,
-      child: InkWell(
-        onTap: _launch,
-        borderRadius: BorderRadius.circular(50),
-        child: Container(
-          width: 48,
-          height: 48,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            shape: BoxShape.circle,
-            border: Border.all(color: Theme.of(context).colorScheme.outline),
+      message: widget.tooltip,
+      child: MouseRegion(
+        onEnter: (_) => setState(() => _hovered = true),
+        onExit: (_) => setState(() => _hovered = false),
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: _launch,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            width: 44,
+            height: 44,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: _hovered
+                    ? colorScheme.primary.withValues(alpha: 0.4)
+                    : colorScheme.outlineVariant.withValues(alpha: 0.6),
+              ),
+              boxShadow: _hovered
+                  ? [
+                      BoxShadow(
+                        color: colorScheme.primary.withValues(alpha: 0.15),
+                        blurRadius: 12,
+                        offset: const Offset(0, 3),
+                      ),
+                    ]
+                  : [
+                      const BoxShadow(
+                        color: Color(0x0D000000),
+                        blurRadius: 6,
+                        offset: Offset(0, 2),
+                      ),
+                    ],
+            ),
+            child: Image.asset(widget.assetPath),
           ),
-          child: Image.asset(assetPath),
         ),
       ),
     );

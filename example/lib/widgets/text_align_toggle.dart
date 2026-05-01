@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-/// A compact pill-shaped toggle for switching between text alignment options.
-/// Uses icon-only buttons to keep it small.
 class TextAlignToggle extends StatelessWidget {
   final TextAlign selected;
   final ValueChanged<TextAlign> onChanged;
@@ -27,6 +25,9 @@ class TextAlignToggle extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
         borderRadius: BorderRadius.circular(100),
+        boxShadow: const [
+          BoxShadow(color: Color(0x08000000), blurRadius: 4, offset: Offset(0, 1)),
+        ],
       ),
       padding: const EdgeInsets.all(4),
       child: Row(
@@ -44,6 +45,14 @@ class TextAlignToggle extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: isSelected ? Colors.white : Colors.transparent,
                   shape: BoxShape.circle,
+                  boxShadow: isSelected
+                      ? const [
+                          BoxShadow(
+                              color: Color(0x14000000),
+                              blurRadius: 8,
+                              offset: Offset(0, 2)),
+                        ]
+                      : null,
                 ),
                 child: Icon(
                   opt.icon,

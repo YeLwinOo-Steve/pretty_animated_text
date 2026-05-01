@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'core/constants.dart';
@@ -29,9 +30,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   int _currentPage = 0;
   TextAlign _textAlign = TextAlign.start;
 
-  /// Tracks the selected variation index for each demo page.
   late final List<int> _variationIndices;
-
   late final List<AnimationDemoItem> _demos;
 
   static const _slideVariations = [
@@ -161,14 +160,14 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _handlePlay() {
     if (_currentController == null) return;
     if (_currentController!.isAnimating) return;
-    
+
     if (_currentController!.isPaused || _currentController!.isRepeating) {
       _currentController!.resume();
     } else {
       _currentController!.play();
     }
   }
-  
+
   void _handlePause() => _currentController?.pause();
   void _handleRepeat() => _currentController?.repeat();
 
@@ -177,7 +176,6 @@ class _HomeWidgetState extends State<HomeWidget> {
     setState(() {
       _isWordMode = isWord;
     });
-    // Give time for widget to build and controller to be registered
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _handleRepeat();
     });
@@ -210,6 +208,7 @@ class _HomeWidgetState extends State<HomeWidget> {
 
     return SelectionArea(
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Center(
             child: ConstrainedBox(
@@ -231,7 +230,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                             Expanded(
                                 flex: 1,
                                 child: _buildSideNavigation(colorScheme)),
-                            const SizedBox(width: 32),
+                            const SizedBox(width: 24),
                           ],
                           Expanded(
                             flex: 3,
@@ -256,27 +255,38 @@ class _HomeWidgetState extends State<HomeWidget> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(32),
-        border: Border.all(
-            color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+        boxShadow: kCardShadows,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Animations',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
               color: colorScheme.onSurface,
+              letterSpacing: -0.3,
             ),
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 4),
+          Text(
+            '${_demos.length} types',
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 20),
           Expanded(
             child: ListView.separated(
               itemCount: _demos.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              separatorBuilder: (_, __) => const SizedBox(height: 8),
               itemBuilder: (context, index) {
                 final isSelected = _currentPage == index;
+                final icon =
+                    kDemoIcons[_demos[index].title] ?? Icons.animation_rounded;
                 return InkWell(
                   onTap: () {
                     _pageController.animateToPage(
@@ -285,39 +295,64 @@ class _HomeWidgetState extends State<HomeWidget> {
                       curve: _curve,
                     );
                   },
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(18),
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 200),
+                    duration: const Duration(milliseconds: 250),
+                    curve: Curves.easeInOut,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 16, horizontal: 20),
+                        vertical: 14, horizontal: 16),
                     decoration: BoxDecoration(
-                      color: isSelected
-                          ? colorScheme.primaryContainer
-                          : Colors.transparent,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: isSelected
-                            ? colorScheme.primary.withValues(alpha: 0.3)
-                            : Colors.transparent,
-                      ),
+                      gradient: isSelected
+                          ? LinearGradient(
+                              colors: [
+                                colorScheme.primaryContainer,
+                                colorScheme.primaryContainer
+                                    .withValues(alpha: 0.6),
+                              ],
+                            )
+                          : null,
+                      color: isSelected ? null : Colors.transparent,
+                      borderRadius: BorderRadius.circular(18),
+                      boxShadow: isSelected ? kNavSelectedShadows : null,
                     ),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          _demos[index].title,
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight:
-                                isSelected ? FontWeight.w700 : FontWeight.w500,
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 250),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? colorScheme.primary.withValues(alpha: 0.12)
+                                : colorScheme.surfaceContainerHighest
+                                    .withValues(alpha: 0.6),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            icon,
+                            size: 18,
                             color: isSelected
                                 ? colorScheme.primary
                                 : colorScheme.onSurfaceVariant,
                           ),
                         ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            _demos[index].title,
+                            style: GoogleFonts.plusJakartaSans(
+                              fontSize: 15,
+                              fontWeight: isSelected
+                                  ? FontWeight.w700
+                                  : FontWeight.w500,
+                              color: isSelected
+                                  ? colorScheme.primary
+                                  : colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                        ),
                         if (isSelected)
-                          Icon(Icons.arrow_forward_ios,
-                              size: 14, color: colorScheme.primary),
+                          Icon(Icons.arrow_forward_ios_rounded,
+                              size: 12, color: colorScheme.primary),
                       ],
                     ),
                   ),
@@ -342,8 +377,7 @@ class _HomeWidgetState extends State<HomeWidget> {
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(32),
-              border: Border.all(
-                  color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+              boxShadow: kCardShadows,
             ),
             child: Column(
               children: [
@@ -356,12 +390,30 @@ class _HomeWidgetState extends State<HomeWidget> {
                       Expanded(
                         child: Row(
                           children: [
-                            Text(
-                              currentDemo.title,
-                              style: TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: colorScheme.onSurface,
+                            AnimatedSwitcher(
+                              duration: const Duration(milliseconds: 300),
+                              transitionBuilder: (child, animation) {
+                                final offsetAnimation = Tween<Offset>(
+                                  begin: const Offset(0.0, 0.15),
+                                  end: Offset.zero,
+                                ).animate(CurvedAnimation(
+                                    parent: animation,
+                                    curve: Curves.easeOutCubic));
+                                return FadeTransition(
+                                  opacity: animation,
+                                  child: SlideTransition(
+                                      position: offsetAnimation, child: child),
+                                );
+                              },
+                              child: Text(
+                                currentDemo.title,
+                                key: ValueKey(currentDemo.title),
+                                style: GoogleFonts.plusJakartaSans(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.w800,
+                                  color: colorScheme.onSurface,
+                                  letterSpacing: -0.3,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 12),
@@ -389,46 +441,69 @@ class _HomeWidgetState extends State<HomeWidget> {
                   ),
                 ),
                 Expanded(
-                  child: PageView.builder(
-                    controller: _pageController,
-                    onPageChanged: (index) {
-                      setState(() => _currentPage = index);
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        _handleRepeat();
-                      });
-                    },
-                    itemCount: _demos.length,
-                    itemBuilder: (context, index) {
-                      final demo = _demos[index];
-                      final isCurrentPage = index == _currentPage;
-                      final vi = _variationIndices[index];
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          kCanvasGradientA,
+                          kCanvasGradientB,
+                          kCanvasGradientA,
+                        ],
+                        stops: [0.0, 0.5, 1.0],
+                      ),
+                      border: Border(
+                        top: BorderSide(
+                            color: colorScheme.outlineVariant
+                                .withValues(alpha: 0.3)),
+                        bottom: BorderSide(
+                            color: colorScheme.outlineVariant
+                                .withValues(alpha: 0.3)),
+                      ),
+                    ),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      onPageChanged: (index) {
+                        setState(() => _currentPage = index);
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          _handleRepeat();
+                        });
+                      },
+                      itemCount: _demos.length,
+                      itemBuilder: (context, index) {
+                        final demo = _demos[index];
+                        final isCurrentPage = index == _currentPage;
+                        final vi = _variationIndices[index];
 
-                      void onControllerCreated(AnimatedTextController c) {
-                        if (isCurrentPage) {
-                          if (_currentController != c) {
-                            _currentController = c;
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              if (mounted) {
-                                _controllerNotifier.value = c;
-                              }
-                            });
+                        void onControllerCreated(AnimatedTextController c) {
+                          if (isCurrentPage) {
+                            if (_currentController != c) {
+                              _currentController = c;
+                              WidgetsBinding.instance
+                                  .addPostFrameCallback((_) {
+                                if (mounted) {
+                                  _controllerNotifier.value = c;
+                                }
+                              });
+                            }
                           }
                         }
-                      }
 
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(48, 0, 48, 48),
-                        child: Center(
-                          key: ValueKey(
-                              '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_$isCurrentPage'),
-                          child: _isWordMode
-                              ? demo.buildWord(
-                                  onControllerCreated, vi, _textAlign)
-                              : demo.buildLetter(
-                                  onControllerCreated, vi, _textAlign),
-                        ),
-                      );
-                    },
+                        return Padding(
+                          padding: const EdgeInsets.fromLTRB(48, 0, 48, 48),
+                          child: Center(
+                            key: ValueKey(
+                                '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_$isCurrentPage'),
+                            child: _isWordMode
+                                ? demo.buildWord(
+                                    onControllerCreated, vi, _textAlign)
+                                : demo.buildLetter(
+                                    onControllerCreated, vi, _textAlign),
+                          ),
+                        );
+                      },
+                    ),
                   ),
                 ),
                 Padding(
@@ -464,33 +539,72 @@ class _HomeWidgetState extends State<HomeWidget> {
         return ListenableBuilder(
           listenable: controller ?? ChangeNotifier(),
           builder: (context, _) {
-            String statusText = 'Stopped';
-            if (controller != null) {
-              if (controller.isAnimating) {
+            String statusText;
+            Color chipBg;
+            Color chipFg;
+            IconData chipIcon;
+
+            if (controller == null) {
+              statusText = 'Stopped';
+              chipBg = kStatusStoppedBg;
+              chipFg = kStatusStopped;
+              chipIcon = Icons.stop_circle_outlined;
+            } else if (controller.isAnimating) {
+              if (controller.repeatCount > 0) {
+                statusText = 'Repeat ${controller.repeatCount}';
+              } else {
                 statusText = 'Playing';
-                if (controller.repeatCount > 0) {
-                  statusText += ' (Repeat: ${controller.repeatCount})';
-                }
-              } else if (controller.isPaused) {
-                statusText = 'Paused';
-              } else if (controller.isCompleted) {
-                statusText = 'Completed';
-              } else if (controller.isDismissed) {
-                statusText = 'Dismissed';
               }
+              chipBg = kStatusPlayingBg;
+              chipFg = kStatusPlaying;
+              chipIcon = Icons.play_circle_outline_rounded;
+            } else if (controller.isPaused) {
+              statusText = 'Paused';
+              chipBg = kStatusPausedBg;
+              chipFg = kStatusPaused;
+              chipIcon = Icons.pause_circle_outline_rounded;
+            } else if (controller.isCompleted) {
+              statusText = 'Completed';
+              chipBg = kStatusCompleteBg;
+              chipFg = kStatusComplete;
+              chipIcon = Icons.check_circle_outline_rounded;
+            } else {
+              statusText = 'Stopped';
+              chipBg = kStatusStoppedBg;
+              chipFg = kStatusStopped;
+              chipIcon = Icons.stop_circle_outlined;
             }
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(16),
+
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 250),
+              transitionBuilder: (child, animation) => ScaleTransition(
+                scale: CurvedAnimation(
+                    parent: animation, curve: Curves.easeOutBack),
+                child: FadeTransition(opacity: animation, child: child),
               ),
-              child: Text(
-                statusText,
-                style: TextStyle(
-                  color: colorScheme.onPrimaryContainer,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
+              child: Container(
+                key: ValueKey(statusText),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: chipBg,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(chipIcon, size: 13, color: chipFg),
+                    const SizedBox(width: 5),
+                    Text(
+                      statusText,
+                      style: GoogleFonts.plusJakartaSans(
+                        color: chipFg,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w700,
+                        letterSpacing: 0.3,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             );
@@ -526,12 +640,11 @@ class _HomeWidgetState extends State<HomeWidget> {
         ] else
           const SizedBox.shrink(),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(100),
-            border: Border.all(
-                color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+            boxShadow: kControlPillShadows,
           ),
           child: Row(
             mainAxisSize: MainAxisSize.min,
@@ -542,14 +655,14 @@ class _HomeWidgetState extends State<HomeWidget> {
                 onPressed: _handleRepeat,
                 colorScheme: colorScheme,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 4),
               ControlButton(
                 icon: Icons.pause_rounded,
                 tooltip: 'Pause',
                 onPressed: _handlePause,
                 colorScheme: colorScheme,
               ),
-              const SizedBox(width: 8),
+              const SizedBox(width: 4),
               ControlButton(
                 icon: Icons.play_arrow_rounded,
                 tooltip: 'Play',
