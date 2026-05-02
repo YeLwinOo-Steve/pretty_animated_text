@@ -19,11 +19,13 @@ class AnimationDemoItem {
   final Widget Function(
       void Function(AnimatedTextController) onCreated,
       int variationIndex,
-      TextAlign textAlign) buildLetter;
+      TextAlign textAlign,
+      Duration duration) buildLetter;
   final Widget Function(
       void Function(AnimatedTextController) onCreated,
       int variationIndex,
-      TextAlign textAlign) buildWord;
+      TextAlign textAlign,
+      Duration duration) buildWord;
 
   /// The list of variation options for this animation.
   /// Empty means no variations are available.

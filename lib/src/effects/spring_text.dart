@@ -1,9 +1,9 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:pretty_animated_text/src/widgets/paragraph_text.dart';
 import 'package:pretty_animated_text/src/animated_text_base.dart';
 import 'package:pretty_animated_text/src/animated_text_controller.dart';
 import 'package:pretty_animated_text/src/animation_config.dart';
+import 'package:pretty_animated_text/src/utils/spring_curve.dart';
 
 /// A widget that animates text with a spring effect
 class SpringText extends StatelessWidget {
@@ -47,31 +47,36 @@ class SpringText extends StatelessWidget {
                   ? WrapAlignment.end
                   : WrapAlignment.start,
           children: List.generate(segments.length, (index) {
-            final rotateAnimation =
-                Tween<double>(begin: 180.0, end: 0.0).animate(
+            // dampingRatio = damping / (2 * sqrt(mass * stiffness)) ≈ 0.28 -> ~37% overshoot.
+            // Hard-coded so SpringText always feels like a spring regardless of
+            // what curve the caller puts in config.curve.
+            final yAnimation = Tween<double>(begin: 50.0, end: 0.0).animate(
               CurvedAnimation(
                 parent: animations[index],
-                curve: config.curve,
+                curve: const SpringCurve(
+                  stiffness: 200.0,
+                  damping: 12.0,
+                  duration: 1.2,
+                ),
               ),
             );
 
-            final springAnimation = Tween<double>(begin: 1, end: 0).animate(
+            // Fade in during the first third so the spring bounce is fully visible.
+            final opacityAnimation =
+                Tween<double>(begin: 0.0, end: 1.0).animate(
               CurvedAnimation(
                 parent: animations[index],
-                curve: config.curve,
+                curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
               ),
             );
 
             return AnimatedBuilder(
-              animation: springAnimation,
+              animation: animations[index],
               builder: (context, child) {
-                return Transform(
-                  alignment: Alignment.bottomCenter,
-                  transform: Matrix4.identity()
-                    ..translate(0.0, springAnimation.value.clamp(-1.0, 1.0))
-                    ..rotateZ(rotateAnimation.value * pi / 180),
+                return Transform.translate(
+                  offset: Offset(0.0, yAnimation.value),
                   child: Opacity(
-                    opacity: animations[index].value.clamp(0.0, 1.0),
+                    opacity: opacityAnimation.value.clamp(0.0, 1.0),
                     child: child,
                   ),
                 );

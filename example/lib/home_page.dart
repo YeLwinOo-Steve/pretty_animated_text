@@ -8,6 +8,7 @@ import 'models/animation_demo_item.dart';
 import 'widgets/control_button.dart';
 import 'widgets/header.dart';
 import 'widgets/mode_toggle_round.dart';
+import 'widgets/speed_selector.dart';
 import 'widgets/text_align_toggle.dart';
 import 'widgets/variation_selector.dart';
 
@@ -29,6 +30,10 @@ class _HomeWidgetState extends State<HomeWidget> {
   bool _isWordMode = false;
   int _currentPage = 0;
   TextAlign _textAlign = TextAlign.start;
+  int _speedIndex = 1; // 0=slow, 1=medium, 2=fast
+
+  Duration get _letterDuration => letterDurations[_speedIndex];
+  Duration get _wordDuration => wordDurations[_speedIndex];
 
   late final List<int> _variationIndices;
   late final List<AnimationDemoItem> _demos;
@@ -79,24 +84,25 @@ class _HomeWidgetState extends State<HomeWidget> {
     _demos = [
       AnimationDemoItem(
         title: 'Scale',
-        buildLetter: (onCreated, _, ta) =>
-            ScaleTextDemo(textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta) => ScaleTextDemo(
+        buildLetter: (onCreated, _, ta, dur) =>
+            ScaleTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => ScaleTextDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
             textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Slide',
         variations: _slideVariations,
-        buildLetter: (onCreated, vi, ta) => SlideTextDemo(
+        buildLetter: (onCreated, vi, ta, dur) => SlideTextDemo(
+            duration: dur,
             slideType: _slideVariations[vi].value,
             textAlign: ta,
             onControllerCreated: onCreated),
-        buildWord: (onCreated, vi, ta) => SlideTextDemo(
+        buildWord: (onCreated, vi, ta, dur) => SlideTextDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
             slideType: _slideVariations[vi].value,
             textAlign: ta,
             onControllerCreated: onCreated),
@@ -104,44 +110,55 @@ class _HomeWidgetState extends State<HomeWidget> {
       AnimationDemoItem(
         title: 'Rotate',
         variations: _rotateVariations,
-        buildLetter: (onCreated, vi, ta) => RotateTextDemo(
+        buildLetter: (onCreated, vi, ta, dur) => RotateTextDemo(
+            duration: dur,
             direction: _rotateVariations[vi].value,
             textAlign: ta,
             onControllerCreated: onCreated),
-        buildWord: (onCreated, vi, ta) => RotateTextDemo(
+        buildWord: (onCreated, vi, ta, dur) => RotateTextDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
             direction: _rotateVariations[vi].value,
             textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Chime Bell',
-        buildLetter: (onCreated, _, ta) =>
-            ChimeBellDemo(textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta) => ChimeBellDemo(
+        buildLetter: (onCreated, _, ta, dur) =>
+            ChimeBellDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => ChimeBellDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
             textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Spring',
-        buildLetter: (onCreated, _, ta) =>
-            SpringDemo(textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta) => SpringDemo(
+        buildLetter: (onCreated, _, ta, dur) =>
+            SpringDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => SpringDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
             textAlign: ta,
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
         title: 'Blur',
-        buildLetter: (onCreated, _, ta) =>
-            BlurTextDemo(textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta) => BlurTextDemo(
+        buildLetter: (onCreated, _, ta, dur) =>
+            BlurTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => BlurTextDemo(
             type: AnimationType.word,
-            duration: wordAnimationDuration,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
+        title: 'Scramble',
+        buildLetter: (onCreated, _, ta, dur) =>
+            ScrambleTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => ScrambleTextDemo(
+            type: AnimationType.word,
+            duration: dur,
             textAlign: ta,
             onControllerCreated: onCreated),
       ),
@@ -160,7 +177,6 @@ class _HomeWidgetState extends State<HomeWidget> {
   void _handlePlay() {
     if (_currentController == null) return;
     if (_currentController!.isAnimating) return;
-
     if (_currentController!.isPaused || _currentController!.isRepeating) {
       _currentController!.resume();
     } else {
@@ -173,32 +189,26 @@ class _HomeWidgetState extends State<HomeWidget> {
 
   void _onModeChanged(bool isWord) {
     if (_isWordMode == isWord) return;
-    setState(() {
-      _isWordMode = isWord;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleRepeat();
-    });
+    setState(() => _isWordMode = isWord);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleRepeat());
   }
 
   void _onVariationChanged(int pageIndex, int variationIndex) {
     if (_variationIndices[pageIndex] == variationIndex) return;
-    setState(() {
-      _variationIndices[pageIndex] = variationIndex;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleRepeat();
-    });
+    setState(() => _variationIndices[pageIndex] = variationIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleRepeat());
   }
 
   void _onTextAlignChanged(TextAlign align) {
     if (_textAlign == align) return;
-    setState(() {
-      _textAlign = align;
-    });
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _handleRepeat();
-    });
+    setState(() => _textAlign = align);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleRepeat());
+  }
+
+  void _onSpeedChanged(int index) {
+    if (_speedIndex == index) return;
+    setState(() => _speedIndex = index);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _handleRepeat());
   }
 
   @override
@@ -215,22 +225,23 @@ class _HomeWidgetState extends State<HomeWidget> {
               constraints: const BoxConstraints(maxWidth: 1200),
               child: Padding(
                 padding: EdgeInsets.symmetric(
-                  horizontal: isDesktop ? 48.0 : 24.0,
+                  horizontal: isDesktop ? 48.0 : 20.0,
                   vertical: 24.0,
                 ),
                 child: Column(
                   children: [
                     Header(colorScheme: colorScheme),
-                    const SizedBox(height: 32),
+                    const SizedBox(height: 28),
                     Expanded(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           if (isDesktop) ...[
                             Expanded(
-                                flex: 1,
-                                child: _buildSideNavigation(colorScheme)),
-                            const SizedBox(width: 24),
+                              flex: 1,
+                              child: _buildSideNavigation(colorScheme),
+                            ),
+                            const SizedBox(width: 20),
                           ],
                           Expanded(
                             flex: 3,
@@ -249,98 +260,104 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
+  // ── Side navigation ──────────────────────────────────────────────────────
+
   Widget _buildSideNavigation(ColorScheme colorScheme) {
     return Container(
-      padding: const EdgeInsets.all(24),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(32),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: kCardShadows,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'Animations',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 18,
-              fontWeight: FontWeight.w700,
-              color: colorScheme.onSurface,
-              letterSpacing: -0.3,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Animations',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    color: colorScheme.onSurface,
+                    letterSpacing: -0.3,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  '${_demos.length} types',
+                  style: GoogleFonts.plusJakartaSans(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w500,
+                    color: colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            '${_demos.length} types',
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: colorScheme.onSurfaceVariant,
-            ),
-          ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 16),
           Expanded(
             child: ListView.separated(
               itemCount: _demos.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 8),
+              separatorBuilder: (_, __) => const SizedBox(height: 6),
               itemBuilder: (context, index) {
                 final isSelected = _currentPage == index;
                 final icon =
                     kDemoIcons[_demos[index].title] ?? Icons.animation_rounded;
                 return InkWell(
-                  onTap: () {
-                    _pageController.animateToPage(
-                      index,
-                      duration: _pageTransitionDuration,
-                      curve: _curve,
-                    );
-                  },
-                  borderRadius: BorderRadius.circular(18),
+                  onTap: () => _pageController.animateToPage(
+                    index,
+                    duration: _pageTransitionDuration,
+                    curve: _curve,
+                  ),
+                  borderRadius: BorderRadius.circular(16),
                   child: AnimatedContainer(
-                    duration: const Duration(milliseconds: 250),
+                    duration: const Duration(milliseconds: 220),
                     curve: Curves.easeInOut,
                     padding: const EdgeInsets.symmetric(
-                        vertical: 14, horizontal: 16),
+                        vertical: 12, horizontal: 14),
                     decoration: BoxDecoration(
                       gradient: isSelected
-                          ? LinearGradient(
-                              colors: [
-                                colorScheme.primaryContainer,
-                                colorScheme.primaryContainer
-                                    .withValues(alpha: 0.6),
-                              ],
-                            )
+                          ? LinearGradient(colors: [
+                              colorScheme.primaryContainer,
+                              colorScheme.primaryContainer
+                                  .withValues(alpha: 0.55),
+                            ])
                           : null,
                       color: isSelected ? null : Colors.transparent,
-                      borderRadius: BorderRadius.circular(18),
+                      borderRadius: BorderRadius.circular(16),
                       boxShadow: isSelected ? kNavSelectedShadows : null,
                     ),
                     child: Row(
                       children: [
                         AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          padding: const EdgeInsets.all(8),
+                          duration: const Duration(milliseconds: 220),
+                          padding: const EdgeInsets.all(7),
                           decoration: BoxDecoration(
                             color: isSelected
                                 ? colorScheme.primary.withValues(alpha: 0.12)
                                 : colorScheme.surfaceContainerHighest
-                                    .withValues(alpha: 0.6),
-                            borderRadius: BorderRadius.circular(10),
+                                    .withValues(alpha: 0.7),
+                            borderRadius: BorderRadius.circular(9),
                           ),
                           child: Icon(
                             icon,
-                            size: 18,
+                            size: 16,
                             color: isSelected
                                 ? colorScheme.primary
                                 : colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        const SizedBox(width: 12),
+                        const SizedBox(width: 10),
                         Expanded(
                           child: Text(
                             _demos[index].title,
                             style: GoogleFonts.plusJakartaSans(
-                              fontSize: 15,
+                              fontSize: 14,
                               fontWeight: isSelected
                                   ? FontWeight.w700
                                   : FontWeight.w500,
@@ -352,7 +369,7 @@ class _HomeWidgetState extends State<HomeWidget> {
                         ),
                         if (isSelected)
                           Icon(Icons.arrow_forward_ios_rounded,
-                              size: 12, color: colorScheme.primary),
+                              size: 11, color: colorScheme.primary),
                       ],
                     ),
                   ),
@@ -365,171 +382,206 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
+  // ── Main content card ────────────────────────────────────────────────────
+
   Widget _buildMainContent(ColorScheme colorScheme, bool isDesktop) {
     final currentDemo = _demos[_currentPage];
     final currentVariationIndex = _variationIndices[_currentPage];
 
-    return Column(
-      children: [
-        Expanded(
-          child: Container(
-            clipBehavior: Clip.antiAlias,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(32),
-              boxShadow: kCardShadows,
-            ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            AnimatedSwitcher(
-                              duration: const Duration(milliseconds: 300),
-                              transitionBuilder: (child, animation) {
-                                final offsetAnimation = Tween<Offset>(
-                                  begin: const Offset(0.0, 0.15),
-                                  end: Offset.zero,
-                                ).animate(CurvedAnimation(
-                                    parent: animation,
-                                    curve: Curves.easeOutCubic));
-                                return FadeTransition(
-                                  opacity: animation,
-                                  child: SlideTransition(
-                                      position: offsetAnimation, child: child),
-                                );
-                              },
-                              child: Text(
-                                currentDemo.title,
-                                key: ValueKey(currentDemo.title),
-                                style: GoogleFonts.plusJakartaSans(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.w800,
-                                  color: colorScheme.onSurface,
-                                  letterSpacing: -0.3,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            _statusChip(colorScheme),
-                          ],
-                        ),
-                      ),
-                      Column(
-                        spacing: 12,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ModeToggleRound(
-                            isWordMode: _isWordMode,
-                            onChanged: _onModeChanged,
-                            colorScheme: colorScheme,
-                          ),
-                          TextAlignToggle(
-                            selected: _textAlign,
-                            onChanged: _onTextAlignChanged,
-                            colorScheme: colorScheme,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                        colors: [
-                          kCanvasGradientA,
-                          kCanvasGradientB,
-                          kCanvasGradientA,
-                        ],
-                        stops: [0.0, 0.5, 1.0],
-                      ),
-                      border: Border(
-                        top: BorderSide(
-                            color: colorScheme.outlineVariant
-                                .withValues(alpha: 0.3)),
-                        bottom: BorderSide(
-                            color: colorScheme.outlineVariant
-                                .withValues(alpha: 0.3)),
-                      ),
-                    ),
-                    child: PageView.builder(
-                      controller: _pageController,
-                      onPageChanged: (index) {
-                        setState(() => _currentPage = index);
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          _handleRepeat();
-                        });
-                      },
-                      itemCount: _demos.length,
-                      itemBuilder: (context, index) {
-                        final demo = _demos[index];
-                        final isCurrentPage = index == _currentPage;
-                        final vi = _variationIndices[index];
-
-                        void onControllerCreated(AnimatedTextController c) {
-                          if (isCurrentPage) {
-                            if (_currentController != c) {
-                              _currentController = c;
-                              WidgetsBinding.instance
-                                  .addPostFrameCallback((_) {
-                                if (mounted) {
-                                  _controllerNotifier.value = c;
-                                }
-                              });
-                            }
-                          }
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.fromLTRB(48, 0, 48, 48),
-                          child: Center(
-                            key: ValueKey(
-                                '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_$isCurrentPage'),
-                            child: _isWordMode
-                                ? demo.buildWord(
-                                    onControllerCreated, vi, _textAlign)
-                                : demo.buildLetter(
-                                    onControllerCreated, vi, _textAlign),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(24.0),
-                  child: Column(
-                    spacing: 16,
-                    children: [
-                      if (currentDemo.hasVariations)
-                        VariationSelector(
-                          variations: currentDemo.variations,
-                          selectedIndex: currentVariationIndex,
-                          onChanged: (index) =>
-                              _onVariationChanged(_currentPage, index),
-                          colorScheme: colorScheme,
-                        ),
-                      _buildBottomControls(colorScheme, isDesktop),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
+    return Container(
+      clipBehavior: Clip.antiAlias,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: kCardShadows,
+      ),
+      child: Column(
+        children: [
+          _buildCardHeader(colorScheme, currentDemo),
+          _buildToolbar(colorScheme),
+          Expanded(child: _buildCanvas()),
+          _buildFooter(colorScheme, isDesktop, currentDemo, currentVariationIndex),
+        ],
+      ),
     );
   }
+
+  // Card header: title + status chip only
+  Widget _buildCardHeader(ColorScheme colorScheme, AnimationDemoItem currentDemo) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 14),
+      child: Row(
+        children: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 280),
+            transitionBuilder: (child, animation) {
+              final offset = Tween<Offset>(
+                begin: const Offset(0, 0.2),
+                end: Offset.zero,
+              ).animate(
+                  CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+              return FadeTransition(
+                opacity: animation,
+                child: SlideTransition(position: offset, child: child),
+              );
+            },
+            child: Text(
+              currentDemo.title,
+              key: ValueKey(currentDemo.title),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+                color: colorScheme.onSurface,
+                letterSpacing: -0.4,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          _statusChip(colorScheme),
+        ],
+      ),
+    );
+  }
+
+  // Toolbar shelf: all controls in one horizontal scrollable band
+  Widget _buildToolbar(ColorScheme colorScheme) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.symmetric(
+          horizontal: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.22),
+          ),
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+      child: Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          ModeToggleRound(
+            isWordMode: _isWordMode,
+            onChanged: _onModeChanged,
+            colorScheme: colorScheme,
+          ),
+          SpeedSelector(
+            selectedIndex: _speedIndex,
+            onChanged: _onSpeedChanged,
+            colorScheme: colorScheme,
+          ),
+          TextAlignToggle(
+            selected: _textAlign,
+            onChanged: _onTextAlignChanged,
+            colorScheme: colorScheme,
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Canvas: animation PageView with gradient background
+  Widget _buildCanvas() {
+    return Container(
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [kCanvasGradientA, kCanvasGradientB, kCanvasGradientA],
+          stops: [0.0, 0.5, 1.0],
+        ),
+      ),
+      child: PageView.builder(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() => _currentPage = index);
+          WidgetsBinding.instance
+              .addPostFrameCallback((_) => _handleRepeat());
+        },
+        itemCount: _demos.length,
+        itemBuilder: (context, index) {
+          final demo = _demos[index];
+          final isCurrentPage = index == _currentPage;
+          final vi = _variationIndices[index];
+
+          void onControllerCreated(AnimatedTextController c) {
+            if (isCurrentPage && _currentController != c) {
+              _currentController = c;
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (mounted) _controllerNotifier.value = c;
+              });
+            }
+          }
+
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: Center(
+              key: ValueKey(
+                  '${demo.title}_${_isWordMode}_${vi}_${_textAlign}_${_speedIndex}_$isCurrentPage'),
+              child: _isWordMode
+                  ? demo.buildWord(
+                      onControllerCreated, vi, _textAlign, _wordDuration)
+                  : demo.buildLetter(
+                      onControllerCreated, vi, _textAlign, _letterDuration),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  // Footer: variation selector OR page dots on left, play controls on right
+  Widget _buildFooter(
+    ColorScheme colorScheme,
+    bool isDesktop,
+    AnimationDemoItem currentDemo,
+    int currentVariationIndex,
+  ) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(24, 14, 24, 20),
+      decoration: BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: colorScheme.outlineVariant.withValues(alpha: 0.22),
+          ),
+        ),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Left: variations if present, else page dots on mobile
+          if (currentDemo.hasVariations)
+            VariationSelector(
+              variations: currentDemo.variations,
+              selectedIndex: currentVariationIndex,
+              onChanged: (i) => _onVariationChanged(_currentPage, i),
+              colorScheme: colorScheme,
+            )
+          else if (!isDesktop)
+            SmoothPageIndicator(
+              controller: _pageController,
+              count: _demos.length,
+              effect: ExpandingDotsEffect(
+                activeDotColor: colorScheme.primary,
+                dotColor: colorScheme.outlineVariant,
+                dotHeight: 7,
+                dotWidth: 7,
+                expansionFactor: 3,
+              ),
+              onDotClicked: (index) => _pageController.animateToPage(
+                index,
+                duration: _pageTransitionDuration,
+                curve: _curve,
+              ),
+            )
+          else
+            const SizedBox.shrink(),
+          // Right: play controls
+          _buildPlayControls(colorScheme),
+        ],
+      ),
+    );
+  }
+
+  // ── Status chip ──────────────────────────────────────────────────────────
 
   ValueListenableBuilder<AnimatedTextController?> _statusChip(
       ColorScheme colorScheme) {
@@ -550,11 +602,9 @@ class _HomeWidgetState extends State<HomeWidget> {
               chipFg = kStatusStopped;
               chipIcon = Icons.stop_circle_outlined;
             } else if (controller.isAnimating) {
-              if (controller.repeatCount > 0) {
-                statusText = 'Repeat ${controller.repeatCount}';
-              } else {
-                statusText = 'Playing';
-              }
+              statusText = controller.repeatCount > 0
+                  ? 'Repeat ${controller.repeatCount}'
+                  : 'Playing';
               chipBg = kStatusPlayingBg;
               chipFg = kStatusPlaying;
               chipIcon = Icons.play_circle_outline_rounded;
@@ -576,16 +626,15 @@ class _HomeWidgetState extends State<HomeWidget> {
             }
 
             return AnimatedSwitcher(
-              duration: const Duration(milliseconds: 250),
-              transitionBuilder: (child, animation) => ScaleTransition(
-                scale: CurvedAnimation(
-                    parent: animation, curve: Curves.easeOutBack),
-                child: FadeTransition(opacity: animation, child: child),
+              duration: const Duration(milliseconds: 220),
+              transitionBuilder: (child, anim) => ScaleTransition(
+                scale: CurvedAnimation(parent: anim, curve: Curves.easeOutBack),
+                child: FadeTransition(opacity: anim, child: child),
               ),
               child: Container(
                 key: ValueKey(statusText),
                 padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(
                   color: chipBg,
                   borderRadius: BorderRadius.circular(20),
@@ -593,15 +642,15 @@ class _HomeWidgetState extends State<HomeWidget> {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(chipIcon, size: 13, color: chipFg),
-                    const SizedBox(width: 5),
+                    Icon(chipIcon, size: 12, color: chipFg),
+                    const SizedBox(width: 4),
                     Text(
                       statusText,
                       style: GoogleFonts.plusJakartaSans(
                         color: chipFg,
                         fontSize: 11,
                         fontWeight: FontWeight.w700,
-                        letterSpacing: 0.3,
+                        letterSpacing: 0.2,
                       ),
                     ),
                   ],
@@ -614,66 +663,42 @@ class _HomeWidgetState extends State<HomeWidget> {
     );
   }
 
-  Widget _buildBottomControls(ColorScheme colorScheme, bool isDesktop) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        if (!isDesktop) ...[
-          SmoothPageIndicator(
-            controller: _pageController,
-            count: _demos.length,
-            effect: ExpandingDotsEffect(
-              activeDotColor: colorScheme.primary,
-              dotColor: colorScheme.outlineVariant,
-              dotHeight: 8,
-              dotWidth: 8,
-              expansionFactor: 3,
-            ),
-            onDotClicked: (index) {
-              _pageController.animateToPage(
-                index,
-                duration: _pageTransitionDuration,
-                curve: _curve,
-              );
-            },
+  // ── Play controls pill ───────────────────────────────────────────────────
+
+  Widget _buildPlayControls(ColorScheme colorScheme) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(100),
+        boxShadow: kControlPillShadows,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          ControlButton(
+            icon: Icons.refresh_rounded,
+            tooltip: 'Repeat',
+            onPressed: _handleRepeat,
+            colorScheme: colorScheme,
           ),
-        ] else
-          const SizedBox.shrink(),
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(100),
-            boxShadow: kControlPillShadows,
+          const SizedBox(width: 4),
+          ControlButton(
+            icon: Icons.pause_rounded,
+            tooltip: 'Pause',
+            onPressed: _handlePause,
+            colorScheme: colorScheme,
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ControlButton(
-                icon: Icons.refresh_rounded,
-                tooltip: 'Repeat',
-                onPressed: _handleRepeat,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(width: 4),
-              ControlButton(
-                icon: Icons.pause_rounded,
-                tooltip: 'Pause',
-                onPressed: _handlePause,
-                colorScheme: colorScheme,
-              ),
-              const SizedBox(width: 4),
-              ControlButton(
-                icon: Icons.play_arrow_rounded,
-                tooltip: 'Play',
-                onPressed: _handlePlay,
-                colorScheme: colorScheme,
-                isPrimary: true,
-              ),
-            ],
+          const SizedBox(width: 4),
+          ControlButton(
+            icon: Icons.play_arrow_rounded,
+            tooltip: 'Play',
+            onPressed: _handlePlay,
+            colorScheme: colorScheme,
+            isPrimary: true,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

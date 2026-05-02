@@ -145,6 +145,30 @@ class BlurTextDemo extends StatelessWidget {
       );
 }
 
+class ScrambleTextDemo extends StatelessWidget {
+  final AnimationType type;
+  final Duration duration;
+  final TextAlign textAlign;
+  final void Function(AnimatedTextController)? onControllerCreated;
+
+  const ScrambleTextDemo({
+    super.key,
+    this.type = AnimationType.letter,
+    this.duration = letterAnimationDuration,
+    this.textAlign = TextAlign.start,
+    this.onControllerCreated,
+  });
+
+  @override
+  Widget build(BuildContext context) => ScrambleText(
+        text: demoText,
+        style: demoTextStyle,
+        textAlign: textAlign,
+        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
+        onControllerCreated: onControllerCreated,
+      );
+}
+
 class SlideTextDemo extends StatelessWidget {
   final AnimationType type;
   final SlideAnimationType slideType;

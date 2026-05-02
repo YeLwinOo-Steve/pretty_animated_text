@@ -12,8 +12,23 @@ final demoTextStyle = GoogleFonts.comicNeue(
   letterSpacing: -0.5,
 );
 
-const letterAnimationDuration = Duration(milliseconds: 300);
-const wordAnimationDuration = Duration(milliseconds: 600);
+// Letter animation durations (slow / medium / fast)
+const letterDurationSlow = Duration(milliseconds: 600);
+const letterDurationMedium = Duration(milliseconds: 300);
+const letterDurationFast = Duration(milliseconds: 150);
+
+// Word animation durations (slow / medium / fast)
+const wordDurationSlow = Duration(milliseconds: 1200);
+const wordDurationMedium = Duration(milliseconds: 600);
+const wordDurationFast = Duration(milliseconds: 300);
+
+// Indexed for lookup by speed index (0=slow, 1=medium, 2=fast)
+const letterDurations = [letterDurationSlow, letterDurationMedium, letterDurationFast];
+const wordDurations = [wordDurationSlow, wordDurationMedium, wordDurationFast];
+
+// Kept for backwards compatibility with demo widget defaults
+const letterAnimationDuration = letterDurationMedium;
+const wordAnimationDuration = wordDurationMedium;
 
 // Primary Color
 const kBrandIndigo = Color(0xFF6366F1);
@@ -91,4 +106,5 @@ const kDemoIcons = <String, IconData>{
   'Chime Bell': Icons.notifications_rounded,
   'Spring': Icons.directions_run_rounded,
   'Blur': Icons.blur_on_rounded,
+  'Scramble': Icons.shuffle_rounded,
 };
