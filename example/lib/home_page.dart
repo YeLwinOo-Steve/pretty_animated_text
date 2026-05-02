@@ -153,6 +153,16 @@ class _HomeWidgetState extends State<HomeWidget> {
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
+        title: 'Reveal',
+        buildLetter: (onCreated, _, ta, dur) =>
+            RevealTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => RevealTextDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
         title: 'Scramble',
         buildLetter: (onCreated, _, ta, dur) =>
             ScrambleTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
