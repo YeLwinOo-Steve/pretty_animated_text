@@ -24,6 +24,8 @@ Link: https://pretty-animated-text.vercel.app
   - Rotate animation
   - Blur animation
   - Offset (slide) animation
+  - Scramble animation *(new in v2)*
+  - Reveal animation with sliding cursor *(new in v2)*
 - Supports both letter-by-letter and word-by-word animations
 - Customizable animation duration and styles
 - Easy to integrate into existing Flutter projects
@@ -69,6 +71,8 @@ Currently, the plugin supports default Flutter text alignments:
 | Offest Text (left-right)           | ![Word Offset Text(lr)](assets/gifs/words/w_offset_text_left_right.gif)       | ![Letter Offset Text(lr)](assets/gifs/letters/offset_text_left_right.gif)       |
 | Offest Text (right-left)           | ![Word Offset Text(rl)](assets/gifs/words/w_offset_text_right_left.gif)       | ![Letter Offset Text(rl)](assets/gifs/letters/offset_text_right_left.gif)       |
 | Offest Text (alternate left-right) | ![Word Offset Tetx(a-lr)](assets/gifs/words/w_offset_text_alternate_lr.gif)   | ![Letter Offset Tetx(a-lr)](assets/gifs/letters/offset_text_alternate_lr.gif)️   |
+| Scramble Text *(v2)*               | coming soon                                                                   | coming soon                                                                     |
+| Reveal Text *(v2)*                 | coming soon                                                                   | coming soon                                                                     |
 
 ##### Code Examples
 
@@ -136,6 +140,38 @@ Currently, the plugin supports default Flutter text alignments:
       ),
     )
   ```
+- Scramble Text *(new in v2)*
+  ```dart
+    ScrambleText(
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: AnimationConfig(
+        duration: const Duration(milliseconds: 300),
+        type: AnimationType.letter, // or AnimationType.word
+      ),
+    )
+  ```
+  Phase 1 (first half of the animation): every character cycles through random
+  glyphs. Phase 2 (second half): characters resolve left-to-right into the
+  final text. Spaces are never scrambled.
+
+- Reveal Text *(new in v2)*
+  ```dart
+    RevealText(
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: AnimationConfig(
+        duration: const Duration(milliseconds: 300),
+        type: AnimationType.word, // or AnimationType.letter
+      ),
+      // Optional: customize the sliding cursor
+      cursorColor: Colors.indigo,
+      dimOpacity: 0.3, // initial opacity of unrevealed text (default 0.3)
+    )
+  ```
+  All text starts at `dimOpacity` (default 0.3). A cursor sweeps left-to-right
+  and each character/word transitions to full opacity as the cursor passes it.
+
 - Offset Text
   
   `OffsetText` has multiple slide effects that you can tweak according to your needs.

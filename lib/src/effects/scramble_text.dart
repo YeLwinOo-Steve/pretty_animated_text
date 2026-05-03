@@ -4,12 +4,13 @@ import 'package:pretty_animated_text/src/animated_text_base.dart';
 import 'package:pretty_animated_text/src/animated_text_controller.dart';
 import 'package:pretty_animated_text/src/animation_config.dart';
 
-const _kChars =
-    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#%&?';
+const _kUpperChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const _kLowerChars = 'abcdefghijklmnopqrstuvwxyz';
+const _kOtherChars = '0123456789!@#%&?';
 
 /// Returns the display string for [original] at animation progress [t]
 ///
-/// Phase 1 (t = 0 -> 0.5): all characters cycle through [_kChars]
+/// Phase 1 (t = 0 -> 0.5): all characters cycle through a case-matched pool
 /// Phase 2 (t = 0.5 -> 1.0): characters resolve left-to-right
 /// Spaces are always kept as-is
 String _scrambleDisplay(String original, double t, int segIdx) {
@@ -22,9 +23,18 @@ String _scrambleDisplay(String original, double t, int segIdx) {
     if (ch == ' ' || i < resolvedCount) {
       buf.write(ch);
     } else {
+      final code = ch.codeUnitAt(0);
+      final String pool;
+      if (code >= 65 && code <= 90) {
+        pool = _kUpperChars;
+      } else if (code >= 97 && code <= 122) {
+        pool = _kLowerChars;
+      } else {
+        pool = _kOtherChars;
+      }
       // 18 cycles per animation window gives a fast, readable scramble
-      final idx = ((t * 18).floor() + i * 5 + segIdx * 13) % _kChars.length;
-      buf.write(_kChars[idx]);
+      final idx = ((t * 18).floor() + i * 5 + segIdx * 13) % pool.length;
+      buf.write(pool[idx]);
     }
   }
   return buf.toString();
