@@ -26,6 +26,7 @@ Link: https://pretty-animated-text.vercel.app
   - Offset (slide) animation
   - Scramble animation *(new in v2)*
   - Reveal animation with sliding cursor *(new in v2)*
+  - Gravity animation — real 2D rigid-body physics (collisions, piling, tap & drag) via forge2d *(new in v2)*
 - Supports both letter-by-letter and word-by-word animations
 - Customizable animation duration and styles
 - Easy to integrate into existing Flutter projects
@@ -73,6 +74,7 @@ Currently, the plugin supports default Flutter text alignments:
 | Offest Text (alternate left-right) | ![Word Offset Tetx(a-lr)](assets/gifs/words/w_offset_text_alternate_lr.gif)   | ![Letter Offset Tetx(a-lr)](assets/gifs/letters/offset_text_alternate_lr.gif)️   |
 | Scramble Text *(v2)*               | coming soon                                                                   | coming soon                                                                     |
 | Reveal Text *(v2)*                 | coming soon                                                                   | coming soon                                                                     |
+| Gravity Text *(v2)*                | coming soon                                                                   | coming soon                                                                     |
 
 ##### Code Examples
 
@@ -171,6 +173,37 @@ Currently, the plugin supports default Flutter text alignments:
   ```
   All text starts at `dimOpacity` (default 0.3). A cursor sweeps left-to-right
   and each character/word transitions to full opacity as the cursor passes it.
+
+- Gravity Text *(new in v2)*
+
+  A real 2D rigid-body simulation powered by [`forge2d`](https://pub.dev/packages/forge2d)
+  (a Box2D port). The whole text is visible at rest first; on play each segment
+  (letter or word) becomes a physics body and falls under gravity — letters collide,
+  pile up on the floor between the walls, carry real linear + angular momentum, push
+  their neighbours, and rest (sleep) until disturbed. Tap a letter to kick it, or
+  press-drag-and-release to throw it.
+
+  ```dart
+    GravityText(
+      text: 'Lorem ipsum dolor sit amet ...',
+      style: const TextStyle(fontSize: 18),
+      config: const AnimationConfig(
+        type: AnimationType.letter, // or AnimationType.word
+      ),
+      // Optional: tune the physics
+      gravity: 30.0, // m/s²
+      pixelsPerMeter: 50.0,
+      density: 1.0,
+      friction: 0.4,
+      restitution: 0.1, // bounciness (keep low so piles settle)
+      // Optional: stage / interaction
+      height: 400, // floor sits at the bottom of the stage (null = fill parent)
+      enableInteraction: true, // tap to kick, drag to throw
+      kickStrength: 9.0, // m/s imparted to a tapped letter
+    )
+  ```
+  Playback via the controller: `play` / `restart` / `repeat` re-drop the text from its
+  reading layout; `pause` / `resume` freeze and run the simulation.
 
 - Offset Text
   

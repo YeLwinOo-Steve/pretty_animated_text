@@ -23,7 +23,11 @@ const wordDurationMedium = Duration(milliseconds: 600);
 const wordDurationFast = Duration(milliseconds: 300);
 
 // Indexed for lookup by speed index (0=slow, 1=medium, 2=fast)
-const letterDurations = [letterDurationSlow, letterDurationMedium, letterDurationFast];
+const letterDurations = [
+  letterDurationSlow,
+  letterDurationMedium,
+  letterDurationFast
+];
 const wordDurations = [wordDurationSlow, wordDurationMedium, wordDurationFast];
 
 // Kept for backwards compatibility with demo widget defaults
@@ -41,7 +45,7 @@ const kBgGradientBottom = Color(0xFFF8FAFC);
 const kCanvasGradientA = Color(0xFFF0F1FF);
 const kCanvasGradientB = Color(0xFFFAFAFF);
 
-// Status chip - semantic colors 
+// Status chip - semantic colors
 const kStatusPlaying = Color(0xFF10B981);
 const kStatusPaused = Color(0xFFF59E0B);
 const kStatusComplete = Color(0xFF6366F1);
@@ -108,4 +112,5 @@ const kDemoIcons = <String, IconData>{
   'Blur': Icons.blur_on_rounded,
   'Scramble': Icons.shuffle_rounded,
   'Reveal': Icons.auto_fix_high_rounded,
+  'Gravity': Icons.arrow_downward_rounded,
 };

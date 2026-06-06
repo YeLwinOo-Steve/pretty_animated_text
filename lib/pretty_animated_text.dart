@@ -9,6 +9,7 @@ export 'src/effects/chime_bell_text.dart';
 export 'src/effects/slide_text.dart';
 export 'src/effects/scramble_text.dart';
 export 'src/effects/reveal_text.dart';
+export 'src/effects/gravity_text.dart';
 export 'src/widgets/paragraph_text.dart';
 
 /// Animation type enum for [letter, word] & modes [ forward, reverse, repeat ]

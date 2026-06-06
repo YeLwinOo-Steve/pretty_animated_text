@@ -84,8 +84,8 @@ class _HomeWidgetState extends State<HomeWidget> {
     _demos = [
       AnimationDemoItem(
         title: 'Scale',
-        buildLetter: (onCreated, _, ta, dur) =>
-            ScaleTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => ScaleTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => ScaleTextDemo(
             type: AnimationType.word,
             duration: dur,
@@ -124,8 +124,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
       AnimationDemoItem(
         title: 'Chime Bell',
-        buildLetter: (onCreated, _, ta, dur) =>
-            ChimeBellDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => ChimeBellDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => ChimeBellDemo(
             type: AnimationType.word,
             duration: dur,
@@ -134,8 +134,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
       AnimationDemoItem(
         title: 'Spring',
-        buildLetter: (onCreated, _, ta, dur) =>
-            SpringDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => SpringDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => SpringDemo(
             type: AnimationType.word,
             duration: dur,
@@ -144,8 +144,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
       AnimationDemoItem(
         title: 'Blur',
-        buildLetter: (onCreated, _, ta, dur) =>
-            BlurTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => BlurTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => BlurTextDemo(
             type: AnimationType.word,
             duration: dur,
@@ -154,8 +154,8 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
       AnimationDemoItem(
         title: 'Reveal',
-        buildLetter: (onCreated, _, ta, dur) =>
-            RevealTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => RevealTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => RevealTextDemo(
             type: AnimationType.word,
             duration: dur,
@@ -164,9 +164,19 @@ class _HomeWidgetState extends State<HomeWidget> {
       ),
       AnimationDemoItem(
         title: 'Scramble',
-        buildLetter: (onCreated, _, ta, dur) =>
-            ScrambleTextDemo(duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildLetter: (onCreated, _, ta, dur) => ScrambleTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => ScrambleTextDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
+        title: 'Gravity',
+        buildLetter: (onCreated, _, ta, dur) => GravityTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => GravityTextDemo(
             type: AnimationType.word,
             duration: dur,
             textAlign: ta,
@@ -419,14 +429,16 @@ class _HomeWidgetState extends State<HomeWidget> {
           _buildCardHeader(colorScheme, currentDemo),
           _buildToolbar(colorScheme),
           Expanded(child: _buildCanvas()),
-          _buildFooter(colorScheme, isDesktop, currentDemo, currentVariationIndex),
+          _buildFooter(
+              colorScheme, isDesktop, currentDemo, currentVariationIndex),
         ],
       ),
     );
   }
 
   // Card header: title + status chip only
-  Widget _buildCardHeader(ColorScheme colorScheme, AnimationDemoItem currentDemo) {
+  Widget _buildCardHeader(
+      ColorScheme colorScheme, AnimationDemoItem currentDemo) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 20, 24, 14),
       child: Row(
@@ -437,8 +449,8 @@ class _HomeWidgetState extends State<HomeWidget> {
               final offset = Tween<Offset>(
                 begin: const Offset(0, 0.2),
                 end: Offset.zero,
-              ).animate(
-                  CurvedAnimation(parent: animation, curve: Curves.easeOutCubic));
+              ).animate(CurvedAnimation(
+                  parent: animation, curve: Curves.easeOutCubic));
               return FadeTransition(
                 opacity: animation,
                 child: SlideTransition(position: offset, child: child),
@@ -512,8 +524,7 @@ class _HomeWidgetState extends State<HomeWidget> {
         controller: _pageController,
         onPageChanged: (index) {
           setState(() => _currentPage = index);
-          WidgetsBinding.instance
-              .addPostFrameCallback((_) => _handleRepeat());
+          WidgetsBinding.instance.addPostFrameCallback((_) => _handleRepeat());
         },
         itemCount: _demos.length,
         itemBuilder: (context, index) {
@@ -652,8 +663,7 @@ class _HomeWidgetState extends State<HomeWidget> {
               ),
               child: Container(
                 key: ValueKey(statusText),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
                 decoration: BoxDecoration(
                   color: chipBg,
                   borderRadius: BorderRadius.circular(20),
