@@ -194,7 +194,16 @@ class _HomeWidgetState extends State<HomeWidget> {
     }
   }
 
-  void _handlePause() => _currentController?.pause();
+  void _handlePlayPause() {
+    final c = _currentController;
+    if (c == null) return;
+    if (c.isAnimating) {
+      c.pause();
+    } else {
+      _handlePlay();
+    }
+  }
+
   void _handleRepeat() => _currentController?.repeat();
 
   void _onModeChanged(bool isWord) {
@@ -693,19 +702,25 @@ class _HomeWidgetState extends State<HomeWidget> {
             colorScheme: colorScheme,
           ),
           const SizedBox(width: 4),
-          ControlButton(
-            icon: Icons.pause_rounded,
-            tooltip: 'Pause',
-            onPressed: _handlePause,
-            colorScheme: colorScheme,
-          ),
-          const SizedBox(width: 4),
-          ControlButton(
-            icon: Icons.play_arrow_rounded,
-            tooltip: 'Play',
-            onPressed: _handlePlay,
-            colorScheme: colorScheme,
-            isPrimary: true,
+          ValueListenableBuilder<AnimatedTextController?>(
+            valueListenable: _controllerNotifier,
+            builder: (context, controller, _) {
+              return ListenableBuilder(
+                listenable: controller ?? ChangeNotifier(),
+                builder: (context, _) {
+                  final isPlaying = controller?.isAnimating ?? false;
+                  return ControlButton(
+                    icon: isPlaying
+                        ? Icons.pause_rounded
+                        : Icons.play_arrow_rounded,
+                    tooltip: isPlaying ? 'Pause' : 'Play',
+                    onPressed: _handlePlayPause,
+                    colorScheme: colorScheme,
+                    isPrimary: true,
+                  );
+                },
+              );
+            },
           ),
         ],
       ),
