@@ -198,6 +198,7 @@ class GravityTextDemo extends StatelessWidget {
   final Duration duration;
   final TextAlign textAlign;
   final void Function(AnimatedTextController)? onControllerCreated;
+  final bool enableInteraction;
 
   const GravityTextDemo({
     super.key,
@@ -205,6 +206,7 @@ class GravityTextDemo extends StatelessWidget {
     this.duration = letterAnimationDuration,
     this.textAlign = TextAlign.start,
     this.onControllerCreated,
+    this.enableInteraction = true,
   });
 
   @override
@@ -212,8 +214,18 @@ class GravityTextDemo extends StatelessWidget {
         text: demoText,
         style: demoTextStyle,
         textAlign: textAlign,
-        config: _buildConfig(runtimeType, type, duration, onControllerCreated),
+        // GravityText is a physics sim — it ignores repeat / reverse, so build a
+        // config without them (see the asserts in GravityText).
+        config: AnimationConfig(
+          type: type,
+          duration: duration,
+          onPlay: (c) => debugPrint('$runtimeType animation played!'),
+          onPause: (c) => debugPrint('$runtimeType animation paused!'),
+          onComplete: (c) => debugPrint('$runtimeType animation completed!'),
+          onDismissed: (c) => debugPrint('$runtimeType animation dismissed!'),
+        ),
         onControllerCreated: onControllerCreated,
+        enableInteraction: enableInteraction,
       );
 }
 

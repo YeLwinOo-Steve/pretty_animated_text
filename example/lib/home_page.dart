@@ -31,6 +31,7 @@ class _HomeWidgetState extends State<HomeWidget> {
   int _currentPage = 0;
   TextAlign _textAlign = TextAlign.start;
   int _speedIndex = 1; // 0=slow, 1=medium, 2=fast
+  bool _interactionEnabled = true; // Gravity demo: tap/drag interaction
 
   Duration get _letterDuration => letterDurations[_speedIndex];
   Duration get _wordDuration => wordDurations[_speedIndex];
@@ -83,6 +84,50 @@ class _HomeWidgetState extends State<HomeWidget> {
     super.initState();
     _demos = [
       AnimationDemoItem(
+        title: 'Gravity',
+        buildLetter: (onCreated, _, ta, dur) => GravityTextDemo(
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated,
+            enableInteraction: _interactionEnabled),
+        buildWord: (onCreated, _, ta, dur) => GravityTextDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated,
+            enableInteraction: _interactionEnabled),
+      ),
+      AnimationDemoItem(
+        title: 'Scramble',
+        buildLetter: (onCreated, _, ta, dur) => ScrambleTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => ScrambleTextDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
+        title: 'Spring',
+        buildLetter: (onCreated, _, ta, dur) => SpringDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => SpringDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
+        title: 'Reveal',
+        buildLetter: (onCreated, _, ta, dur) => RevealTextDemo(
+            duration: dur, textAlign: ta, onControllerCreated: onCreated),
+        buildWord: (onCreated, _, ta, dur) => RevealTextDemo(
+            type: AnimationType.word,
+            duration: dur,
+            textAlign: ta,
+            onControllerCreated: onCreated),
+      ),
+      AnimationDemoItem(
         title: 'Scale',
         buildLetter: (onCreated, _, ta, dur) => ScaleTextDemo(
             duration: dur, textAlign: ta, onControllerCreated: onCreated),
@@ -133,50 +178,10 @@ class _HomeWidgetState extends State<HomeWidget> {
             onControllerCreated: onCreated),
       ),
       AnimationDemoItem(
-        title: 'Spring',
-        buildLetter: (onCreated, _, ta, dur) => SpringDemo(
-            duration: dur, textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta, dur) => SpringDemo(
-            type: AnimationType.word,
-            duration: dur,
-            textAlign: ta,
-            onControllerCreated: onCreated),
-      ),
-      AnimationDemoItem(
         title: 'Blur',
         buildLetter: (onCreated, _, ta, dur) => BlurTextDemo(
             duration: dur, textAlign: ta, onControllerCreated: onCreated),
         buildWord: (onCreated, _, ta, dur) => BlurTextDemo(
-            type: AnimationType.word,
-            duration: dur,
-            textAlign: ta,
-            onControllerCreated: onCreated),
-      ),
-      AnimationDemoItem(
-        title: 'Reveal',
-        buildLetter: (onCreated, _, ta, dur) => RevealTextDemo(
-            duration: dur, textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta, dur) => RevealTextDemo(
-            type: AnimationType.word,
-            duration: dur,
-            textAlign: ta,
-            onControllerCreated: onCreated),
-      ),
-      AnimationDemoItem(
-        title: 'Scramble',
-        buildLetter: (onCreated, _, ta, dur) => ScrambleTextDemo(
-            duration: dur, textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta, dur) => ScrambleTextDemo(
-            type: AnimationType.word,
-            duration: dur,
-            textAlign: ta,
-            onControllerCreated: onCreated),
-      ),
-      AnimationDemoItem(
-        title: 'Gravity',
-        buildLetter: (onCreated, _, ta, dur) => GravityTextDemo(
-            duration: dur, textAlign: ta, onControllerCreated: onCreated),
-        buildWord: (onCreated, _, ta, dur) => GravityTextDemo(
             type: AnimationType.word,
             duration: dur,
             textAlign: ta,
@@ -604,10 +609,43 @@ class _HomeWidgetState extends State<HomeWidget> {
             )
           else
             const SizedBox.shrink(),
-          // Right: play controls
-          _buildPlayControls(colorScheme),
+          // Right: interaction toggle (Gravity only) + play controls
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (currentDemo.title == 'Gravity') ...[
+                _buildInteractionToggle(colorScheme),
+                const SizedBox(width: 12),
+              ],
+              _buildPlayControls(colorScheme),
+            ],
+          ),
         ],
       ),
+    );
+  }
+
+  // Interaction enable/disable toggle for the Gravity demo.
+  Widget _buildInteractionToggle(ColorScheme colorScheme) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'Interact',
+          style: GoogleFonts.plusJakartaSans(
+            fontSize: 13,
+            fontWeight: FontWeight.w600,
+            color: colorScheme.onSurfaceVariant,
+          ),
+        ),
+        const SizedBox(width: 8),
+        Switch(
+          value: _interactionEnabled,
+          activeColor: colorScheme.primary,
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          onChanged: (v) => setState(() => _interactionEnabled = v),
+        ),
+      ],
     );
   }
 

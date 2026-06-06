@@ -116,6 +116,26 @@ class _GravityTextState extends State<GravityText>
     _textController.addListener(_onControllerNotify);
     _clock.addStatusListener(_onClockStatus);
     _ticker = createTicker(_onTick);
+
+    // GravityText is a real rigid-body simulation, so the tween-oriented
+    // playback flags don't apply. 
+    // Warn (debug only, non-fatal) that they're ignored.
+    assert(() {
+      if (widget.config.reverse) {
+        debugPrint(
+          'GravityText: AnimationConfig.reverse is ignored — a physics '
+          'simulation cannot run backwards. Use the controller to re-drop.',
+        );
+      }
+      if (widget.config.repeat || widget.config.repeatCount != null) {
+        debugPrint(
+          'GravityText: AnimationConfig.repeat / repeatCount / repeatDelay are '
+          'ignored. Call the controller (play / restart / repeat) to re-drop.',
+        );
+      }
+      return true;
+    }());
+
     widget.onControllerCreated?.call(_textController);
     _textController.startInitialAnimation();
   }
