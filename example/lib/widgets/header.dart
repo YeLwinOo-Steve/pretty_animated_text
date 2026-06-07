@@ -13,49 +13,10 @@ class Header extends StatelessWidget {
       children: [
         Row(
           children: [
-            Container(
+            Image.asset(
+              'assets/logo.png',
               width: 52,
               height: 52,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Color(0xFF818CF8), Color(0xFF6366F1), Color(0xFF4F46E5)],
-                ),
-                borderRadius: BorderRadius.circular(18),
-                boxShadow: const [
-                  BoxShadow(
-                    color: Color(0x406366F1),
-                    blurRadius: 20,
-                    offset: Offset(0, 6),
-                  ),
-                ],
-              ),
-              child: Stack(
-                children: [
-                  Positioned(
-                    top: 4,
-                    left: 6,
-                    right: 6,
-                    child: Container(
-                      height: 1,
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            Colors.white.withValues(alpha: 0.0),
-                            Colors.white.withValues(alpha: 0.4),
-                            Colors.white.withValues(alpha: 0.0),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  const Center(
-                    child: Icon(Icons.text_fields_rounded,
-                        color: Colors.white, size: 28),
-                  ),
-                ],
-              ),
             ),
             const SizedBox(width: 14),
             Column(
