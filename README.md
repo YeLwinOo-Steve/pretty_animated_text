@@ -17,6 +17,10 @@ Physics-based animations are utilized for text animations, providing a smooth an
 > This project heavily inspires on [jasudev's AnimateText for SwiftUI package](https://github.com/jasudev/AnimateText)
 
 
+<div align="center">
+  <img src="docs/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
+</div>
+
 ##  Preview Website
 
 Link: https://pretty-animated-text.vercel.app
