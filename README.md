@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="example/assets/logo.png" width="120" alt="Pretty Animated Text logo" />
+<img src="https://raw.githubusercontent.com/YeLwinOo-Steve/pretty_animated_text/master/example/assets/logo.png" width="120" alt="Pretty Animated Text logo" />
 
 # Pretty Animated Text
 
@@ -21,7 +21,7 @@ Physics-based animations are utilized for text animations, providing a smooth an
 
 
 <div align="center">
-  <img src="doc/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
+  <img src="https://raw.githubusercontent.com/YeLwinOo-Steve/pretty_animated_text/master/doc/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
 </div>
 
 ### Key Features: 
