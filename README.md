@@ -21,7 +21,7 @@ Physics-based animations are utilized for text animations, providing a smooth an
 
 
 <div align="center">
-  <img src="docs/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
+  <img src="doc/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
 </div>
 
 ### Key Features: 
