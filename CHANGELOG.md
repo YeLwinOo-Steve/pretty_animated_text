@@ -1,4 +1,4 @@
-## 2.1.0
+## 3.0.0
 
 * Added `GravityText` - a real 2D rigid-body physics effect (Box2D via `forge2d`): letters fall, collide, pile up on the floor between walls, carry linear + angular momentum, and push their neighbours. Tap to kick a letter or drag to throw it; play/pause/restart control the simulation
 * Added `ScrambleText` - characters cycle through random glyphs then resolve left-to-right into the final text
