@@ -1,3 +1,8 @@
+## 3.0.1
+
+- Improve README rendering on pub.dev.
+- Fix image and GIF display issues.
+
 ## 3.0.0
 
 * Added `GravityText` - a real 2D rigid-body physics effect (Box2D via `forge2d`): letters fall, collide, pile up on the floor between walls, carry linear + angular momentum, and push their neighbours. Tap to kick a letter or drag to throw it; play/pause/restart control the simulation
