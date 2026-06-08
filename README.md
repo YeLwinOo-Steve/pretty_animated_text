@@ -4,6 +4,8 @@
 
 # Pretty Animated Text
 
+Link: https://pretty-animated-text.vercel.app
+
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-orange.svg)](https://buymeacoffee.com/yloo2)
 &nbsp;&nbsp;
@@ -21,10 +23,6 @@ Physics-based animations are utilized for text animations, providing a smooth an
 <div align="center">
   <img src="docs/demo_v3.gif" width="600" alt="Pretty Animated Text demo" />
 </div>
-
-##  Preview Website
-
-Link: https://pretty-animated-text.vercel.app
 
 ### Key Features: 
 
