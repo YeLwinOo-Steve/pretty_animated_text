@@ -25,9 +25,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
-  pretty_animated_text: c6a3cbc54f52aeb3155d5f901b3efc8a9c7507b5
-  url_launcher_ios: 5334b05cef931de560670eeae103fd3e431ac3fe
+  integration_test: 4a889634ef21a45d28d50d622cf412dc6d9f586e
+  pretty_animated_text: cc861d9e60db9165c80a914de16b43d514992942
+  url_launcher_ios: 694010445543906933d732453a59da0a173ae33d
 
 PODFILE CHECKSUM: 819463e6a0290f5a72f145ba7cde16e8b6ef0796
 

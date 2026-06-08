@@ -1,0 +1,199 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Flutter Web (Debug)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Profile)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--profile",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Release)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--release",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web Example (Debug)",
+            "type": "dart",
+            "request": "launch",
+            "program": "example/lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "8080"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web Example (Profile)",
+            "type": "dart",
+            "request": "launch",
+            "program": "example/lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--profile",
+                "--web-port",
+                "8080"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web Example (Release)",
+            "type": "dart",
+            "request": "launch",
+            "program": "example/lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--release",
+                "--web-port",
+                "8080"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Custom Port 4000)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-port",
+                "4000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (HTML Renderer)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-renderer",
+                "html",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (CanvasKit Renderer)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-renderer",
+                "canvaskit",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Auto Renderer)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--web-renderer",
+                "auto",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Verbose)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--verbose",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Hot Restart Disabled)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "chrome",
+                "--no-hot",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Development Server)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        },
+        {
+            "name": "Flutter Web (Edge Browser)",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "edge",
+                "--web-port",
+                "3000"
+            ],
+            "console": "debugConsole"
+        }
+    ]
+}

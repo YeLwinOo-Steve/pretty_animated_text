@@ -7,12 +7,14 @@ CurvedAnimation curvedAnimation(
   double overlapFactor, {
   Curve curve = Curves.easeInOut,
 }) {
-  double start = index * intervalStep * (1 - overlapFactor); // start before the previous animation finishes
-  double end = start + intervalStep; // finishes its own step
+  final double stepOverlap = intervalStep * (1 - overlapFactor);
+  final double start = index * stepOverlap;
+  final double end = start + intervalStep;
+
   return CurvedAnimation(
     parent: controller,
     curve: Interval(
-      start.clamp(0.0, 1.0), // Ensure the interval stays within bounds
+      start.clamp(0.0, 1.0),
       end.clamp(0.0, 1.0),
       curve: curve,
     ),

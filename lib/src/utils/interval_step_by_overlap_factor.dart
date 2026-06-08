@@ -1,3 +1,10 @@
 double intervalStepByOverlapFactor(int wordCount, double overlapFactor) {
-  return wordCount > 1 ? (0.95 / ((wordCount) * overlapFactor)) : 1.0; // had to do a little tweak (not precise calculation) but it works best when ~0.95
+  if (wordCount <= 1) return 1.0;
+
+  // Each segment takes up a "duration unit"
+  // With overlap, next one starts earlier, so the step is reduced
+  // Total animation range needs to be covered within [0.0, 1.0]
+  final double effectiveAnimationDuration =
+      1.0 / (1 + (wordCount - 1) * (1 - overlapFactor));
+  return effectiveAnimationDuration;
 }
