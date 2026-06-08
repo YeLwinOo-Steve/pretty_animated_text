@@ -6,6 +6,8 @@
 
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-orange.svg)](https://buymeacoffee.com/yloo2)
+&nbsp;&nbsp;
+![GitHub Repo stars](https://img.shields.io/github/stars/YeLwinOo-Steve/pretty_animated_text)
 
 A text animation UI plugin that provides you with gorgeous and customizable animated text widgets so that you can use them effortlessly in your project.
 
