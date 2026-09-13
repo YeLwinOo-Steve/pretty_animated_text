@@ -45,6 +45,7 @@ String _scrambleDisplay(String original, double t, int segIdx) {
 class ScrambleText extends StatefulWidget {
   final String text;
   final TextStyle? style;
+  final bool autoPlay;
   final TextAlign textAlign;
   final AnimationConfig config;
   final void Function(AnimatedTextController)? onControllerCreated;
@@ -53,6 +54,7 @@ class ScrambleText extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     this.onControllerCreated,
@@ -68,6 +70,7 @@ class _ScrambleTextState extends State<ScrambleText> {
     return AnimatedTextBase(
       text: widget.text,
       style: widget.style,
+      autoPlay: widget.autoPlay,
       textAlign: widget.textAlign,
       config: widget.config,
       onControllerCreated: widget.onControllerCreated,

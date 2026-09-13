@@ -81,6 +81,9 @@ class GlitchText extends StatefulWidget {
   /// The style to apply to the text.
   final TextStyle? style;
 
+  /// Auto animate when widget is first created
+  final bool autoPlay;
+
   /// The text alignment.
   final TextAlign textAlign;
 
@@ -97,6 +100,7 @@ class GlitchText extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     this.glitchStyle = const GlitchStyle(),
@@ -209,6 +213,7 @@ class _GlitchTextState extends State<GlitchText> {
     return AnimatedTextBase(
       text: widget.text,
       style: widget.style,
+      autoPlay: widget.autoPlay,
       textAlign: widget.textAlign,
       config: widget.config,
       onControllerCreated: _handleController,

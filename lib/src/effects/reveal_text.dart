@@ -13,6 +13,7 @@ import 'package:pretty_animated_text/src/animation_config.dart';
 class RevealText extends StatelessWidget {
   final String text;
   final TextStyle? style;
+  final bool autoPlay;
   final TextAlign textAlign;
   final AnimationConfig config;
   final void Function(AnimatedTextController)? onControllerCreated;
@@ -27,6 +28,7 @@ class RevealText extends StatelessWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     this.onControllerCreated,
@@ -41,6 +43,7 @@ class RevealText extends StatelessWidget {
     return AnimatedTextBase(
       text: text,
       style: style,
+      autoPlay: autoPlay,
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,

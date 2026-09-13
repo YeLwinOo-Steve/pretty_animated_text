@@ -19,6 +19,9 @@ class AnimatedTextBase extends StatefulWidget {
   /// The style to apply to the text
   final TextStyle? style;
 
+  /// Auto animate when widget is first created
+  final bool autoPlay;
+
   /// The text alignment
   final TextAlign textAlign;
 
@@ -41,6 +44,7 @@ class AnimatedTextBase extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     required this.builder,
@@ -100,8 +104,10 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
     // Create overlapped animations for each segment
     _buildSegmentAnimations();
 
-    // Start the initial animation
-    _textController.startInitialAnimation();
+    // Start the initial animation if autoPlay is True
+    if (widget.autoPlay) {
+      _textController.startInitialAnimation();
+    }
   }
 
   void _buildSegmentAnimations() {
@@ -140,8 +146,10 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
       // Recreate segment animations with new configuration
       _buildSegmentAnimations();
 
-      // Restart the animation
-      _textController.startInitialAnimation();
+      // Restart the animation only if autoPlay is True
+      if (widget.autoPlay) {
+        _textController.startInitialAnimation();
+      }
     }
   }
 

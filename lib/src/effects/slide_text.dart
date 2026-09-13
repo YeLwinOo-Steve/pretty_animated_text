@@ -10,6 +10,9 @@ class SlideText extends StatelessWidget {
   /// The style to apply to the text
   final TextStyle? style;
 
+  /// Auto animate when widget is first created
+  final bool autoPlay;
+
   /// The text alignment
   final TextAlign textAlign;
 
@@ -26,6 +29,7 @@ class SlideText extends StatelessWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     this.slideType = SlideAnimationType.topBottom,
@@ -37,6 +41,7 @@ class SlideText extends StatelessWidget {
     return AnimatedTextBase(
       text: text,
       style: style,
+      autoPlay: autoPlay,
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,

@@ -62,6 +62,9 @@ class SquashBounceText extends StatefulWidget {
   /// The style to apply to the text
   final TextStyle? style;
 
+  /// Auto animate when widget is first created
+  final bool autoPlay;
+
   /// The text alignment
   final TextAlign textAlign;
 
@@ -78,6 +81,7 @@ class SquashBounceText extends StatefulWidget {
     super.key,
     required this.text,
     this.style,
+    this.autoPlay = true,
     this.textAlign = TextAlign.start,
     required this.config,
     this.squashStyle = const SquashBounceStyle(),
@@ -120,6 +124,7 @@ class _SquashBounceTextState extends State<SquashBounceText> {
     return AnimatedTextBase(
       text: widget.text,
       style: widget.style,
+      autoPlay: widget.autoPlay,
       textAlign: widget.textAlign,
       config: widget.config,
       onControllerCreated: _handleController,
