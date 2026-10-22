@@ -71,6 +71,9 @@ class _ScrambleTextState extends State<ScrambleText> {
       textAlign: widget.textAlign,
       config: widget.config,
       onControllerCreated: widget.onControllerCreated,
+      // Each segment listens to its own animation, so only moving
+      // glyphs rebuild.
+      rebuildOnTick: false,
       builder: (context, animations, segments) {
 
         return Wrap(
@@ -81,10 +84,9 @@ class _ScrambleTextState extends State<ScrambleText> {
                   : WrapAlignment.start,
           children: List.generate(segments.length, (index) {
             final opacityAnim = Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: animations[index],
+              animations[index].drive(CurveTween(
                 curve: const Interval(0.0, 0.25, curve: Curves.easeOut),
-              ),
+              )),
             );
 
             return Stack(

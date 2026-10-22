@@ -1,0 +1,5 @@
+tags:
+  # Benchmarks under test/perf print timings and have no assertions, so they
+  # stay out of the default run. Run with: flutter test test/perf --run-skipped
+  perf:
+    skip: "Benchmark; run with --run-skipped"

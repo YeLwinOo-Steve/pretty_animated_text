@@ -41,6 +41,9 @@ class RotateText extends StatelessWidget {
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,
+      // Each segment listens to its own animation, so only moving
+      // glyphs rebuild.
+      rebuildOnTick: false,
       builder: (context, animations, segments) {
         return Wrap(
           alignment: textAlign == TextAlign.center
@@ -50,10 +53,7 @@ class RotateText extends StatelessWidget {
                   : WrapAlignment.start,
           children: List.generate(segments.length, (index) {
             final rotateAnimation = doubleTweenByRotateType(direction).animate(
-              CurvedAnimation(
-                parent: animations[index],
-                curve: config.curve,
-              ),
+              animations[index].drive(CurveTween(curve: config.curve)),
             );
 
             return AnimatedBuilder(
