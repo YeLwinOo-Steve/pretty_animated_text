@@ -40,6 +40,9 @@ class SlideText extends StatelessWidget {
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,
+      // Each segment listens to its own animation, so only moving
+      // glyphs rebuild.
+      rebuildOnTick: false,
       builder: (context, animations, segments) {
         return Wrap(
           alignment: textAlign == TextAlign.center
@@ -52,10 +55,7 @@ class SlideText extends StatelessWidget {
               slideType,
               index: index,
             ).animate(
-              CurvedAnimation(
-                parent: animations[index],
-                curve: config.curve,
-              ),
+              animations[index].drive(CurveTween(curve: config.curve)),
             );
 
             return AnimatedBuilder(

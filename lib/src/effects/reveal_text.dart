@@ -44,6 +44,8 @@ class RevealText extends StatelessWidget {
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,
+      // The AnimatedBuilder below listens to the segment animations itself.
+      rebuildOnTick: false,
       builder: (context, animations, segments) {
         return AnimatedBuilder(
           // Rebuild whenever any segment animation ticks so the cursor

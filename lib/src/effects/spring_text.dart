@@ -39,6 +39,9 @@ class SpringText extends StatelessWidget {
       textAlign: textAlign,
       config: config,
       onControllerCreated: onControllerCreated,
+      // Each segment listens to its own animation, so only moving
+      // glyphs rebuild.
+      rebuildOnTick: false,
       builder: (context, animations, segments) {
         return Wrap(
           alignment: textAlign == TextAlign.center
@@ -51,23 +54,21 @@ class SpringText extends StatelessWidget {
             // Hard-coded so SpringText always feels like a spring regardless of
             // what curve the caller puts in config.curve.
             final yAnimation = Tween<double>(begin: 50.0, end: 0.0).animate(
-              CurvedAnimation(
-                parent: animations[index],
+              animations[index].drive(CurveTween(
                 curve: const SpringCurve(
                   stiffness: 200.0,
                   damping: 12.0,
                   duration: 1.2,
                 ),
-              ),
+              )),
             );
 
             // Fade in during the first third so the spring bounce is fully visible.
             final opacityAnimation =
                 Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(
-                parent: animations[index],
+              animations[index].drive(CurveTween(
                 curve: const Interval(0.0, 0.35, curve: Curves.easeOut),
-              ),
+              )),
             );
 
             return AnimatedBuilder(
