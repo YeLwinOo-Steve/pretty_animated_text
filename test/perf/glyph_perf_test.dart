@@ -1,12 +1,14 @@
-// Glyph-count scaling benchmark. Run with:
-//   flutter test test/perf/glyph_perf_test.dart --reporter expanded
+// Glyph-count scaling benchmark. Skipped by default (see dart_test.yaml).
+// Run with:
+//   flutter test test/perf/glyph_perf_test.dart --run-skipped
 // Prints one `PERF {json}` line per (effect, glyph count) sample.
+@Tags(['perf'])
+library;
+
 import 'dart:convert';
-import 'dart:io' show ProcessInfo;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pretty_animated_text/pretty_animated_text.dart';
 
@@ -81,7 +83,7 @@ int _renderObjectCount(WidgetTester tester) {
     r.visitChildren(visit);
   }
 
-  visit(tester.binding.renderView);
+  visit(tester.binding.renderViews.first);
   return count;
 }
 
@@ -96,7 +98,7 @@ double _p90(List<double> xs) {
 }
 
 void main() {
-  // Long run: frame time + RSS drift over a full playthrough, and the cost of
+  // Long run: frame time over a full playthrough, and the cost of
   // the frame where the status flips to completed (fans out to every status
   // listener that accumulated on the controller).
   for (final entry in {
@@ -123,7 +125,6 @@ void main() {
       ));
       final samples = <Map<String, Object>>[];
       final frames = <double>[];
-      final rss0 = ProcessInfo.currentRss;
       for (var i = 0; i < 420; i++) {
         final sw = Stopwatch()..start();
         await tester.pump(const Duration(milliseconds: 16));
@@ -134,7 +135,6 @@ void main() {
           samples.add({
             'frame': i + 1,
             'frameMs': _median(frames.sublist(frames.length - 30)),
-            'rssMb': (ProcessInfo.currentRss - rss0) / (1024 * 1024),
           });
         }
       }

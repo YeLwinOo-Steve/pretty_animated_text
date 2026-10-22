@@ -143,6 +143,31 @@ void main() {
       await tester.pump(const Duration(milliseconds: 20));
       expect(controller!.isCompleted, isTrue);
     });
+
+    testWidgets('passes new callbacks from an equal config to the controller',
+        (tester) async {
+      final calls = <String>[];
+      AnimatedTextController? controller;
+      // AnimationConfig equality ignores callbacks, so these two are "equal".
+      Widget scale(String tag) => _host(ScaleText(
+            text: 'abc',
+            style: _style,
+            config: AnimationConfig(
+              duration: const Duration(milliseconds: 100),
+              onComplete: (_) => calls.add(tag),
+            ),
+            onControllerCreated: (c) => controller = c,
+          ));
+
+      await tester.pumpWidget(scale('first'));
+      await tester.pump(const Duration(milliseconds: 100));
+      final progress = controller!.progress;
+      await tester.pumpWidget(scale('second'));
+      // Equal config: no restart.
+      expect(controller!.progress, progress);
+      await tester.pumpAndSettle();
+      expect(calls, ['second']);
+    });
   });
 
   group('rebuild scope', () {

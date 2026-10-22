@@ -1,3 +1,9 @@
+// GravityText frame cost with every body released. Skipped by default (see
+// dart_test.yaml). Run with:
+//   flutter test test/perf/gravity_awake_test.dart --run-skipped
+@Tags(['perf'])
+library;
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';

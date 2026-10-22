@@ -1,3 +1,8 @@
+// Compositing layer count per effect. Skipped by default (see dart_test.yaml).
+// Run with: flutter test test/perf/layer_count_test.dart --run-skipped
+@Tags(['perf'])
+library;
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -51,7 +56,7 @@ void main() {
           }
         }
       }
-      visit(tester.binding.renderView.debugLayer!);
+      visit(tester.binding.renderViews.first.debugLayer!);
       // ignore: avoid_print
       print('LAYERS ${jsonEncode({'effect': e.key, 'glyphs': 500, 'layers': layers, 'kinds': kinds})}');
       await tester.pumpWidget(const SizedBox());

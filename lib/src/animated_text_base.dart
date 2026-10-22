@@ -176,6 +176,13 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
       widget.onControllerCreated?.call(_textController);
     }
 
+    // AnimationConfig equality ignores callbacks, so an "equal" config can
+    // still carry new onComplete/onRepeat/... closures. Always hand the
+    // controller the latest one.
+    if (!identical(oldWidget.config, widget.config)) {
+      _textController.updateConfig(widget.config);
+    }
+
     if (oldWidget.config != widget.config || oldWidget.text != widget.text) {
       // Re-split: the text or the letter/word type may have changed.
       _segments = _splitSegments();
@@ -185,9 +192,6 @@ class _AnimatedTextBaseState extends State<AnimatedTextBase>
       _controller
         ..duration = totalDuration
         ..reverseDuration = totalDuration;
-
-      // Update the config on the controller
-      _textController.updateConfig(widget.config);
 
       // Recreate segment animations with new configuration
       _buildSegmentAnimations();

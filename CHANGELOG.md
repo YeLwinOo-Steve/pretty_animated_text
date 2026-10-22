@@ -3,8 +3,10 @@
 * Fixed a memory leak in `BlurText`, `ScaleText`, `OffsetText`, `SpringText`, `RotateText`, `ChimeBellText`, `SlideText` and `ScrambleText`. Every frame created a new `CurvedAnimation` per glyph that stayed subscribed to the controller until the widget was removed: 300 glyphs piled up ~113k listeners over one run, and the frame where the animation completed took ~27× longer than a normal frame.
 * Improved performance on long text. Effects no longer rebuild every glyph on every frame: each glyph rebuilds only while its own animation is moving, and glyphs that haven't started or have finished are skipped. The eight effects above are 8–13× faster per frame at 2,000 letters. Rendering is unchanged.
 * Added `rebuildOnTick` to `AnimatedTextBase` (defaults to `true`, the previous behavior). Custom builders that listen to the per-segment animations they receive can pass `false` to get the same speed-up.
+* The per-segment `animations` passed to an `AnimatedTextBase` builder now notify listeners only when their own value changes, instead of on every controller tick. A custom builder that listens to `animations[i]` as a per-frame tick (for example to read overall progress) stops being notified once that segment finishes; read `AnimatedTextController.progress` in a builder with `rebuildOnTick: true` instead.
 * Fixed `AnimatedTextBase` ignoring changes to `text` and to the letter/word `type` after the first build. The text is now re-split, the controller is set to the full overlapped duration instead of a single segment's, and the animation restarts from the beginning.
 * Disposed the per-segment animations `AnimatedTextBase` creates, when they are rebuilt and when the widget is removed.
+* Fixed new `onPlay`/`onComplete`/`onRepeat`/`onPause`/`onResume`/`onDismissed` callbacks being ignored when a rebuilt `AnimationConfig` was otherwise equal to the previous one.
 
 ## 3.2.0
 
